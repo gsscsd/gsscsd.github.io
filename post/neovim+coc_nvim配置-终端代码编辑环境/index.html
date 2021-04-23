@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+    <meta charset="UTF-8" />
+
+    <meta name="generator" content="Hugo 0.74.3" /><meta name="theme-color" content="#1c1c21" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+    
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <title>Neovim&#43;Coc.nvim配置 终端代码编辑环境 | Listener</title>
+
+    <link rel="stylesheet" href="/css/meme.min.be77810cf1b71cbe8af612db690f792956b3f09e1b35b365c0e2a9515a02cf41.css" integrity="sha256-vneBDPG3HL6K9hLbaQ95KVaz8J4bNbNlwOKpUVoCz0E=" />
+
+    
+    
+        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js" defer></script><script src="/js/meme.min.c535361dc9d7f923ad9854d4fd292cd70471dbdec4499f8109fba4f494689386.js" integrity="sha256-xTU2HcnX&#43;SOtmFTU/Sks1wRx297ESZ&#43;BCfuk9JRok4Y="></script>
+
+    
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=EB&#43;Garamond:400,400i,700,700i%7cNoto&#43;Serif&#43;SC:400,700%7cSource&#43;Code&#43;Pro:400,400i,700,700i%7cCinzel&#43;Decorative:700%7cMa&#43;Shan&#43;Zheng:%7cLiu&#43;Jian&#43;Mao&#43;Cao:&amp;display=swap&amp;subset=chinese-simplified" media="print" onload="this.media='all'" />
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=EB&#43;Garamond:400,400i,700,700i%7cNoto&#43;Serif&#43;SC:400,700%7cSource&#43;Code&#43;Pro:400,400i,700,700i%7cCinzel&#43;Decorative:700%7cMa&#43;Shan&#43;Zheng:%7cLiu&#43;Jian&#43;Mao&#43;Cao:&amp;display=swap&amp;subset=chinese-simplified" /></noscript>
+
+    <meta name="author" content="Listener" /><meta name="description" content=" 目前公司常用的环境还是linux的服务器，经常需要使用vim进行写代码，经过探索Neovim &#43; Coc.nvim非常适合。以下全部采用源码安装（相比之下，直接用各个发行版的命令安装会更加简单）。参考博客
+" />
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#2a6df4" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Listener" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Listener" />
+    <meta name="msapplication-starturl" content="../../" />
+    <meta name="msapplication-TileColor" content="#fff" />
+    <meta name="msapplication-TileImage" content="../../icons/mstile-150x150.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    
+    
+
+    
+    <link rel="canonical" href="https://gsscsd.github.io/post/neovim&#43;coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/" />
+    
+
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "datePublished": "2021-01-13T22:52:45+08:00",
+        "dateModified": "2021-01-15T23:03:15+08:00",
+        "url": "https://gsscsd.github.io/post/neovim+coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/",
+        "headline": "Neovim+Coc.nvim配置 终端代码编辑环境",
+        "description": " 目前公司常用的环境还是linux的服务器，经常需要使用vim进行写代码，经过探索Neovim + Coc.nvim非常适合。以下全部采用源码安装（相比之下，直接用各个发行版的命令安装会更加简单）。参考博客\n",
+        "inLanguage" : "zh-CN",
+        "articleSection": "post",
+        "wordCount":  5336 ,
+        "image": "https://gsscsd.github.io/icons/apple-touch-icon.png",
+        "author": {
+            "@type": "Person",
+            "description": "时光划过指缝",
+            "email": "gsscsd@outlook.com",
+            "image": "https://gsscsd.github.io/icons/favicon.png",
+            "url": "https://gsscsd.github.io",
+            "name": "Listener"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Listener",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://gsscsd.github.io/icons/apple-touch-icon.png"
+            },
+            "url": "https://gsscsd.github.io/"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebSite",
+            "@id": "https://gsscsd.github.io/"
+        }
+    }
+</script>
+
+    
+
+<meta name="twitter:card" content="summary" />
+
+<meta name="twitter:site" content="@reuixiy" />
+
+    
+
+
+
+<meta property="og:title" content="Neovim&#43;Coc.nvim配置 终端代码编辑环境" />
+<meta property="og:description" content=" 目前公司常用的环境还是linux的服务器，经常需要使用vim进行写代码，经过探索Neovim &#43; Coc.nvim非常适合。以下全部采用源码安装（相比之下，直接用各个发行版的命令安装会更加简单）。参考博客
+" />
+<meta property="og:url" content="https://gsscsd.github.io/post/neovim&#43;coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/" />
+<meta property="og:site_name" content="Listener" />
+<meta property="og:locale" content="zh-cn" /><meta property="og:image" content="https://gsscsd.github.io/icons/apple-touch-icon.png" />
+    <meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2021-01-13T22:52:45&#43;08:00" />
+    <meta property="article:modified_time" content="2021-01-15T23:03:15&#43;08:00" />
+    
+    <meta property="article:section" content="post" />
+
+
+
+    
+</head>
+
+    <body>
+        <div class="container">
+            
+    <header class="header">
+        
+            <div class="header-wrapper">
+                <div class="header-inner single">
+                    
+    <div class="site-brand">
+        
+            <a href="/" class="brand">Listener</a>
+        
+    </div>
+
+                    <nav class="nav">
+    <ul class="menu" id="menu">
+        
+            
+        
+        
+        
+        
+            
+                <li class="menu-item"><a href="/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="icon home"><path d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"/></svg><span class="menu-item-name">首页</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/categories/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon th"><path d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"/></svg><span class="menu-item-name">分类</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/tags/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="icon tags"><path d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"/></svg><span class="menu-item-name">标签</span></a>
+                </li>
+            
+        
+            
+                
+                    
+                    
+                        <li class="menu-item">
+                            <a id="theme-switcher" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon theme-icon-light"><path d="M193.2 104.5l48.8-97.5a18 18 0 0128 0l48.8 97.5 103.4 -34.5a18 18 0 0119.8 19.8l-34.5 103.4l97.5 48.8a18 18 0 010 28l-97.5 48.8 34.5 103.4a18 18 0 01-19.8 19.8l-103.4-34.5-48.8 97.5a18 18 0 01-28 0l-48.8-97.5l-103.4 34.5a18 18 0 01-19.8-19.8l34.5-103.4-97.5-48.8a18 18 0 010-28l97.5-48.8-34.5-103.4a18 18 0 0119.8-19.8zM256 128a128 128 0 10.01 0M256 160a96 96 0 10.01 0"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon theme-icon-dark"><path d="M27 412a256 256 0 10154-407a11.5 11.5 0 00-5 20a201.5 201.5 0 01-134 374a11.5 11.5 0 00-15 13"/></svg></a>
+                        </li>
+                    
+                
+            
+        
+            
+                
+            
+        
+            
+                <li class="menu-item"><a href="/about/"><span class="menu-item-name">About</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/search/"><span class="menu-item-name">百度搜索</span></a>
+                </li>
+            
+        
+    </ul>
+</nav>
+
+                    
+                </div>
+            </div>
+            
+    <input type="checkbox" id="nav-toggle" aria-hidden="true" />
+    <label for="nav-toggle" class="nav-toggle"></label>
+    <label for="nav-toggle" class="nav-curtain"></label>
+
+
+        
+    </header>
+
+
+
+
+            
+            
+    <main class="main single" id="main">
+    <div class="main-inner">
+
+        
+
+        <article class="content post h-entry" data-align="justify" data-type="post">
+
+            <h1 class="post-title p-name">Neovim+Coc.nvim配置 终端代码编辑环境</h1>
+
+            
+
+            
+                
+            
+
+            
+                
+
+<div class="post-meta">
+    
+        
+        <time datetime="2021-01-13T22:52:45&#43;08:00" class="post-meta-item published dt-published"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M148 288h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3 0 6-2.7 6-6z"/></svg>&nbsp;2021.1.13</time>
+    
+    
+    
+    
+        
+        
+        
+            
+                <span class="post-meta-item category"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M464 128H272l-54.63-54.63c-6-6-14.14-9.37-22.63-9.37H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48zm0 272H48V112h140.12l54.63 54.63c6 6 14.14 9.37 22.63 9.37H464v224z"/></svg>&nbsp;<a href="/categories/vim/" class="category-link p-category">vim</a></span>
+            
+        
+    
+    
+    
+    
+    
+</div>
+
+            
+
+            <div class="post-body e-content">
+              <blockquote>
+<p style="text-indent:0"><span class="drop-cap">目</span>前公司常用的环境还是linux的服务器，经常需要使用vim进行写代码，经过探索Neovim + Coc.nvim非常适合。以下全部采用源码安装（相比之下，直接用各个发行版的命令安装会更加简单）。<a href="https://www.cnblogs.com/cniwoq/p/13272746.html" target="_blank" rel="noopener">参考博客</a></p>
+</blockquote>
+<h3 id="neovim-和插件安装"><a href="#neovim-和插件安装" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Neovim 和插件安装</h3>
+<p>neovim：<a href="https://github.com/neovim/neovim/releases" target="_blank" rel="noopener">下载地址</a></p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">wget https://github.com/neovim/neovim/releases/download/v0.4.3/nvim-linux64.tar.gz
+tar -zxvf nvim-linux64.tar.gz
+</code></pre></td></tr></table></div>
+</div>
+</div><p>然后把neovim路径下的bin加入到~/.bashrc，然后在source一下就算是成功了。</p>
+<h4 id="neovim的基本配置"><a href="#neovim的基本配置" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Neovim的基本配置</h4>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">filetype plugin on
+<span class="s2">&#34; 设置为双字宽显示，否则无法完整显示如:☆
+</span><span class="s2">set ambiwidth=double
+</span><span class="s2">set t_ut= &#34;</span> 防止vim背景颜色错误
+<span class="nb">set</span> showmatch <span class="s2">&#34; 高亮匹配括号
+</span><span class="s2">set matchtime=1
+</span><span class="s2">set report=0
+</span><span class="s2">set ignorecase
+</span><span class="s2">set nocompatible
+</span><span class="s2">set noeb
+</span><span class="s2">set softtabstop=4
+</span><span class="s2">set shiftwidth=4
+</span><span class="s2">set nobackup
+</span><span class="s2">set autoread
+</span><span class="s2">set nocompatible
+</span><span class="s2">set nu &#34;</span>设置显示行号
+<span class="nb">set</span> <span class="nv">backspace</span><span class="o">=</span><span class="m">2</span> <span class="s2">&#34;能使用backspace回删
+</span><span class="s2">syntax on &#34;</span>语法检测
+<span class="nb">set</span> ruler <span class="s2">&#34;显示最后一行的状态
+</span><span class="s2">set laststatus=2 &#34;</span>两行状态行+一行命令行
+<span class="nb">set</span> <span class="nv">ts</span><span class="o">=</span><span class="m">4</span>
+<span class="nb">set</span> expandtab
+<span class="nb">set</span> autoindent <span class="s2">&#34;设置c语言自动对齐
+</span><span class="s2">set t_Co=256 &#34;</span>指定配色方案为256
+<span class="s2">&#34; set mouse=a &#34;</span>设置可以在VIM使用鼠标
+<span class="nb">set</span> <span class="nv">selection</span><span class="o">=</span>exclusive
+<span class="s2">&#34; set selectmode=mouse,key
+</span><span class="s2">set tabstop=4 &#34;</span>设置TAB宽度
+<span class="nb">set</span> <span class="nv">history</span><span class="o">=</span><span class="m">1000</span> <span class="s2">&#34;设置历史记录条数   
+</span><span class="s2">&#34;</span> 配色方案
+<span class="s2">&#34; let g:seoul256_background = 234
+</span><span class="s2">colo monokai
+</span><span class="s2">set background=dark
+</span><span class="s2">set shortmess=atl
+</span><span class="s2">&#34;</span> colorscheme desert
+<span class="s2">&#34;共享剪切板
+</span><span class="s2">set clipboard+=unnamed 
+</span><span class="s2">set cmdheight=3
+</span><span class="s2">if version &gt;= 603
+</span><span class="s2">     set helplang=cn
+</span><span class="s2">     set encoding=utf-8
+</span><span class="s2">endif
+</span><span class="s2">set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
+</span><span class="s2">set termencoding=utf-8
+</span><span class="s2">set encoding=utf-8
+</span><span class="s2">set fileencodings=ucs-bom,utf-8,cp936
+</span><span class="s2">set fileencoding=utf-8
+</span><span class="s2">set updatetime=300
+</span><span class="s2">set shortmess+=c
+</span><span class="s2">set signcolumn=yes
+</span><span class="s2"> 
+</span><span class="s2">&#34;</span> autocmd FileType json syntax match Comment +<span class="se">\/\/</span>.<span class="se">\+</span>$+
+ 
+<span class="nb">set</span> <span class="nv">foldmethod</span><span class="o">=</span>indent <span class="s2">&#34; 设置默认折叠方式为缩进
+</span><span class="s2">set foldlevelstart=99 &#34;</span> 每次打开文件时关闭折叠
+ 
+<span class="s2">&#34; hi Normal ctermfg=252 ctermbg=none &#34;</span>背景透明
+<span class="s2">&#34; au FileType gitcommit,gitrebase let g:gutentags_enabled=0
+</span><span class="s2">if has(&#34;</span>autocmd<span class="s2">&#34;)
+</span><span class="s2">    au BufReadPost * if line(&#34;</span><span class="s1">&#39;\&#34;&#34;) &gt; 1 &amp;&amp; line(&#34;&#39;</span><span class="se">\&#34;</span><span class="s2">&#34;) &lt;= line(&#34;$&#34;) | exe &#34;</span>normal! g<span class="err">&#39;</span><span class="se">\&#34;</span><span class="s2">&#34; | endif
+</span><span class="s2">endif
+</span><span class="s2">inoremap jj &lt;Esc&gt; &#34;</span>将jj映射到Esc
+</code></pre></td></tr></table></div>
+</div>
+</div><h3 id="插件安装"><a href="#插件安装" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>插件安装</h3>
+<h4 id="vim-plug"><a href="#vim-plug" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Vim-Plug</h4>
+<p>目前由于vim插件越来越多，由此也出现了插件管理工具，目前用得比较广泛的有：Vundle，vim-plug和dein,推荐使用vim-plug(对Vundle更好的替换)，关于dein，引用某巨佬的原话：“过度设计”。</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">sh -c <span class="s1">&#39;curl -fLo &#34;${XDG_DATA_HOME:-$HOME/.local/share}&#34;/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim&#39;</span>
+</code></pre></td></tr></table></div>
+</div>
+</div><p>这样，这个<code>~/.local/share/nvim/site/autoload/plug.vim</code>就会在你的目录下，并且vim会被调用。
+创建nvim的配置文件（这个配置文件和vim的<code>.vimrc</code>）一样：</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">mkdir ~/.config/nvim/
+nvim ~/.config/nvim/init.vim
+</code></pre></td></tr></table></div>
+</div>
+</div><p>然后把</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">call plug#begin<span class="o">(</span><span class="s1">&#39;~/.vim/plugged&#39;</span><span class="o">)</span>
+call plug#end<span class="o">()</span>
+</code></pre></td></tr></table></div>
+</div>
+</div><p>加入到<code>init.vim</code>中，这样以后在<code>call begin</code>和<code>call end</code>之间加上插件就可以使用了。</p>
+<p><strong>之后的每个插件在init.vim文件中配置好后，要进行保存退出，再次进入nvim,使用命令 :PlugInstall安装</strong></p>
+<h4 id="indentline"><a href="#indentline" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>indentLine</h4>
+<p><code>indentLine</code>此插件提供的一个可视化的缩进，把<code>Plug 'Yggdroot/indentLine'</code>，放到<code>init.vim的call begin和call end</code>之间，同时加入一些简单的配置：</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">let</span> g:indent_guides_guide_size            <span class="o">=</span> <span class="m">1</span>  <span class="s2">&#34; 指定对齐线的尺寸
+</span><span class="s2">let g:indent_guides_start_level           = 2  &#34;</span> 从第二层开始可视化显示缩进
+</code></pre></td></tr></table></div>
+</div>
+</div><h4 id="vim-monokai"><a href="#vim-monokai" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>vim-monokai</h4>
+<p><code>vim-monokai</code>，这个插件是nvim的一个主题，monokai这个配色是比较经典好看的主题。</p>
+<p>在<code>call begin 和 call end</code>之间加上<code>Plug 'crusoexia/vim-monokai'</code>，然后把</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">colo monokai
+</code></pre></td></tr></table></div>
+</div>
+</div><p>加到<code>init.vim</code>后面。</p>
+<h4 id="vim-airline"><a href="#vim-airline" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>vim-airline</h4>
+<p><code>vim-airline</code>给<code>nvim</code>提供一个强大的状态栏和标签栏，当打开多个文本时，可以用它进行快速的切换，是一个很强大的工具。</p>
+<p>在<code>call begin 和 call end</code>之间加上：</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">Plug <span class="s1">&#39;vim-airline/vim-airline&#39;</span>       
+Plug <span class="s1">&#39;vim-airline/vim-airline-themes&#39;</span> <span class="s2">&#34;airline 的主题
+</span></code></pre></td></tr></table></div>
+</div>
+</div><p>然后在<code>init.vim</code>里加上一些个性的配置：</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="s2">&#34; 设置状态栏
+</span><span class="s2">let g:airline#extensions#tabline#enabled = 1
+</span><span class="s2">let g:airline#extensions#tabline#left_alt_sep = &#39;|&#39;
+</span><span class="s2">let g:airline#extensions#tabline#buffer_nr_show = 0
+</span><span class="s2">let g:airline#extensions#tabline#formatter = &#39;default&#39;
+</span><span class="s2">let g:airline_theme = &#39;desertink&#39;  &#34;</span> 主题
+<span class="nb">let</span> g:airline#extensions#keymap#enabled <span class="o">=</span> <span class="m">1</span>
+<span class="nb">let</span> g:airline#extensions#tabline#buffer_idx_mode <span class="o">=</span> <span class="m">1</span>
+<span class="nb">let</span> g:airline#extensions#tabline#buffer_idx_format <span class="o">=</span> <span class="o">{</span>
+       <span class="se">\ </span><span class="s1">&#39;0&#39;</span>: <span class="s1">&#39;0 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;1&#39;</span>: <span class="s1">&#39;1 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;2&#39;</span>: <span class="s1">&#39;2 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;3&#39;</span>: <span class="s1">&#39;3 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;4&#39;</span>: <span class="s1">&#39;4 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;5&#39;</span>: <span class="s1">&#39;5 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;6&#39;</span>: <span class="s1">&#39;6 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;7&#39;</span>: <span class="s1">&#39;7 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;8&#39;</span>: <span class="s1">&#39;8 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;9&#39;</span>: <span class="s1">&#39;9 &#39;</span>
+       <span class="se">\}</span>
+<span class="s2">&#34; 设置切换tab的快捷键 &lt;\&gt; + &lt;i&gt; 切换到第i个 tab
+</span><span class="s2">nmap &lt;leader&gt;1 &lt;Plug&gt;AirlineSelectTab1
+</span><span class="s2">nmap &lt;leader&gt;2 &lt;Plug&gt;AirlineSelectTab2
+</span><span class="s2">nmap &lt;leader&gt;3 &lt;Plug&gt;AirlineSelectTab3
+</span><span class="s2">nmap &lt;leader&gt;4 &lt;Plug&gt;AirlineSelectTab4
+</span><span class="s2">nmap &lt;leader&gt;5 &lt;Plug&gt;AirlineSelectTab5
+</span><span class="s2">nmap &lt;leader&gt;6 &lt;Plug&gt;AirlineSelectTab6
+</span><span class="s2">nmap &lt;leader&gt;7 &lt;Plug&gt;AirlineSelectTab7
+</span><span class="s2">nmap &lt;leader&gt;8 &lt;Plug&gt;AirlineSelectTab8
+</span><span class="s2">nmap &lt;leader&gt;9 &lt;Plug&gt;AirlineSelectTab9
+</span><span class="s2">&#34;</span> 设置切换tab的快捷键 &lt;<span class="se">\&gt;</span> + &lt;-&gt; 切换到前一个 tab
+nmap &lt;leader&gt;- &lt;Plug&gt;AirlineSelectPrevTab
+<span class="s2">&#34; 设置切换tab的快捷键 &lt;\&gt; + &lt;+&gt; 切换到后一个 tab
+</span><span class="s2">nmap &lt;leader&gt;+ &lt;Plug&gt;AirlineSelectNextTab
+</span><span class="s2">&#34;</span> 设置切换tab的快捷键 &lt;<span class="se">\&gt;</span> + &lt;q&gt; 退出当前的 tab
+nmap &lt;leader&gt;q :bp&lt;cr&gt;:bd <span class="c1">#&lt;cr&gt;</span>
+<span class="s2">&#34; 修改了一些个人不喜欢的字符
+</span><span class="s2">if !exists(&#39;g:airline_symbols&#39;)
+</span><span class="s2">    let g:airline_symbols = {}
+</span><span class="s2">endif
+</span><span class="s2">let g:airline_symbols.linenr = &#34;</span>CL<span class="s2">&#34; &#34;</span> current line
+<span class="nb">let</span> g:airline_symbols.whitespace <span class="o">=</span> <span class="s1">&#39;|&#39;</span>
+<span class="nb">let</span> g:airline_symbols.maxlinenr <span class="o">=</span> <span class="s1">&#39;Ml&#39;</span> <span class="s2">&#34;maxline
+</span><span class="s2">let g:airline_symbols.branch = &#39;BR&#39;
+</span><span class="s2">let g:airline_symbols.readonly = &#34;</span>RO<span class="s2">&#34;
+</span><span class="s2">let g:airline_symbols.dirty = &#34;</span>DT<span class="s2">&#34;
+</span><span class="s2">let g:airline_symbols.crypt = &#34;</span>CR<span class="s2">&#34; 
+</span></code></pre></td></tr></table></div>
+</div>
+</div><h4 id="rainbow"><a href="#rainbow" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>rainbow</h4>
+<p><code>rainbow</code>是一个提供嵌套括号高亮的一个工具。
+在<code>call begin 和 call end</code>之间加上<code>Plug 'luochen1990/rainbow'</code>
+简单的修复相应的配置：</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">let</span> g:rainbow_active <span class="o">=</span> <span class="m">1</span>
+<span class="nb">let</span> g:rainbow_conf <span class="o">=</span> <span class="o">{</span>
+<span class="se">\ </span>  <span class="s1">&#39;guifgs&#39;</span>: <span class="o">[</span><span class="s1">&#39;darkorange3&#39;</span>, <span class="s1">&#39;seagreen3&#39;</span>, <span class="s1">&#39;royalblue3&#39;</span>, <span class="s1">&#39;firebrick&#39;</span><span class="o">]</span>,
+<span class="se">\ </span>  <span class="s1">&#39;ctermfgs&#39;</span>: <span class="o">[</span><span class="s1">&#39;lightyellow&#39;</span>, <span class="s1">&#39;lightcyan&#39;</span>,<span class="s1">&#39;lightblue&#39;</span>, <span class="s1">&#39;lightmagenta&#39;</span><span class="o">]</span>,
+<span class="se">\ </span>  <span class="s1">&#39;operators&#39;</span>: <span class="s1">&#39;_,_&#39;</span>,
+<span class="se">\ </span>  <span class="s1">&#39;parentheses&#39;</span>: <span class="o">[</span><span class="s1">&#39;start=/(/ end=/)/ fold&#39;</span>, <span class="s1">&#39;start=/\[/ end=/\]/ fold&#39;</span>, <span class="s1">&#39;start=/{/ end=/}/ fold&#39;</span><span class="o">]</span>,
+<span class="se">\ </span>  <span class="s1">&#39;separately&#39;</span>: <span class="o">{</span>
+<span class="se">\ </span>      <span class="s1">&#39;*&#39;</span>: <span class="o">{}</span>,
+<span class="se">\ </span>      <span class="s1">&#39;tex&#39;</span>: <span class="o">{</span>
+<span class="se">\ </span>          <span class="s1">&#39;parentheses&#39;</span>: <span class="o">[</span><span class="s1">&#39;start=/(/ end=/)/&#39;</span>, <span class="s1">&#39;start=/\[/ end=/\]/&#39;</span><span class="o">]</span>,
+<span class="se">\ </span>      <span class="o">}</span>,
+<span class="se">\ </span>      <span class="s1">&#39;lisp&#39;</span>: <span class="o">{</span>
+<span class="se">\ </span>          <span class="s1">&#39;guifgs&#39;</span>: <span class="o">[</span><span class="s1">&#39;darkorange3&#39;</span>, <span class="s1">&#39;seagreen3&#39;</span>, <span class="s1">&#39;royalblue3&#39;</span>, <span class="s1">&#39;firebrick&#39;</span><span class="o">]</span>,
+<span class="se">\ </span>      <span class="o">}</span>,
+<span class="se">\ </span>      <span class="s1">&#39;vim&#39;</span>: <span class="o">{</span>
+<span class="se">\ </span>          <span class="s1">&#39;parentheses&#39;</span>: <span class="o">[</span><span class="s1">&#39;start=/(/ end=/)/&#39;</span>, <span class="s1">&#39;start=/\[/ end=/\]/&#39;</span>, <span class="s1">&#39;start=/{/ end=/}/ fold&#39;</span>, <span class="s1">&#39;start=/(/ end=/)/ containedin=vimFuncBody&#39;</span>, <span class="s1">&#39;start=/\[/ end=/\]/ containedin=vimFuncBody&#39;</span>, <span class="s1">&#39;start=/{/ end=/}/ fold containedin=vimFuncBody&#39;</span><span class="o">]</span>,
+<span class="se">\ </span>      <span class="o">}</span>,
+<span class="se">\ </span>      <span class="s1">&#39;html&#39;</span>: <span class="o">{</span>
+<span class="se">\ </span>          <span class="s1">&#39;parentheses&#39;</span>: <span class="o">[</span><span class="s1">&#39;start=/\v\&lt;((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ &gt;])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=(&#34;[^&#34;]*&#34;|&#39;</span>.<span class="s2">&#34;&#39;&#34;</span>.<span class="s1">&#39;[^&#39;</span>.<span class="s2">&#34;&#39;&#34;</span>.<span class="s1">&#39;]*&#39;</span>.<span class="s2">&#34;&#39;&#34;</span>.<span class="s1">&#39;|[^ &#39;</span>.<span class="s2">&#34;&#39;&#34;</span>.<span class="s1">&#39;&#34;&gt;&lt;=`]*))?)*\&gt;/ end=#&lt;/\z1&gt;# fold&#39;</span><span class="o">]</span>,
+<span class="se">\ </span>      <span class="o">}</span>,
+<span class="se">\ </span>      <span class="s1">&#39;css&#39;</span>: 0,
+<span class="se">\ </span>  <span class="o">}</span>
+<span class="se">\}</span>
+</code></pre></td></tr></table></div>
+</div>
+</div><h4 id="nerdtree"><a href="#nerdtree" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>nerdtree</h4>
+<p><code>nerdtree</code>是一个树形的目录管理插件，可以方便在nvim中进行当前文件夹中的文件切换</p>
+<p>在<code>call begin 和 call end</code>之间加上</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">Plug <span class="s1">&#39;preservim/nerdtree&#39;</span>
+Plug <span class="s1">&#39;Xuyuanp/nerdtree-git-plugin&#39;</span>
+</code></pre></td></tr></table></div>
+</div>
+</div><p>进行以下的简单配置</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="s2">&#34; autocmd vimenter * NERDTree  &#34;</span>自动开启Nerdtree
+<span class="nb">let</span> g:NERDTreeWinSize <span class="o">=</span> <span class="m">25</span> <span class="s2">&#34;设定 NERDTree 视窗大小
+</span><span class="s2">let NERDTreeShowBookmarks=1  &#34;</span> 开启Nerdtree时自动显示Bookmarks
+<span class="s2">&#34;打开vim时如果没有文件自动打开NERDTree
+</span><span class="s2">&#34;</span> autocmd vimenter * <span class="k">if</span> !argc<span class="o">()</span><span class="p">|</span>NERDTree<span class="p">|</span>endif
+<span class="s2">&#34;当NERDTree为剩下的唯一窗口时自动关闭
+</span><span class="s2">autocmd bufenter * if (winnr(&#34;$&#34;) == 1 &amp;&amp; exists(&#34;</span>b:NERDTree<span class="s2">&#34;) &amp;&amp; b:NERDTree.isTabTree()) | q | endif
+</span><span class="s2">&#34;</span> 设置树的显示图标
+<span class="nb">let</span> g:NERDTreeDirArrowExpandable <span class="o">=</span> <span class="s1">&#39;+&#39;</span>
+<span class="nb">let</span> g:NERDTreeDirArrowCollapsible <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+<span class="nb">let</span> <span class="nv">NERDTreeIgnore</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;\.pyc$&#39;</span><span class="o">]</span>  <span class="s2">&#34; 过滤所有.pyc文件不显示
+</span><span class="s2">let g:NERDTreeShowLineNumbers=0 &#34;</span> 是否显示行号
+<span class="nb">let</span> g:NERDTreeHidden<span class="o">=</span><span class="m">0</span>     <span class="s2">&#34;不显示隐藏文件
+</span><span class="s2">&#34;&#34;Making it prettier
+</span><span class="s2">let NERDTreeMinimalUI = 1
+</span><span class="s2">let NERDTreeDirArrows = 1
+</span><span class="s2">nnoremap &lt;F3&gt; :NERDTreeToggle&lt;CR&gt; &#34;</span> 开启/关闭nerdtree快捷键
+</code></pre></td></tr></table></div>
+</div>
+</div><p>默认的情况下是关闭的，可以把autocmd vimenter * NERDTree的注释打开，改成默认开启的状态。同时把开关的按键映射到了F3，按下可以打开或关闭。</p>
+<h4 id="vim-cpp-enhanced-highlight"><a href="#vim-cpp-enhanced-highlight" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>vim-cpp-enhanced-highlight</h4>
+<p><code>vim-cpp-enhanced-highlight</code>，这个是用来加强C++的高亮的</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">Plug <span class="s1">&#39;octol/vim-cpp-enhanced-highlight&#39;</span>
+</code></pre></td></tr></table></div>
+</div>
+</div><h4 id="vim-snippets"><a href="#vim-snippets" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>vim-snippets</h4>
+<p><code>honza/vim-snippets</code>用来提供C++的snippets.</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">Plug <span class="s1">&#39;honza/vim-snippets&#39;</span>
+</code></pre></td></tr></table></div>
+</div>
+</div><h4 id="cocnvim"><a href="#cocnvim" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>coc.nvim</h4>
+<p><code>coc.nvim</code>是目前非常流行的，集代码补全、静态检测、函数跳转等功能的一个引擎。</p>
+<p>安装<code>coc.nvim</code>，需要安装<code>nodejs</code>。和<code>nvim</code>一样，这个也有编译好的版本，解压后把bin的路径放到放到<code>.bashrc</code>里，之后运行</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">npm install -g neovim
+</code></pre></td></tr></table></div>
+</div>
+</div><p>在<code>init.vim</code>安装</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">Plug <span class="s1">&#39;neoclide/coc.nvim&#39;</span>, <span class="o">{</span><span class="s1">&#39;branch&#39;</span>: <span class="s1">&#39;release&#39;</span><span class="o">}</span>
+</code></pre></td></tr></table></div>
+</div>
+</div><p>以下是coc的默认配置：</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span><span class="lnt">92
+</span><span class="lnt">93
+</span><span class="lnt">94
+</span><span class="lnt">95
+</span><span class="lnt">96
+</span><span class="lnt">97
+</span><span class="lnt">98
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="s2">&#34; if hidden is not set, TextEdit might fail.
+</span><span class="s2">set hidden
+</span><span class="s2">&#34;</span> Some servers have issues with backup files, see <span class="c1">#649</span>
+<span class="nb">set</span> nobackup
+<span class="nb">set</span> nowritebackup
+ 
+<span class="s2">&#34; You will have bad experience for diagnostic messages when it&#39;s default 4000.
+</span><span class="s2">set updatetime=300
+</span><span class="s2"> 
+</span><span class="s2">&#34;</span> don<span class="s1">&#39;t give |ins-completion-menu| messages.
+</span><span class="s1">set shortmess+=c
+</span><span class="s1"> 
+</span><span class="s1">&#34; always show signcolumns
+</span><span class="s1">set signcolumn=yes
+</span><span class="s1"> 
+</span><span class="s1">&#34; Use tab for trigger completion with characters ahead and navigate.
+</span><span class="s1">&#34; Use command &#39;</span>:verbose imap &lt;tab&gt;<span class="s1">&#39; to make sure tab is not mapped by other plugin.
+</span><span class="s1">inoremap &lt;silent&gt;&lt;expr&gt; &lt;TAB&gt;
+</span><span class="s1">      \ pumvisible() ? &#34;\&lt;C-n&gt;&#34; :
+</span><span class="s1">      \ &lt;SID&gt;check_back_space() ? &#34;\&lt;TAB&gt;&#34; :
+</span><span class="s1">      \ coc#refresh()
+</span><span class="s1">inoremap &lt;expr&gt;&lt;S-TAB&gt; pumvisible() ? &#34;\&lt;C-p&gt;&#34; : &#34;\&lt;C-h&gt;&#34;
+</span><span class="s1"> 
+</span><span class="s1">function! s:check_back_space() abort
+</span><span class="s1">  let col = col(&#39;</span>.<span class="s1">&#39;) - 1
+</span><span class="s1">  return !col || getline(&#39;</span>.<span class="s1">&#39;)[col - 1]  =~# &#39;</span><span class="se">\s</span><span class="s1">&#39;
+</span><span class="s1">endfunction
+</span><span class="s1"> 
+</span><span class="s1">&#34; Use &lt;c-space&gt; to trigger completion.
+</span><span class="s1">inoremap &lt;silent&gt;&lt;expr&gt; &lt;c-space&gt; coc#refresh()
+</span><span class="s1"> 
+</span><span class="s1">&#34; Use &lt;cr&gt; to confirm completion, `&lt;C-g&gt;u` means break undo chain at current position.
+</span><span class="s1">&#34; Coc only does snippet and additional edit on confirm.
+</span><span class="s1">inoremap &lt;expr&gt; &lt;cr&gt; pumvisible() ? &#34;\&lt;C-y&gt;&#34; : &#34;\&lt;C-g&gt;u\&lt;CR&gt;&#34;
+</span><span class="s1">&#34; Or use `complete_info` if your vim support it, like:
+</span><span class="s1">&#34; inoremap &lt;expr&gt; &lt;cr&gt; complete_info()[&#34;selected&#34;] != &#34;-1&#34; ? &#34;\&lt;C-y&gt;&#34; : &#34;\&lt;C-g&gt;u\&lt;CR&gt;&#34;
+</span><span class="s1"> 
+</span><span class="s1">&#34; Use `[g` and `]g` to navigate diagnostics
+</span><span class="s1">nmap &lt;silent&gt; [g &lt;Plug&gt;(coc-diagnostic-prev)
+</span><span class="s1">nmap &lt;silent&gt; ]g &lt;Plug&gt;(coc-diagnostic-next)
+</span><span class="s1">&#34; Remap keys for gotos
+</span><span class="s1">nmap &lt;silent&gt; gd &lt;Plug&gt;(coc-definition)
+</span><span class="s1">nmap &lt;silent&gt; gy &lt;Plug&gt;(coc-type-definition)
+</span><span class="s1">nmap &lt;silent&gt; gi &lt;Plug&gt;(coc-implementation)
+</span><span class="s1">nmap &lt;silent&gt; gr &lt;Plug&gt;(coc-references)
+</span><span class="s1"> 
+</span><span class="s1">&#34; Use K to show documentation in preview window
+</span><span class="s1">nnoremap &lt;silent&gt; K :call &lt;SID&gt;show_documentation()&lt;CR&gt;
+</span><span class="s1"> 
+</span><span class="s1">function! s:show_documentation()
+</span><span class="s1">  if (index([&#39;</span>vim<span class="s1">&#39;,&#39;</span>help<span class="s1">&#39;], &amp;filetype) &gt;= 0)
+</span><span class="s1">    execute &#39;</span>h <span class="s1">&#39;.expand(&#39;</span>&lt;cword&gt;<span class="s1">&#39;)
+</span><span class="s1">  else
+</span><span class="s1">    call CocAction(&#39;</span>doHover<span class="s1">&#39;)
+</span><span class="s1">  endif
+</span><span class="s1">endfunction
+</span><span class="s1"> 
+</span><span class="s1">&#34; Highlight symbol under cursor on CursorHold
+</span><span class="s1">autocmd CursorHold * silent call CocActionAsync(&#39;</span>highlight<span class="s1">&#39;)
+</span><span class="s1"> 
+</span><span class="s1">&#34; Remap for rename current word
+</span><span class="s1">nmap &lt;leader&gt;rn &lt;Plug&gt;(coc-rename)
+</span><span class="s1"> 
+</span><span class="s1">&#34; Remap for format selected region
+</span><span class="s1">xmap &lt;leader&gt;f  &lt;Plug&gt;(coc-format-selected)
+</span><span class="s1">nmap &lt;leader&gt;f  &lt;Plug&gt;(coc-format-selected)
+</span><span class="s1"> 
+</span><span class="s1">augroup mygroup
+</span><span class="s1">  autocmd!
+</span><span class="s1">  &#34; Setup formatexpr specified filetype(s).
+</span><span class="s1">  autocmd FileType typescript,json setl formatexpr=CocAction(&#39;</span>formatSelected<span class="s1">&#39;)
+</span><span class="s1">  &#34; Update signature help on jump placeholder
+</span><span class="s1">  autocmd User CocJumpPlaceholder call CocActionAsync(&#39;</span>showSignatureHelp<span class="s1">&#39;)
+</span><span class="s1">augroup end
+</span><span class="s1"> 
+</span><span class="s1">&#34; Remap for do codeAction of selected region, ex: `&lt;leader&gt;aap` for current paragraph
+</span><span class="s1">xmap &lt;leader&gt;a  &lt;Plug&gt;(coc-codeaction-selected)
+</span><span class="s1">nmap &lt;leader&gt;a  &lt;Plug&gt;(coc-codeaction-selected)
+</span><span class="s1"> 
+</span><span class="s1">&#34; Remap for do codeAction of current line
+</span><span class="s1">nmap &lt;leader&gt;ac  &lt;Plug&gt;(coc-codeaction)
+</span><span class="s1">&#34; Fix autofix problem of current line
+</span><span class="s1">nmap &lt;leader&gt;qf  &lt;Plug&gt;(coc-fix-current)
+</span><span class="s1"> 
+</span><span class="s1">&#34; Create mappings for function text object, requires document symbols feature of languageserver.
+</span><span class="s1">xmap if &lt;Plug&gt;(coc-funcobj-i)
+</span><span class="s1">xmap af &lt;Plug&gt;(coc-funcobj-a)
+</span><span class="s1">omap if &lt;Plug&gt;(coc-funcobj-i)
+</span><span class="s1">omap af &lt;Plug&gt;(coc-funcobj-a)
+</span><span class="s1"> 
+</span><span class="s1">&#34; Use `:Format` to format current buffer
+</span><span class="s1">command! -nargs=0 Format :call CocAction(&#39;</span>format<span class="s1">&#39;)
+</span><span class="s1"> 
+</span><span class="s1">&#34; Use `:Fold` to fold current buffer
+</span><span class="s1">command! -nargs=? Fold :call     CocAction(&#39;</span>fold<span class="s1">&#39;, &lt;f-args&gt;)
+</span><span class="s1"> 
+</span><span class="s1">&#34; use `:OR` for organize import of current buffer
+</span><span class="s1">command! -nargs=0 OR   :call     CocAction(&#39;</span>runCommand<span class="s1">&#39;, &#39;</span>editor.action.organizeImport<span class="err">&#39;</span><span class="o">)</span>
+</code></pre></td></tr></table></div>
+</div>
+</div><h4 id="cocvim"><a href="#cocvim" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>CocVim</h4>
+<p>对于Python，直接装anaconda就行了，同时需要用pip装一下pynvim。</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">pip install pynvim
+</code></pre></td></tr></table></div>
+</div>
+</div><p>在<code>nvim</code>输入<code>:checkhealth</code>，会进行基本环境的检查，保证你用的环境不会出问题即可.
+<code>coc.nvim </code>提供了很多有用的扩展工具在<code>coc extensions</code>中，这些扩展在nvim中通过命令<code>:CocInstall</code>进行安装</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">:CocInstall coc-clangd <span class="c1"># C++环境插件</span>
+:CocInstall coc-cmake  <span class="c1"># Cmake 支持</span> 
+:CocInstall coc-git    <span class="c1"># git 支持</span>
+:CocInstall coc-highlight  <span class="c1"># 高亮支持</span>
+:CocInstall coc-jedi   <span class="c1"># jedi</span>
+:CocInstall coc-java   <span class="c1"># java</span>
+:CocInstall coc-json   <span class="c1"># json 文件支持</span>
+:CocInstall coc-python <span class="c1"># python 环境支持</span>
+:CocInstall coc-sh     <span class="c1"># bash 环境支持</span>
+:CocInstall coc-snippets <span class="c1"># python提供 snippets</span>
+:CocInstall coc-vimlsp <span class="c1"># lsp</span>
+:CocInstall coc-yaml   <span class="c1"># yaml</span>
+:CocInstall coc-pairs  <span class="c1"># 自动补全括号</span>
+</code></pre></td></tr></table></div>
+</div>
+</div><p>在snaipppts的提示中，可以通过 Ctrl + j 进行移动修改（参考https://github.com/neoclide/coc-snippets)。
+在函数里，可以通过按下<code>gd</code>进行函数的跳转，<code>ctrl + o </code>回调到上次的位置。</p>
+<h3 id="附录--个人配置"><a href="#附录--个人配置" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>附录&ndash;个人配置</h3>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span><span class="lnt">208
+</span><span class="lnt">209
+</span><span class="lnt">210
+</span><span class="lnt">211
+</span><span class="lnt">212
+</span><span class="lnt">213
+</span><span class="lnt">214
+</span><span class="lnt">215
+</span><span class="lnt">216
+</span><span class="lnt">217
+</span><span class="lnt">218
+</span><span class="lnt">219
+</span><span class="lnt">220
+</span><span class="lnt">221
+</span><span class="lnt">222
+</span><span class="lnt">223
+</span><span class="lnt">224
+</span><span class="lnt">225
+</span><span class="lnt">226
+</span><span class="lnt">227
+</span><span class="lnt">228
+</span><span class="lnt">229
+</span><span class="lnt">230
+</span><span class="lnt">231
+</span><span class="lnt">232
+</span><span class="lnt">233
+</span><span class="lnt">234
+</span><span class="lnt">235
+</span><span class="lnt">236
+</span><span class="lnt">237
+</span><span class="lnt">238
+</span><span class="lnt">239
+</span><span class="lnt">240
+</span><span class="lnt">241
+</span><span class="lnt">242
+</span><span class="lnt">243
+</span><span class="lnt">244
+</span><span class="lnt">245
+</span><span class="lnt">246
+</span><span class="lnt">247
+</span><span class="lnt">248
+</span><span class="lnt">249
+</span><span class="lnt">250
+</span><span class="lnt">251
+</span><span class="lnt">252
+</span><span class="lnt">253
+</span><span class="lnt">254
+</span><span class="lnt">255
+</span><span class="lnt">256
+</span><span class="lnt">257
+</span><span class="lnt">258
+</span><span class="lnt">259
+</span><span class="lnt">260
+</span><span class="lnt">261
+</span><span class="lnt">262
+</span><span class="lnt">263
+</span><span class="lnt">264
+</span><span class="lnt">265
+</span><span class="lnt">266
+</span><span class="lnt">267
+</span><span class="lnt">268
+</span><span class="lnt">269
+</span><span class="lnt">270
+</span><span class="lnt">271
+</span><span class="lnt">272
+</span><span class="lnt">273
+</span><span class="lnt">274
+</span><span class="lnt">275
+</span><span class="lnt">276
+</span><span class="lnt">277
+</span><span class="lnt">278
+</span><span class="lnt">279
+</span><span class="lnt">280
+</span><span class="lnt">281
+</span><span class="lnt">282
+</span><span class="lnt">283
+</span><span class="lnt">284
+</span><span class="lnt">285
+</span><span class="lnt">286
+</span><span class="lnt">287
+</span><span class="lnt">288
+</span><span class="lnt">289
+</span><span class="lnt">290
+</span><span class="lnt">291
+</span><span class="lnt">292
+</span><span class="lnt">293
+</span><span class="lnt">294
+</span><span class="lnt">295
+</span><span class="lnt">296
+</span><span class="lnt">297
+</span><span class="lnt">298
+</span><span class="lnt">299
+</span><span class="lnt">300
+</span><span class="lnt">301
+</span><span class="lnt">302
+</span><span class="lnt">303
+</span><span class="lnt">304
+</span><span class="lnt">305
+</span><span class="lnt">306
+</span><span class="lnt">307
+</span><span class="lnt">308
+</span><span class="lnt">309
+</span><span class="lnt">310
+</span><span class="lnt">311
+</span><span class="lnt">312
+</span><span class="lnt">313
+</span><span class="lnt">314
+</span><span class="lnt">315
+</span><span class="lnt">316
+</span><span class="lnt">317
+</span><span class="lnt">318
+</span><span class="lnt">319
+</span><span class="lnt">320
+</span><span class="lnt">321
+</span><span class="lnt">322
+</span><span class="lnt">323
+</span><span class="lnt">324
+</span><span class="lnt">325
+</span><span class="lnt">326
+</span><span class="lnt">327
+</span><span class="lnt">328
+</span><span class="lnt">329
+</span><span class="lnt">330
+</span><span class="lnt">331
+</span><span class="lnt">332
+</span><span class="lnt">333
+</span><span class="lnt">334
+</span><span class="lnt">335
+</span><span class="lnt">336
+</span><span class="lnt">337
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">call plug#begin<span class="o">(</span><span class="s1">&#39;~/.vim/plugged&#39;</span><span class="o">)</span> <span class="s2">&#34; 记得先创建该目录
+</span><span class="s2">    Plug &#39;honza/vim-snippets&#39;
+</span><span class="s2">    Plug &#39;sainnhe/sonokai&#39;
+</span><span class="s2">    Plug &#39;vim-python/python-syntax&#39;
+</span><span class="s2">    &#34;</span> Plug <span class="s1">&#39;vim-scripts/ctags.vim&#39;</span>
+    Plug <span class="s1">&#39;crusoexia/vim-monokai&#39;</span>
+    Plug <span class="s1">&#39;tmux-plugins/vim-tmux-focus-events&#39;</span>
+    Plug <span class="s1">&#39;vim-airline/vim-airline&#39;</span>
+    Plug <span class="s1">&#39;scrooloose/nerdcommenter&#39;</span>
+    Plug <span class="s1">&#39;vim-airline/vim-airline-themes&#39;</span>
+    Plug <span class="s1">&#39;luochen1990/rainbow&#39;</span>
+    Plug <span class="s1">&#39;octol/vim-cpp-enhanced-highlight&#39;</span>
+    Plug <span class="s1">&#39;Yggdroot/indentLine&#39;</span>
+    Plug <span class="s1">&#39;preservim/nerdtree&#39;</span>
+    Plug <span class="s1">&#39;Xuyuanp/nerdtree-git-plugin&#39;</span>
+    Plug <span class="s1">&#39;neoclide/coc.nvim&#39;</span>, <span class="o">{</span><span class="s1">&#39;branch&#39;</span>: <span class="s1">&#39;release&#39;</span><span class="o">}</span>
+    <span class="s2">&#34; Plug &#39;majutsushi/tagbar&#39;
+</span><span class="s2">    Plug &#39;lifepillar/vim-solarized8&#39;
+</span><span class="s2">call plug#end()
+</span><span class="s2">
+</span><span class="s2">let mapleader = &#34;</span>,<span class="s2">&#34;  &#34;</span> <span class="nb">set</span> map leader
+filetype plugin on
+<span class="s2">&#34; 设置为双字宽显示，否则无法完整显示如:☆
+</span><span class="s2">set ambiwidth=double
+</span><span class="s2">set t_ut= &#34;</span> 防止vim背景颜色错误
+<span class="nb">set</span> showmatch <span class="s2">&#34; 高亮匹配括号
+</span><span class="s2">set matchtime=1
+</span><span class="s2">set noshowmode &#34;</span> block mode display
+<span class="nb">set</span> novisualbell noerrorbells
+<span class="nb">set</span> <span class="nv">report</span><span class="o">=</span><span class="m">0</span>
+<span class="nb">set</span> ignorecase
+<span class="nb">set</span> cursorline <span class="s2">&#34;highlight current line
+</span><span class="s2">set noeb
+</span><span class="s2">set softtabstop=2
+</span><span class="s2">set shiftwidth=2
+</span><span class="s2">set nobackup
+</span><span class="s2">set autoread
+</span><span class="s2">set nocompatible
+</span><span class="s2">set nu &#34;</span>设置显示行号
+<span class="nb">set</span> <span class="nv">backspace</span><span class="o">=</span><span class="m">2</span> <span class="s2">&#34;能使用backspace回删
+</span><span class="s2">syntax on &#34;</span>语法检测
+<span class="nb">set</span> ruler <span class="s2">&#34;显示最后一行的状态
+</span><span class="s2">set laststatus=2 &#34;</span>两行状态行+一行命令行
+<span class="s2">&#34; set ts=4
+</span><span class="s2">set expandtab
+</span><span class="s2">set autoindent &#34;</span>设置c语言自动对齐
+<span class="nb">set</span> <span class="nv">t_Co</span><span class="o">=</span><span class="m">256</span> <span class="s2">&#34;指定配色方案为256
+</span><span class="s2">&#34;</span> <span class="nb">set</span> <span class="nv">mouse</span><span class="o">=</span>a <span class="s2">&#34;设置可以在VIM使用鼠标
+</span><span class="s2">set selection=exclusive
+</span><span class="s2">&#34;</span> <span class="nb">set</span> <span class="nv">selectmode</span><span class="o">=</span>mouse,key
+<span class="nb">set</span> <span class="nv">tabstop</span><span class="o">=</span><span class="m">2</span> <span class="s2">&#34;设置TAB宽度
+</span><span class="s2">set history=1000 &#34;</span>设置历史记录条数
+<span class="nb">set</span> <span class="nv">shortmess</span><span class="o">=</span>atl
+<span class="nb">set</span> <span class="nv">clipboard</span><span class="o">+=</span>unnamed
+<span class="nb">set</span> <span class="nv">cmdheight</span><span class="o">=</span><span class="m">1</span>
+<span class="k">if</span> version &gt;<span class="o">=</span> <span class="m">603</span>
+    <span class="nb">set</span> <span class="nv">helplang</span><span class="o">=</span>cn
+    <span class="nb">set</span> <span class="nv">encoding</span><span class="o">=</span>utf-8
+endif
+<span class="nb">set</span> <span class="nv">fencs</span><span class="o">=</span>utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
+<span class="nb">set</span> <span class="nv">termencoding</span><span class="o">=</span>utf-8
+<span class="nb">set</span> <span class="nv">encoding</span><span class="o">=</span>utf-8
+<span class="nb">set</span> <span class="nv">fileencodings</span><span class="o">=</span>ucs-bom,utf-8,cp936
+<span class="s2">&#34; set updatetime=300
+</span><span class="s2">set shortmess+=c
+</span><span class="s2">set signcolumn=yes
+</span><span class="s2">&#34;</span> reset cursor when vim exits
+au VimLeave * <span class="nb">set</span> <span class="nv">guicursor</span><span class="o">=</span>a:ver25-blinkon0
+
+<span class="s2">&#34; +================================ 可视化缩进 =====================================+ &#34;</span>
+<span class="s2">&#34; set notermguicolors
+</span><span class="s2">&#34;</span> <span class="nb">let</span> g:sonokai_style <span class="o">=</span> <span class="s1">&#39;shusia&#39;</span>
+<span class="s2">&#34; let g:sonokai_enable_italic = 1
+</span><span class="s2">&#34;</span> <span class="nb">let</span> g:sonokai_disable_italic_comment <span class="o">=</span> <span class="m">1</span>
+<span class="s2">&#34; colo sonokai
+</span><span class="s2">colo monokai
+</span><span class="s2">set background=dark
+</span><span class="s2">hi CursorLine ctermfg=NONE ctermbg=NONE cterm=NONE
+</span><span class="s2">hi Normal ctermfg=NONE ctermbg=234 guifg=NONE
+</span><span class="s2">hi LineNr ctermfg=yellow ctermbg=236 cterm=NONE
+</span><span class="s2">&#34;</span> hi Terminal <span class="nv">ctermfg</span><span class="o">=</span>NONE <span class="nv">ctermfg</span><span class="o">=</span>NONE <span class="nv">cterm</span><span class="o">=</span>NONE
+hi EndOfBuffer <span class="nv">ctermbg</span><span class="o">=</span>NONE
+<span class="s2">&#34; visual mode bg
+</span><span class="s2">set foldmethod=indent &#34;</span> 设置默认折叠方式为缩进
+<span class="nb">set</span> <span class="nv">foldlevelstart</span><span class="o">=</span><span class="m">99</span> <span class="s2">&#34; 每次打开文件时关闭折叠
+</span><span class="s2">
+</span><span class="s2">&#34;</span> hi Normal <span class="nv">ctermfg</span><span class="o">=</span><span class="m">252</span> <span class="nv">ctermbg</span><span class="o">=</span>none <span class="s2">&#34;背景透明
+</span><span class="s2">&#34;</span> au FileType gitcommit,gitrebase <span class="nb">let</span> g:gutentags_enabled<span class="o">=</span><span class="m">0</span>
+<span class="k">if</span> has<span class="o">(</span><span class="s2">&#34;autocmd&#34;</span><span class="o">)</span>
+    au BufReadPost * <span class="k">if</span> line<span class="o">(</span><span class="s2">&#34;&#39;\&#34;&#34;</span><span class="o">)</span> &gt; <span class="m">1</span> <span class="o">&amp;&amp;</span> line<span class="o">(</span><span class="s2">&#34;&#39;\&#34;&#34;</span><span class="o">)</span> &lt;<span class="o">=</span> line<span class="o">(</span><span class="s2">&#34;</span>$<span class="s2">&#34;</span><span class="o">)</span> <span class="p">|</span> exe <span class="s2">&#34;normal! g&#39;\&#34;&#34;</span> <span class="p">|</span> endif
+endif
+
+<span class="nb">let</span> g:python_highlight_all <span class="o">=</span> <span class="m">1</span>
+<span class="s2">&#34; +================================ 可视化缩进 =====================================+ &#34;</span>
+
+<span class="nb">let</span> g:indent_guides_enable_on_vim_startup <span class="o">=</span> <span class="m">0</span>  <span class="s2">&#34; 默认关闭
+</span><span class="s2">let g:indent_guides_guide_size            = 1  &#34;</span> 指定对齐线的尺寸
+<span class="nb">let</span> g:indent_guides_start_level           <span class="o">=</span> <span class="m">2</span>  <span class="s2">&#34; 从第二层开始可视化显示缩进
+</span><span class="s2">
+</span><span class="s2">&#34;</span> +<span class="o">==================================</span> <span class="nv">NERDTree</span> <span class="o">=======================================</span>+ <span class="s2">&#34;
+</span><span class="s2">&#34;</span> autocmd vimenter * NERDTree  <span class="s2">&#34;自动开启Nerdtree
+</span><span class="s2">let g:NERDTreeWinSize = 25 &#34;</span>设定 NERDTree 视窗大小
+<span class="nb">let</span> <span class="nv">NERDTreeShowBookmarks</span><span class="o">=</span><span class="m">1</span>  <span class="s2">&#34; 开启Nerdtree时自动显示Bookmarks
+</span><span class="s2">&#34;</span>打开vim时如果没有文件自动打开NERDTree
+<span class="s2">&#34; autocmd vimenter * if !argc()|NERDTree|endif
+</span><span class="s2">&#34;</span>当NERDTree为剩下的唯一窗口时自动关闭
+autocmd bufenter * <span class="k">if</span> <span class="o">(</span>winnr<span class="o">(</span><span class="s2">&#34;</span>$<span class="s2">&#34;</span><span class="o">)</span> <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;&amp;</span> exists<span class="o">(</span><span class="s2">&#34;b:NERDTree&#34;</span><span class="o">)</span> <span class="o">&amp;&amp;</span> b:NERDTree.isTabTree<span class="o">())</span> <span class="p">|</span> q <span class="p">|</span> endif
+<span class="s2">&#34; 设置树的显示图标
+</span><span class="s2">let g:NERDTreeDirArrowExpandable = &#39;+&#39;
+</span><span class="s2">let g:NERDTreeDirArrowCollapsible = &#39;-&#39;
+</span><span class="s2">let g:NERDTreeShowLineNumbers=0 &#34;</span> 是否显示行号
+<span class="nb">let</span> g:NERDTreeHidden<span class="o">=</span><span class="m">0</span>     <span class="s2">&#34;不显示隐藏文件
+</span><span class="s2">&#34;&#34;Making it prettier
+</span><span class="s2">let NERDTreeMinimalUI = 1
+</span><span class="s2">let NERDTreeDirArrows = 1
+</span><span class="s2">&#34;</span> autocmd vimenter *  NERDTreeToggle
+<span class="nb">let</span> <span class="nv">NERDTreeIgnore</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;\.pyc$&#39;</span>, <span class="s1">&#39;__pycache__&#39;</span><span class="o">]</span>
+map &lt;leader&gt;nn :NERDTreeToggle&lt;cr&gt;
+map &lt;leader&gt;nb :NERDTreeFromBookmark&lt;Space&gt;
+map &lt;leader&gt;nf :NERDTreeFind&lt;cr&gt;
+
+<span class="s2">&#34; set key map
+</span><span class="s2">nnoremap &lt;silent&gt; &lt;S-n&gt; :set nu!&lt;CR&gt; &#34;</span> 开关行号
+<span class="s2">&#34; +================================== 按键映射 =======================================+ &#34;</span>
+
+<span class="s2">&#34; self key map:
+</span><span class="s2">&#34;</span> &lt;leader&gt;s : open key
+<span class="s2">&#34; &lt;leader&gt;d : close key
+</span><span class="s2">&#34;</span> &lt;leader&gt;e : norm key
+inoremap &lt;silent&gt; jj &lt;Esc&gt; <span class="s2">&#34;将jj映射到Esc
+</span><span class="s2">nmap &lt;leader&gt;sp :set paste&lt;CR&gt;i
+</span><span class="s2">nmap &lt;leader&gt;dp :set nopaste&lt;CR&gt;
+</span><span class="s2">nnoremap ; :
+</span><span class="s2">xnoremap ; :
+</span><span class="s2">nnoremap j gj
+</span><span class="s2">nnoremap k gk
+</span><span class="s2">nnoremap ^ g^
+</span><span class="s2">nnoremap </span>$<span class="s2"> g</span>$<span class="s2">
+</span><span class="s2">nnoremap &lt;leader&gt;dh :noh&lt;CR&gt;
+</span><span class="s2">
+</span><span class="s2">&#34;</span> +<span class="o">==================================</span> coc.nvim  <span class="o">======================================</span>+ <span class="s2">&#34;
+</span><span class="s2">&#34;</span> <span class="k">if</span> hidden is not set, TextEdit might fail.
+<span class="nb">set</span> hidden
+<span class="s2">&#34; Some servers have issues with backup files, see #649
+</span><span class="s2">set nobackup
+</span><span class="s2">set nowritebackup
+</span><span class="s2">
+</span><span class="s2">&#34;</span> You will have bad experience <span class="k">for</span> diagnostic messages when it<span class="s1">&#39;s default 4000.
+</span><span class="s1">set updatetime=300
+</span><span class="s1">
+</span><span class="s1">&#34; don&#39;</span>t give <span class="p">|</span>ins-completion-menu<span class="p">|</span> messages.
+<span class="nb">set</span> <span class="nv">shortmess</span><span class="o">+=</span>c
+
+<span class="s2">&#34; always show signcolumns
+</span><span class="s2">set signcolumn=yes
+</span><span class="s2">
+</span><span class="s2">&#34;</span> Use tab <span class="k">for</span> trigger completion with characters ahead and navigate.
+<span class="s2">&#34; Use command &#39;:verbose imap &lt;tab&gt;&#39; to make sure tab is not mapped by other plugin.
+</span><span class="s2">inoremap &lt;silent&gt;&lt;expr&gt; &lt;TAB&gt;
+</span><span class="s2">      \ pumvisible() ? &#34;</span><span class="se">\&lt;</span>C-n&gt;<span class="s2">&#34; :
+</span><span class="s2">      \ &lt;SID&gt;check_back_space() ? &#34;</span><span class="se">\&lt;</span>TAB&gt;<span class="s2">&#34; :
+</span><span class="s2">      \ coc#refresh()
+</span><span class="s2">inoremap &lt;expr&gt;&lt;S-TAB&gt; pumvisible() ? &#34;</span><span class="se">\&lt;</span>C-p&gt;<span class="s2">&#34; : &#34;</span><span class="se">\&lt;</span>C-h&gt;<span class="s2">&#34;
+</span><span class="s2">
+</span><span class="s2">function! s:check_back_space() abort
+</span><span class="s2">  let col = col(&#39;.&#39;) - 1
+</span><span class="s2">  return !col || getline(&#39;.&#39;)[col - 1]  =~# &#39;\s&#39;
+</span><span class="s2">endfunction
+</span><span class="s2">
+</span><span class="s2">&#34;</span> Use &lt;c-space&gt; to trigger completion.
+inoremap &lt;silent&gt;&lt;expr&gt; &lt;c-space&gt; coc#refresh<span class="o">()</span>
+
+<span class="s2">&#34; Use &lt;cr&gt; to confirm completion, `&lt;C-g&gt;u` means break undo chain at current position.
+</span><span class="s2">&#34;</span> Coc only does snippet and additional edit on confirm.
+inoremap &lt;expr&gt; &lt;cr&gt; pumvisible<span class="o">()</span> ? <span class="s2">&#34;\&lt;C-y&gt;&#34;</span> : <span class="s2">&#34;\&lt;C-g&gt;u\&lt;CR&gt;&#34;</span>
+<span class="s2">&#34; Or use `complete_info` if your vim support it, like:
+</span><span class="s2">&#34;</span> inoremap &lt;expr&gt; &lt;cr&gt; complete_info<span class="o">()[</span><span class="s2">&#34;selected&#34;</span><span class="o">]</span> !<span class="o">=</span> <span class="s2">&#34;-1&#34;</span> ? <span class="s2">&#34;\&lt;C-y&gt;&#34;</span> : <span class="s2">&#34;\&lt;C-g&gt;u\&lt;CR&gt;&#34;</span>
+
+<span class="s2">&#34; Use `[g` and `]g` to navigate diagnostics
+</span><span class="s2">nmap &lt;silent&gt; [g &lt;Plug&gt;(coc-diagnostic-prev)
+</span><span class="s2">nmap &lt;silent&gt; ]g &lt;Plug&gt;(coc-diagnostic-next)
+</span><span class="s2">&#34;</span> Remap keys <span class="k">for</span> gotos
+nmap &lt;silent&gt; gd &lt;Plug&gt;<span class="o">(</span>coc-definition<span class="o">)</span>
+nmap &lt;silent&gt; gy &lt;Plug&gt;<span class="o">(</span>coc-type-definition<span class="o">)</span>
+nmap &lt;silent&gt; gi &lt;Plug&gt;<span class="o">(</span>coc-implementation<span class="o">)</span>
+nmap &lt;silent&gt; gr &lt;Plug&gt;<span class="o">(</span>coc-references<span class="o">)</span>
+
+<span class="s2">&#34; Use K to show documentation in preview window
+</span><span class="s2">nnoremap &lt;silent&gt; K :call &lt;SID&gt;show_documentation()&lt;CR&gt;
+</span><span class="s2">
+</span><span class="s2">function! s:show_documentation()
+</span><span class="s2">  if (index([&#39;vim&#39;,&#39;help&#39;], &amp;filetype) &gt;= 0)
+</span><span class="s2">    execute &#39;h &#39;.expand(&#39;&lt;cword&gt;&#39;)
+</span><span class="s2">  else
+</span><span class="s2">    call CocAction(&#39;doHover&#39;)
+</span><span class="s2">  endif
+</span><span class="s2">endfunction
+</span><span class="s2">
+</span><span class="s2">&#34;</span> Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync<span class="o">(</span><span class="s1">&#39;highlight&#39;</span><span class="o">)</span>
+
+<span class="s2">&#34; Remap for rename current word
+</span><span class="s2">nmap &lt;leader&gt;rn &lt;Plug&gt;(coc-rename)
+</span><span class="s2">
+</span><span class="s2">&#34;</span> Remap <span class="k">for</span> format selected region
+xmap &lt;leader&gt;f  &lt;Plug&gt;<span class="o">(</span>coc-format-selected<span class="o">)</span>
+nmap &lt;leader&gt;f  &lt;Plug&gt;<span class="o">(</span>coc-format-selected<span class="o">)</span>
+
+augroup mygroup
+  autocmd!
+  <span class="s2">&#34; Setup formatexpr specified filetype(s).
+</span><span class="s2">  autocmd FileType typescript,json setl formatexpr=CocAction(&#39;formatSelected&#39;)
+</span><span class="s2">  &#34;</span> Update signature <span class="nb">help</span> on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync<span class="o">(</span><span class="s1">&#39;showSignatureHelp&#39;</span><span class="o">)</span>
+augroup end
+
+<span class="s2">&#34; Remap for do codeAction of selected region, ex: `&lt;leader&gt;aap` for current paragraph
+</span><span class="s2">xmap &lt;leader&gt;a  &lt;Plug&gt;(coc-codeaction-selected)
+</span><span class="s2">nmap &lt;leader&gt;a  &lt;Plug&gt;(coc-codeaction-selected)
+</span><span class="s2">
+</span><span class="s2">&#34;</span> Remap <span class="k">for</span> <span class="k">do</span> codeAction of current line
+nmap &lt;leader&gt;ac  &lt;Plug&gt;<span class="o">(</span>coc-codeaction<span class="o">)</span>
+<span class="s2">&#34; Fix autofix problem of current line
+</span><span class="s2">nmap &lt;leader&gt;qf  &lt;Plug&gt;(coc-fix-current)
+</span><span class="s2">
+</span><span class="s2">&#34;</span> Create mappings <span class="k">for</span> <span class="k">function</span> text object, requires document symbols feature of languageserver.
+xmap <span class="k">if</span> &lt;Plug&gt;<span class="o">(</span>coc-funcobj-i<span class="o">)</span>
+xmap af &lt;Plug&gt;<span class="o">(</span>coc-funcobj-a<span class="o">)</span>
+omap <span class="k">if</span> &lt;Plug&gt;<span class="o">(</span>coc-funcobj-i<span class="o">)</span>
+omap af &lt;Plug&gt;<span class="o">(</span>coc-funcobj-a<span class="o">)</span>
+
+<span class="s2">&#34; Use `:Format` to format current buffer
+</span><span class="s2">command! -nargs=0 Format :call CocAction(&#39;format&#39;)
+</span><span class="s2">
+</span><span class="s2">&#34;</span> Use <span class="sb">`</span>:Fold<span class="sb">`</span> to fold current buffer
+command! -nargs<span class="o">=</span>? Fold :call     CocAction<span class="o">(</span><span class="s1">&#39;fold&#39;</span>, &lt;f-args&gt;<span class="o">)</span>
+
+<span class="s2">&#34; use `:OR` for organize import of current buffer
+</span><span class="s2">command! -nargs=0 OR   :call     CocAction(&#39;runCommand&#39;, &#39;editor.action.organizeImport&#39;)
+</span><span class="s2">&#34;</span>
+<span class="s2">&#34; inoremap &lt;silent&gt;&lt;expr&gt; &lt;TAB&gt;
+</span><span class="s2">&#34;</span>       <span class="se">\ </span>pumvisible<span class="o">()</span> ? coc#_select_confirm<span class="o">()</span> :
+<span class="s2">&#34;       \ coc#expandableOrJumpable() ? \&#34;\&lt;C-r&gt;=coc#rpc#request(&#39;doKeymap&#39;, [&#39;snippets-expand-jump&#39;,&#39;&#39;])\&lt;CR&gt;&#34;</span> :
+<span class="s2">&#34;       \ &lt;SID&gt;check_back_space() ? \&#34;\&lt;TAB&gt;&#34;</span> :
+<span class="s2">&#34;       \ coc#refresh()
+</span><span class="s2">&#34;</span>
+<span class="s2">&#34; function! s:check_back_space() abort
+</span><span class="s2">&#34;</span>   <span class="nb">let</span> <span class="nv">col</span> <span class="o">=</span> col<span class="o">(</span><span class="s1">&#39;.&#39;</span><span class="o">)</span> - <span class="m">1</span>
+<span class="s2">&#34;   return !col || getline(&#39;.&#39;)[col - 1]  =~# &#39;\s&#39;
+</span><span class="s2">&#34;</span> endfunction
+<span class="s2">&#34;
+</span><span class="s2">&#34;</span> <span class="nb">let</span> g:coc_snippet_next <span class="o">=</span> <span class="s1">&#39;&lt;tab&gt;&#39;</span>
+<span class="s2">&#34; +=================================== tagbar =======================================+ &#34;</span>
+
+<span class="nb">let</span> g:tagbar_width<span class="o">=</span><span class="m">30</span>
+<span class="s2">&#34; +================================== airline =======================================+ &#34;</span>
+<span class="nb">let</span> g:airline#extensions#tabline#enabled <span class="o">=</span> <span class="m">1</span>
+<span class="nb">let</span> g:airline#extensions#tabline#left_alt_sep <span class="o">=</span> <span class="s1">&#39;|&#39;</span>
+<span class="nb">let</span> g:airline#extensions#tabline#buffer_nr_show <span class="o">=</span> <span class="m">0</span>
+<span class="nb">let</span> g:airline#extensions#tabline#formatter <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+<span class="nb">let</span> g:airline_theme <span class="o">=</span> <span class="s1">&#39;desertink&#39;</span>
+<span class="nb">let</span> g:airline#extensions#keymap#enabled <span class="o">=</span> <span class="m">1</span>
+<span class="nb">let</span> g:airline#extensions#tabline#buffer_idx_mode <span class="o">=</span> <span class="m">1</span>
+<span class="nb">let</span> g:airline#extensions#tabline#buffer_idx_format <span class="o">=</span> <span class="o">{</span>
+       <span class="se">\ </span><span class="s1">&#39;0&#39;</span>: <span class="s1">&#39;0 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;1&#39;</span>: <span class="s1">&#39;1 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;2&#39;</span>: <span class="s1">&#39;2 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;3&#39;</span>: <span class="s1">&#39;3 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;4&#39;</span>: <span class="s1">&#39;4 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;5&#39;</span>: <span class="s1">&#39;5 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;6&#39;</span>: <span class="s1">&#39;6 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;7&#39;</span>: <span class="s1">&#39;7 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;8&#39;</span>: <span class="s1">&#39;8 &#39;</span>,
+       <span class="se">\ </span><span class="s1">&#39;9&#39;</span>: <span class="s1">&#39;9 &#39;</span>
+       <span class="se">\}</span>
+nmap &lt;leader&gt;1 &lt;Plug&gt;AirlineSelectTab1
+nmap &lt;leader&gt;2 &lt;Plug&gt;AirlineSelectTab2
+nmap &lt;leader&gt;3 &lt;Plug&gt;AirlineSelectTab3
+nmap &lt;leader&gt;4 &lt;Plug&gt;AirlineSelectTab4
+nmap &lt;leader&gt;5 &lt;Plug&gt;AirlineSelectTab5
+nmap &lt;leader&gt;6 &lt;Plug&gt;AirlineSelectTab6
+nmap &lt;leader&gt;7 &lt;Plug&gt;AirlineSelectTab7
+nmap &lt;leader&gt;8 &lt;Plug&gt;AirlineSelectTab8
+nmap &lt;leader&gt;9 &lt;Plug&gt;AirlineSelectTab9
+nmap &lt;leader&gt;- &lt;Plug&gt;AirlineSelectPrevTab
+nmap &lt;leader&gt;<span class="o">=</span> &lt;Plug&gt;AirlineSelectNextTab
+nmap &lt;leader&gt;q :bp&lt;cr&gt;:bd <span class="c1">#&lt;cr&gt;</span>
+<span class="k">if</span> !exists<span class="o">(</span><span class="s1">&#39;g:airline_symbols&#39;</span><span class="o">)</span>
+    <span class="nb">let</span> g:airline_symbols <span class="o">=</span> <span class="o">{}</span>
+endif
+<span class="nb">let</span> g:airline_symbols.linenr <span class="o">=</span> <span class="s2">&#34;CL&#34;</span> <span class="s2">&#34; current line
+</span><span class="s2">let g:airline_symbols.whitespace = &#39;&#39;
+</span><span class="s2">&#34;</span> <span class="nb">let</span> g:airline_left_sep <span class="o">=</span> <span class="s1">&#39;]&#39;</span>
+<span class="s2">&#34; let g:airline_left_alt_sep = &#39;)&#39;
+</span><span class="s2">&#34;</span> <span class="nb">let</span> g:airline_right_sep <span class="o">=</span> <span class="s1">&#39;[&#39;</span>
+<span class="s2">&#34; let g:airline_right_alt_sep = &#39;(&#39;
+</span><span class="s2">let g:airline_symbols.maxlinenr = &#39;Ml&#39; &#34;</span>maxline
+<span class="nb">let</span> g:airline_symbols.branch <span class="o">=</span> <span class="s1">&#39;BR&#39;</span>
+<span class="nb">let</span> g:airline_symbols.readonly <span class="o">=</span> <span class="s2">&#34;RO&#34;</span>
+<span class="nb">let</span> g:airline_symbols.dirty <span class="o">=</span> <span class="s2">&#34;DT&#34;</span>
+<span class="nb">let</span> g:airline_symbols.crypt <span class="o">=</span> <span class="s2">&#34;CR&#34;</span>
+<span class="s2">&#34; +=============================== NERD Commenter ====================================+ &#34;</span>
+<span class="s2">&#34;add spaces after comment delimiters by default
+</span><span class="s2">let g:NERDSpaceDelims = 1
+</span><span class="s2">au FileType python let g:NERDSpaceDelims = 0
+</span><span class="s2">
+</span><span class="s2">&#34;</span> Use compact syntax <span class="k">for</span> prettified multi-line comments
+<span class="nb">let</span> g:NERDCompactSexyComs <span class="o">=</span> <span class="m">1</span>
+
+<span class="s2">&#34; Align line-wise comment delimiters flush left instead of following code indentation
+</span><span class="s2">let g:NERDDefaultAlign = &#39;left&#39;
+</span><span class="s2">
+</span><span class="s2">&#34;</span> Set a language to use its alternate delimiters by default
+<span class="nb">let</span> g:NERDAltDelims_java <span class="o">=</span> <span class="m">1</span>
+
+<span class="s2">&#34; Add your own custom formats or override the defaults
+</span><span class="s2">&#34;</span> <span class="nb">let</span> g:NERDCustomDelimiters <span class="o">=</span> <span class="o">{</span> <span class="s1">&#39;c&#39;</span>: <span class="o">{</span> <span class="s1">&#39;left&#39;</span>: <span class="s1">&#39;/**&#39;</span>,<span class="s1">&#39;right&#39;</span>: <span class="s1">&#39;*/&#39;</span> <span class="o">}</span> <span class="o">}</span>
+
+<span class="s2">&#34; Allow commenting and inverting empty lines (useful when commenting a region)
+</span><span class="s2">let g:NERDCommentEmptyLines = 1
+</span><span class="s2">
+</span><span class="s2">&#34;</span> Enable trimming of trailing whitespace when uncommenting
+<span class="nb">let</span> g:NERDTrimTrailingWhitespace <span class="o">=</span> <span class="m">1</span>
+
+<span class="s2">&#34; Enable NERDCommenterToggle to check all selected lines is commented or not
+</span><span class="s2">let g:NERDToggleCheckAllLines = 1
+</span><span class="s2">
+</span><span class="s2">
+</span><span class="s2">&#34;</span> +<span class="o">===============================</span> rainbow <span class="nv">Parentheses</span> <span class="o">==============================</span>+ <span class="s2">&#34;
+</span><span class="s2">&#34;</span> <span class="o">((((((()))))))</span>
+<span class="nb">let</span> g:rainbow_active <span class="o">=</span> <span class="m">1</span>
+<span class="nb">let</span> g:rainbow_conf <span class="o">=</span> <span class="o">{</span>
+<span class="se">\ </span>  <span class="s1">&#39;guifgs&#39;</span>: <span class="o">[</span><span class="s1">&#39;#FFE66F&#39;</span>, <span class="s1">&#39;#00FFFF&#39;</span>, <span class="s1">&#39;#46A3FF&#39;</span>, <span class="s1">&#39;#AAAAFF&#39;</span>, <span class="s1">&#39;#FFB5B5&#39;</span><span class="o">]</span>,
+<span class="se">\ </span>  <span class="s1">&#39;ctermfgs&#39;</span>: <span class="o">[</span><span class="s1">&#39;lightyellow&#39;</span>, <span class="s1">&#39;lightcyan&#39;</span>,<span class="s1">&#39;lightblue&#39;</span>, <span class="s1">&#39;lightmagenta&#39;</span><span class="o">]</span>,
+<span class="se">\ </span>  <span class="s1">&#39;operators&#39;</span>: <span class="s1">&#39;_,_&#39;</span>,
+<span class="se">\ </span>  <span class="s1">&#39;parentheses&#39;</span>: <span class="o">[</span><span class="s1">&#39;start=/(/ end=/)/ fold&#39;</span>, <span class="s1">&#39;start=/\[/ end=/\]/ fold&#39;</span>, <span class="s1">&#39;start=/{/ end=/}/ fold&#39;</span><span class="o">]</span>,
+<span class="se">\}</span>
+</code></pre></td></tr></table></div>
+</div>
+</div>
+            </div>
+
+            
+
+
+        </article>
+
+        
+
+        
+    <div class="updated-badge-container">
+        <span title="Updated @ 2021-01-15 23:03:15 CST" style="cursor:help">
+
+<svg xmlns="http://www.w3.org/2000/svg" width="130" height="20" class="updated-badge"><linearGradient id="b" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="a"><rect width="130" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#a)"><path class="updated-badge-left" d="M0 0h55v20H0z"/><path class="updated-badge-right" d="M55 0h75v20H55z"/><path fill="url(#b)" d="M0 0h130v20H0z"/></g><g fill="#fff" text-anchor="middle" font-size="110"><text x="285" y="150" fill="#010101" fill-opacity=".3" textLength="450" transform="scale(.1)">updated</text><text x="285" y="140" textLength="450" transform="scale(.1)">updated</text><text x="915" y="150" fill="#010101" fill-opacity=".3" textLength="650" transform="scale(.1)">2021-01-15</text><text x="915" y="140" textLength="650" transform="scale(.1)">2021-01-15</text></g></svg>
+        </span></div>
+
+
+
+        
+
+
+        <div class="post-share">
+
+        
+
+        <div class="share-items">
+
+            
+                <div class="share-item twitter">
+                    
+                    <a href="https://twitter.com/share?url=https://gsscsd.github.io/post/neovim&#43;coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/&amp;text=Neovim&#43;Coc.nvim%e9%85%8d%e7%bd%ae%20%e7%bb%88%e7%ab%af%e4%bb%a3%e7%a0%81%e7%bc%96%e8%be%91%e7%8e%af%e5%a2%83&amp;hashtags=cocvim,vim,&amp;via=reuixiy" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon twitter-icon"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item facebook">
+                    
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://gsscsd.github.io/post/neovim&#43;coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/&amp;hashtag=%23cocvim" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon facebook-icon"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item linkedin">
+                    
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://gsscsd.github.io/post/neovim&#43;coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/&amp;title=Neovim&#43;Coc.nvim%e9%85%8d%e7%bd%ae%20%e7%bb%88%e7%ab%af%e4%bb%a3%e7%a0%81%e7%bc%96%e8%be%91%e7%8e%af%e5%a2%83&amp;summary=%20%e7%9b%ae%e5%89%8d%e5%85%ac%e5%8f%b8%e5%b8%b8%e7%94%a8%e7%9a%84%e7%8e%af%e5%a2%83%e8%bf%98%e6%98%aflinux%e7%9a%84%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%8c%e7%bb%8f%e5%b8%b8%e9%9c%80%e8%a6%81%e4%bd%bf%e7%94%a8vim%e8%bf%9b%e8%a1%8c%e5%86%99%e4%bb%a3%e7%a0%81%ef%bc%8c%e7%bb%8f%e8%bf%87%e6%8e%a2%e7%b4%a2Neovim%20&#43;%20Coc.nvim%e9%9d%9e%e5%b8%b8%e9%80%82%e5%90%88%e3%80%82%e4%bb%a5%e4%b8%8b%e5%85%a8%e9%83%a8%e9%87%87%e7%94%a8%e6%ba%90%e7%a0%81%e5%ae%89%e8%a3%85%ef%bc%88%e7%9b%b8%e6%af%94%e4%b9%8b%e4%b8%8b%ef%bc%8c%e7%9b%b4%e6%8e%a5%e7%94%a8%e5%90%84%e4%b8%aa%e5%8f%91%e8%a1%8c%e7%89%88%e7%9a%84%e5%91%bd%e4%bb%a4%e5%ae%89%e8%a3%85%e4%bc%9a%e6%9b%b4%e5%8a%a0%e7%ae%80%e5%8d%95%ef%bc%89%e3%80%82%e5%8f%82%e8%80%83%e5%8d%9a%e5%ae%a2%0a&amp;source=Listener" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon linkedin-icon"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item telegram">
+                    
+                    <a href="https://t.me/share/url?url=https://gsscsd.github.io/post/neovim&#43;coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/&amp;text=Neovim&#43;Coc.nvim%e9%85%8d%e7%bd%ae%20%e7%bb%88%e7%ab%af%e4%bb%a3%e7%a0%81%e7%bc%96%e8%be%91%e7%8e%af%e5%a2%83" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="icon telegram-icon"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9l-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item weibo">
+                    
+                    <a href="https://service.weibo.com/share/share.php?&amp;url=https://gsscsd.github.io/post/neovim&#43;coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/&amp;title=Neovim&#43;Coc.nvim%e9%85%8d%e7%bd%ae%20%e7%bb%88%e7%ab%af%e4%bb%a3%e7%a0%81%e7%bc%96%e8%be%91%e7%8e%af%e5%a2%83&amp;pic=https://gsscsd.github.io/icons/apple-touch-icon.png&amp;searchPic=false" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon weibo-icon"><path d="M407 177.6c7.6-24-13.4-46.8-37.4-41.7-22 4.8-28.8-28.1-7.1-32.8 50.1-10.9 92.3 37.1 76.5 84.8-6.8 21.2-38.8 10.8-32-10.3zM214.8 446.7C108.5 446.7 0 395.3 0 310.4c0-44.3 28-95.4 76.3-143.7C176 67 279.5 65.8 249.9 161c-4 13.1 12.3 5.7 12.3 6 79.5-33.6 140.5-16.8 114 51.4-3.7 9.4 1.1 10.9 8.3 13.1 135.7 42.3 34.8 215.2-169.7 215.2zm143.7-146.3c-5.4-55.7-78.5-94-163.4-85.7-84.8 8.6-148.8 60.3-143.4 116s78.5 94 163.4 85.7c84.8-8.6 148.8-60.3 143.4-116zM347.9 35.1c-25.9 5.6-16.8 43.7 8.3 38.3 72.3-15.2 134.8 52.8 111.7 124-7.4 24.2 29.1 37 37.4 12 31.9-99.8-55.1-195.9-157.4-174.3zm-78.5 311c-17.1 38.8-66.8 60-109.1 46.3-40.8-13.1-58-53.4-40.3-89.7 17.7-35.4 63.1-55.4 103.4-45.1 42 10.8 63.1 50.2 46 88.5zm-86.3-30c-12.9-5.4-30 .3-38 12.9-8.3 12.9-4.3 28 8.6 34 13.1 6 30.8.3 39.1-12.9 8-13.1 3.7-28.3-9.7-34zm32.6-13.4c-5.1-1.7-11.4.6-14.3 5.4-2.9 5.1-1.4 10.6 3.7 12.9 5.1 2 11.7-.3 14.6-5.4 2.8-5.2 1.1-10.9-4-12.9z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item douban">
+                    
+                    <a href="https://www.douban.com/share/service?href=https://gsscsd.github.io/post/neovim&#43;coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/&amp;name=Neovim&#43;Coc.nvim%e9%85%8d%e7%bd%ae%20%e7%bb%88%e7%ab%af%e4%bb%a3%e7%a0%81%e7%bc%96%e8%be%91%e7%8e%af%e5%a2%83&amp;text=%20%e7%9b%ae%e5%89%8d%e5%85%ac%e5%8f%b8%e5%b8%b8%e7%94%a8%e7%9a%84%e7%8e%af%e5%a2%83%e8%bf%98%e6%98%aflinux%e7%9a%84%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%8c%e7%bb%8f%e5%b8%b8%e9%9c%80%e8%a6%81%e4%bd%bf%e7%94%a8vim%e8%bf%9b%e8%a1%8c%e5%86%99%e4%bb%a3%e7%a0%81%ef%bc%8c%e7%bb%8f%e8%bf%87%e6%8e%a2%e7%b4%a2Neovim%20&#43;%20Coc.nvim%e9%9d%9e%e5%b8%b8%e9%80%82%e5%90%88%e3%80%82%e4%bb%a5%e4%b8%8b%e5%85%a8%e9%83%a8%e9%87%87%e7%94%a8%e6%ba%90%e7%a0%81%e5%ae%89%e8%a3%85%ef%bc%88%e7%9b%b8%e6%af%94%e4%b9%8b%e4%b8%8b%ef%bc%8c%e7%9b%b4%e6%8e%a5%e7%94%a8%e5%90%84%e4%b8%aa%e5%8f%91%e8%a1%8c%e7%89%88%e7%9a%84%e5%91%bd%e4%bb%a4%e5%ae%89%e8%a3%85%e4%bc%9a%e6%9b%b4%e5%8a%a0%e7%ae%80%e5%8d%95%ef%bc%89%e3%80%82%e5%8f%82%e8%80%83%e5%8d%9a%e5%ae%a2%0a" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon douban-icon"><path d="M.643.92v2.412h22.714V.92H.643zm1.974 4.926v9.42h18.764v-9.42H2.617zm2.72 2.408H18.69v4.605H5.338V8.254zm1.657 7.412l-2.512.938c1.037 1.461 1.87 2.825 2.512 4.091H0v2.385h24v-2.385h-6.678c.818-1.176 1.589-2.543 2.303-4.091l-2.73-.938a29.952 29.952 0 01-2.479 5.03h-4.75c-.786-1.962-1.677-3.641-2.672-5.03Z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item qq">
+                    
+                    <a href="https://connect.qq.com/widget/shareqq/index.html?url=https://gsscsd.github.io/post/neovim&#43;coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/&amp;title=Neovim&#43;Coc.nvim%e9%85%8d%e7%bd%ae%20%e7%bb%88%e7%ab%af%e4%bb%a3%e7%a0%81%e7%bc%96%e8%be%91%e7%8e%af%e5%a2%83&amp;summary=%20%e7%9b%ae%e5%89%8d%e5%85%ac%e5%8f%b8%e5%b8%b8%e7%94%a8%e7%9a%84%e7%8e%af%e5%a2%83%e8%bf%98%e6%98%aflinux%e7%9a%84%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%8c%e7%bb%8f%e5%b8%b8%e9%9c%80%e8%a6%81%e4%bd%bf%e7%94%a8vim%e8%bf%9b%e8%a1%8c%e5%86%99%e4%bb%a3%e7%a0%81%ef%bc%8c%e7%bb%8f%e8%bf%87%e6%8e%a2%e7%b4%a2Neovim%20&#43;%20Coc.nvim%e9%9d%9e%e5%b8%b8%e9%80%82%e5%90%88%e3%80%82%e4%bb%a5%e4%b8%8b%e5%85%a8%e9%83%a8%e9%87%87%e7%94%a8%e6%ba%90%e7%a0%81%e5%ae%89%e8%a3%85%ef%bc%88%e7%9b%b8%e6%af%94%e4%b9%8b%e4%b8%8b%ef%bc%8c%e7%9b%b4%e6%8e%a5%e7%94%a8%e5%90%84%e4%b8%aa%e5%8f%91%e8%a1%8c%e7%89%88%e7%9a%84%e5%91%bd%e4%bb%a4%e5%ae%89%e8%a3%85%e4%bc%9a%e6%9b%b4%e5%8a%a0%e7%ae%80%e5%8d%95%ef%bc%89%e3%80%82%e5%8f%82%e8%80%83%e5%8d%9a%e5%ae%a2%0a&amp;pics=https://gsscsd.github.io/icons/apple-touch-icon.png&amp;site=Listener" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon qq-icon"><path d="M433.754 420.445c-11.526 1.393-44.86-52.741-44.86-52.741 0 31.345-16.136 72.247-51.051 101.786 16.842 5.192 54.843 19.167 45.803 34.421-7.316 12.343-125.51 7.881-159.632 4.037-34.122 3.844-152.316 8.306-159.632-4.037-9.045-15.25 28.918-29.214 45.783-34.415-34.92-29.539-51.059-70.445-51.059-101.792 0 0-33.334 54.134-44.859 52.741-5.37-.65-12.424-29.644 9.347-99.704 10.261-33.024 21.995-60.478 40.144-105.779C60.683 98.063 108.982.006 224 0c113.737.006 163.156 96.133 160.264 214.963 18.118 45.223 29.912 72.85 40.144 105.778 21.768 70.06 14.716 99.053 9.346 99.704z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item qzone">
+                    
+                    <a href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://gsscsd.github.io/post/neovim&#43;coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/&amp;title=Neovim&#43;Coc.nvim%e9%85%8d%e7%bd%ae%20%e7%bb%88%e7%ab%af%e4%bb%a3%e7%a0%81%e7%bc%96%e8%be%91%e7%8e%af%e5%a2%83&amp;summary=%20%e7%9b%ae%e5%89%8d%e5%85%ac%e5%8f%b8%e5%b8%b8%e7%94%a8%e7%9a%84%e7%8e%af%e5%a2%83%e8%bf%98%e6%98%aflinux%e7%9a%84%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%8c%e7%bb%8f%e5%b8%b8%e9%9c%80%e8%a6%81%e4%bd%bf%e7%94%a8vim%e8%bf%9b%e8%a1%8c%e5%86%99%e4%bb%a3%e7%a0%81%ef%bc%8c%e7%bb%8f%e8%bf%87%e6%8e%a2%e7%b4%a2Neovim%20&#43;%20Coc.nvim%e9%9d%9e%e5%b8%b8%e9%80%82%e5%90%88%e3%80%82%e4%bb%a5%e4%b8%8b%e5%85%a8%e9%83%a8%e9%87%87%e7%94%a8%e6%ba%90%e7%a0%81%e5%ae%89%e8%a3%85%ef%bc%88%e7%9b%b8%e6%af%94%e4%b9%8b%e4%b8%8b%ef%bc%8c%e7%9b%b4%e6%8e%a5%e7%94%a8%e5%90%84%e4%b8%aa%e5%8f%91%e8%a1%8c%e7%89%88%e7%9a%84%e5%91%bd%e4%bb%a4%e5%ae%89%e8%a3%85%e4%bc%9a%e6%9b%b4%e5%8a%a0%e7%ae%80%e5%8d%95%ef%bc%89%e3%80%82%e5%8f%82%e8%80%83%e5%8d%9a%e5%ae%a2%0a&amp;pics=https://gsscsd.github.io/icons/apple-touch-icon.png&amp;site=Listener" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon qzone-icon"><path d="M23.985 9.202c-.032-.099-.127-.223-.334-.258-.207-.036-7.351-1.406-7.351-1.406s-.105-.022-.198-.07c-.092-.047-.127-.167-.127-.167S12.447.956 12.349.77C12.25.583 12.104.532 12 .532c-.104 0-.251.051-.349.238-.098.186-3.626 6.531-3.626 6.531s-.035.12-.128.167c-.092.047-.197.07-.197.07S.556 8.908.348 8.943c-.208.036-.302.16-.333.258a.477.477 0 0 0 .125.449l5.362 5.49s.072.08.119.172c.016.104.005.21.005.21s-1.189 7.242-1.22 7.45.075.369.159.43c.083.062.233.106.421.013.189-.093 6.812-3.261 6.812-3.261s.098-.044.201-.061c.103-.017.201.061.201.061s6.623 3.168 6.812 3.261c.188.094.338.049.421-.013a.463.463 0 0 0 .159-.43c-.021-.14-.93-5.677-.93-5.677.876-.54 1.425-1.039 1.849-1.747-2.594.969-6.006 1.717-9.415 1.866-.915.041-2.41.097-3.473-.015-.678-.071-1.17-.144-1.243-.438-.053-.215.054-.46.545-.831a2640.5 2640.5 0 0 1 2.861-2.155c1.285-.968 3.559-2.47 3.559-2.731 0-.285-2.144-.781-4.037-.781-1.945 0-2.275.132-2.811.168-.488.034-.769.005-.804-.138-.06-.248.183-.389.588-.568.709-.314 1.86-.594 1.984-.626.194-.052 3.082-.805 5.618-.535 1.318.14 3.244.668 3.244 1.276 0 .342-1.721 1.494-3.225 2.597-1.149.843-2.217 1.561-2.217 1.688 0 .342 3.533 1.241 6.689 1.01l.003-.022c.048-.092.119-.172.119-.172l5.362-5.49a.477.477 0 0 0 .127-.449z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item qrcode">
+                    <div class="qrcode-container" title=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon qrcode-icon"><path d="M0 224h192V32H0v192zM64 96h64v64H64V96zm192-64v192h192V32H256zm128 128h-64V96h64v64zM0 480h192V288H0v192zm64-128h64v64H64v-64zm352-64h32v128h-96v-32h-32v96h-64V288h96v32h64v-32zm0 160h32v32h-32v-32zm-64 0h32v32h-32v-32z"/></svg><div id="qrcode-img"></div>
+                    </div>
+                    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+
+<script>
+    var typeNumber = 0;
+    var errorCorrectionLevel = 'L';
+    var qr = qrcode(typeNumber, errorCorrectionLevel);
+    qr.addData('https:\/\/gsscsd.github.io\/post\/neovim\u002bcoc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83\/');
+    qr.make();
+    document.getElementById('qrcode-img').innerHTML = qr.createImgTag();
+</script>
+
+                </div>
+            
+
+        </div>
+
+    </div>
+
+
+
+
+        
+    
+    
+
+
+
+        
+    
+        <div class="post-tags">
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/cocvim/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>cocvim</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/vim/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>vim</a>
+                
+            
+        </div>
+    
+
+
+
+        
+    <footer class="minimal-footer">
+        
+            <div class="post-tag"><a href="/tags/cocvim/" rel="tag" class="post-tag-link">#cocvim</a> <a href="/tags/vim/" rel="tag" class="post-tag-link">#vim</a></div>
+        
+        
+        
+            
+                <div class="post-category">
+                    <a href="/categories/vim/" class="post-category-link">vim</a>
+                </div>
+            
+        
+    </footer>
+
+
+
+        
+
+
+        
+    
+        
+        
+    
+    
+    
+    
+        <ul class="post-nav">
+            
+                <li class="post-nav-prev">
+                    <a href="/post/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="prev">&lt; Docker学习笔记</a>
+                </li>
+            
+            
+                <li class="post-nav-next">
+                    <a href="/post/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%B9%E9%85%8D/" rel="next">剑指Offer之正则表达式匹配 &gt;</a>
+                </li>
+            
+        </ul>
+    
+
+
+
+        
+
+
+    </div>
+</main>
+
+
+            
+    <div id="back-to-top" class="back-to-top">
+        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon arrow-up"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg></a>
+    </div>
+
+
+            
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="site-info">©&nbsp;2017–2021&nbsp;<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon footer-icon"><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg>&nbsp;Listener</div><div class="powered-by">Powered by <a href="https://github.com/gohugoio/hugo" target="_blank" rel="noopener">Hugo</a> | Theme is <a href="https://github.com/reuixiy/hugo-theme-meme" target="_blank" rel="noopener">MemE</a></div><div class="site-copyright"></div>
+
+            
+
+
+            <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\[','\]']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: {
+                equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"]
+            }
+        }
+    });
+</script>
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+        </div>
+    </footer>
+
+
+        </div>
+        
+
+        
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/medium-zoom@latest/dist/medium-zoom.min.js"></script>
+
+<script>
+    mediumZoom(document.querySelectorAll('div.post-body img'), {
+        background: 'hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.95)'
+    })
+</script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/instant.page@3.0.0/instantpage.min.js" type="module" defer></script>
+
+
+
+
+
+
+
+    </body>
+</html>

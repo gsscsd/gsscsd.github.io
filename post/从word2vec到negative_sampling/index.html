@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+    <meta charset="UTF-8" />
+
+    <meta name="generator" content="Hugo 0.74.3" /><meta name="theme-color" content="#1c1c21" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+    
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <title>从word2vec到negative sampling | Listener</title>
+
+    <link rel="stylesheet" href="/css/meme.min.be77810cf1b71cbe8af612db690f792956b3f09e1b35b365c0e2a9515a02cf41.css" integrity="sha256-vneBDPG3HL6K9hLbaQ95KVaz8J4bNbNlwOKpUVoCz0E=" />
+
+    
+    
+        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js" defer></script><script src="/js/meme.min.c535361dc9d7f923ad9854d4fd292cd70471dbdec4499f8109fba4f494689386.js" integrity="sha256-xTU2HcnX&#43;SOtmFTU/Sks1wRx297ESZ&#43;BCfuk9JRok4Y="></script>
+
+    
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=EB&#43;Garamond:400,400i,700,700i%7cNoto&#43;Serif&#43;SC:400,700%7cSource&#43;Code&#43;Pro:400,400i,700,700i%7cCinzel&#43;Decorative:700%7cMa&#43;Shan&#43;Zheng:%7cLiu&#43;Jian&#43;Mao&#43;Cao:&amp;display=swap&amp;subset=chinese-simplified" media="print" onload="this.media='all'" />
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=EB&#43;Garamond:400,400i,700,700i%7cNoto&#43;Serif&#43;SC:400,700%7cSource&#43;Code&#43;Pro:400,400i,700,700i%7cCinzel&#43;Decorative:700%7cMa&#43;Shan&#43;Zheng:%7cLiu&#43;Jian&#43;Mao&#43;Cao:&amp;display=swap&amp;subset=chinese-simplified" /></noscript>
+
+    <meta name="author" content="Listener" /><meta name="description" content=" 到目前为止，word2vec算法不单单是nlp的基础，也成为推荐和搜索的基础，本文记录一下word2vec算法中的negative sampling方案，并基于此记录了其他的sampling方法。
+参考链接：
+ https://zhuanlan.zhihu.com/p/76568362/ https://blog.csdn.net/yimingsilence/article/details/105920987 https://zhuanlan.zhihu.com/p/129824834 https://narcissuscyn.github.io/2018/07/03/CandidateSampling/ https://www.zhihu.com/question/50043438 https://blog.csdn.net/wangpeng138375/article/details/75151064 https://zhuanlan.zhihu.com/p/45368976 https://zhuanlan.zhihu.com/p/45014864 https://zhuanlan.zhihu.com/p/27234078 https://www.cnblogs.com/pinard/p/7249903.html https://www.cnblogs.com/peghoty/p/3857839.html https://www.zhihu.com/question/386144477 https://blog.csdn.net/weixin_40901056/article/details/88568344 https://blog.csdn.net/u010223750/article/details/69948463  " />
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#2a6df4" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Listener" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Listener" />
+    <meta name="msapplication-starturl" content="../../" />
+    <meta name="msapplication-TileColor" content="#fff" />
+    <meta name="msapplication-TileImage" content="../../icons/mstile-150x150.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    
+    
+
+    
+    <link rel="canonical" href="https://gsscsd.github.io/post/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/" />
+    
+
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "datePublished": "2021-03-13T20:29:58+08:00",
+        "dateModified": "2021-03-14T20:50:45+08:00",
+        "url": "https://gsscsd.github.io/post/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/",
+        "headline": "从word2vec到negative sampling",
+        "description": " 到目前为止，word2vec算法不单单是nlp的基础，也成为推荐和搜索的基础，本文记录一下word2vec算法中的negative sampling方案，并基于此记录了其他的sampling方法。\n参考链接：\n https://zhuanlan.zhihu.com/p/76568362/ https://blog.csdn.net/yimingsilence/article/details/105920987 https://zhuanlan.zhihu.com/p/129824834 https://narcissuscyn.github.io/2018/07/03/CandidateSampling/ https://www.zhihu.com/question/50043438 https://blog.csdn.net/wangpeng138375/article/details/75151064 https://zhuanlan.zhihu.com/p/45368976 https://zhuanlan.zhihu.com/p/45014864 https://zhuanlan.zhihu.com/p/27234078 https://www.cnblogs.com/pinard/p/7249903.html https://www.cnblogs.com/peghoty/p/3857839.html https://www.zhihu.com/question/386144477 https://blog.csdn.net/weixin_40901056/article/details/88568344 https://blog.csdn.net/u010223750/article/details/69948463  ",
+        "inLanguage" : "zh-CN",
+        "articleSection": "post",
+        "wordCount":  6349 ,
+        "image": ["https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast"],
+        "author": {
+            "@type": "Person",
+            "description": "时光划过指缝",
+            "email": "gsscsd@outlook.com",
+            "image": "https://gsscsd.github.io/icons/favicon.png",
+            "url": "https://gsscsd.github.io",
+            "name": "Listener"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Listener",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://gsscsd.github.io/icons/apple-touch-icon.png"
+            },
+            "url": "https://gsscsd.github.io/"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebSite",
+            "@id": "https://gsscsd.github.io/"
+        }
+    }
+</script>
+
+    
+
+<meta name="twitter:card" content="summary_large_image" />
+
+
+<meta name="twitter:site" content="@reuixiy" />
+
+    
+
+
+
+<meta property="og:title" content="从word2vec到negative sampling" />
+<meta property="og:description" content=" 到目前为止，word2vec算法不单单是nlp的基础，也成为推荐和搜索的基础，本文记录一下word2vec算法中的negative sampling方案，并基于此记录了其他的sampling方法。
+参考链接：
+ https://zhuanlan.zhihu.com/p/76568362/ https://blog.csdn.net/yimingsilence/article/details/105920987 https://zhuanlan.zhihu.com/p/129824834 https://narcissuscyn.github.io/2018/07/03/CandidateSampling/ https://www.zhihu.com/question/50043438 https://blog.csdn.net/wangpeng138375/article/details/75151064 https://zhuanlan.zhihu.com/p/45368976 https://zhuanlan.zhihu.com/p/45014864 https://zhuanlan.zhihu.com/p/27234078 https://www.cnblogs.com/pinard/p/7249903.html https://www.cnblogs.com/peghoty/p/3857839.html https://www.zhihu.com/question/386144477 https://blog.csdn.net/weixin_40901056/article/details/88568344 https://blog.csdn.net/u010223750/article/details/69948463  " />
+<meta property="og:url" content="https://gsscsd.github.io/post/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/" />
+<meta property="og:site_name" content="Listener" />
+<meta property="og:locale" content="zh-cn" /><meta property="og:image" content="https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" />
+<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2021-03-13T20:29:58&#43;08:00" />
+    <meta property="article:modified_time" content="2021-03-14T20:50:45&#43;08:00" />
+    
+    <meta property="article:section" content="post" />
+
+
+
+    
+</head>
+
+    <body>
+        <div class="container">
+            
+    <header class="header">
+        
+            <div class="header-wrapper">
+                <div class="header-inner single">
+                    
+    <div class="site-brand">
+        
+            <a href="/" class="brand">Listener</a>
+        
+    </div>
+
+                    <nav class="nav">
+    <ul class="menu" id="menu">
+        
+            
+        
+        
+        
+        
+            
+                <li class="menu-item"><a href="/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="icon home"><path d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"/></svg><span class="menu-item-name">首页</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/categories/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon th"><path d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"/></svg><span class="menu-item-name">分类</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/tags/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="icon tags"><path d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"/></svg><span class="menu-item-name">标签</span></a>
+                </li>
+            
+        
+            
+                
+                    
+                    
+                        <li class="menu-item">
+                            <a id="theme-switcher" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon theme-icon-light"><path d="M193.2 104.5l48.8-97.5a18 18 0 0128 0l48.8 97.5 103.4 -34.5a18 18 0 0119.8 19.8l-34.5 103.4l97.5 48.8a18 18 0 010 28l-97.5 48.8 34.5 103.4a18 18 0 01-19.8 19.8l-103.4-34.5-48.8 97.5a18 18 0 01-28 0l-48.8-97.5l-103.4 34.5a18 18 0 01-19.8-19.8l34.5-103.4-97.5-48.8a18 18 0 010-28l97.5-48.8-34.5-103.4a18 18 0 0119.8-19.8zM256 128a128 128 0 10.01 0M256 160a96 96 0 10.01 0"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon theme-icon-dark"><path d="M27 412a256 256 0 10154-407a11.5 11.5 0 00-5 20a201.5 201.5 0 01-134 374a11.5 11.5 0 00-15 13"/></svg></a>
+                        </li>
+                    
+                
+            
+        
+            
+                
+            
+        
+            
+                <li class="menu-item"><a href="/about/"><span class="menu-item-name">About</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/search/"><span class="menu-item-name">百度搜索</span></a>
+                </li>
+            
+        
+    </ul>
+</nav>
+
+                    
+                </div>
+            </div>
+            
+    <input type="checkbox" id="nav-toggle" aria-hidden="true" />
+    <label for="nav-toggle" class="nav-toggle"></label>
+    <label for="nav-toggle" class="nav-curtain"></label>
+
+
+        
+    </header>
+
+
+
+
+            
+            
+    <main class="main single" id="main">
+    <div class="main-inner">
+
+        
+
+        <article class="content post h-entry" data-align="justify" data-type="post">
+
+            <h1 class="post-title p-name">从word2vec到negative sampling</h1>
+
+            
+
+            
+                
+            
+
+            
+                
+
+<div class="post-meta">
+    
+        
+        <time datetime="2021-03-13T20:29:58&#43;08:00" class="post-meta-item published dt-published"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M148 288h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3 0 6-2.7 6-6z"/></svg>&nbsp;2021.3.13</time>
+    
+    
+    
+    
+        
+        
+        
+            
+                <span class="post-meta-item category"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M464 128H272l-54.63-54.63c-6-6-14.14-9.37-22.63-9.37H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48zm0 272H48V112h140.12l54.63 54.63c6 6 14.14 9.37 22.63 9.37H464v224z"/></svg>&nbsp;<a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="category-link p-category">深度学习</a></span>
+            
+        
+    
+    
+    
+    
+    
+</div>
+
+            
+
+            <div class="post-body e-content">
+              <blockquote>
+<p style="text-indent:0"><span class="drop-cap">到</span>目前为止，word2vec算法不单单是nlp的基础，也成为推荐和搜索的基础，本文记录一下word2vec算法中的negative sampling方案，并基于此记录了其他的sampling方法。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/76568362/" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/76568362/</a></li>
+<li><a href="https://blog.csdn.net/yimingsilence/article/details/105920987" target="_blank" rel="noopener">https://blog.csdn.net/yimingsilence/article/details/105920987</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/129824834" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/129824834</a></li>
+<li><a href="https://narcissuscyn.github.io/2018/07/03/CandidateSampling/" target="_blank" rel="noopener">https://narcissuscyn.github.io/2018/07/03/CandidateSampling/</a></li>
+<li><a href="https://www.zhihu.com/question/50043438" target="_blank" rel="noopener">https://www.zhihu.com/question/50043438</a></li>
+<li><a href="https://blog.csdn.net/wangpeng138375/article/details/75151064" target="_blank" rel="noopener">https://blog.csdn.net/wangpeng138375/article/details/75151064</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/45368976" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/45368976</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/45014864" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/45014864</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/27234078" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27234078</a></li>
+<li><a href="https://www.cnblogs.com/pinard/p/7249903.html" target="_blank" rel="noopener">https://www.cnblogs.com/pinard/p/7249903.html</a></li>
+<li><a href="https://www.cnblogs.com/peghoty/p/3857839.html" target="_blank" rel="noopener">https://www.cnblogs.com/peghoty/p/3857839.html</a></li>
+<li><a href="https://www.zhihu.com/question/386144477" target="_blank" rel="noopener">https://www.zhihu.com/question/386144477</a></li>
+<li><a href="https://blog.csdn.net/weixin_40901056/article/details/88568344" target="_blank" rel="noopener">https://blog.csdn.net/weixin_40901056/article/details/88568344</a></li>
+<li><a href="https://blog.csdn.net/u010223750/article/details/69948463" target="_blank" rel="noopener">https://blog.csdn.net/u010223750/article/details/69948463</a></li>
+</ul>
+</blockquote>
+<h2 id="skip-gram方法的word2vec"><a href="#skip-gram方法的word2vec" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Skip-gram方法的word2vec</h2>
+<blockquote>
+<p>在word2vec出现之前，已经有用神经网络DNN来用训练词向量进而处理词与词之间的关系了。采用的方法一般是一个三层的神经网络结构（当然也可以多层），分为输入层，隐藏层和输出层(softmax层)。</p>
+<p>这个模型是如何定义数据的输入和输出呢？一般分为CBOW(Continuous Bag-of-Words 与Skip-Gram两种模型。</p>
+<p>CBOW模型的训练输入是某一个特征词的上下文相关的词对应的词向量，而输出就是这特定的一个词的词向量。</p>
+<p>Skip-Gram模型和CBOW的思路是反着来的，即输入是特定的一个词的词向量，而输出是特定词对应的上下文词向量。</p>
+<p><strong>PS：skip-gram 出来的准确率比cbow 高，cbow比sg训练快，sg比cbow更好地处理生僻字（出现频率低的字）。</strong></p>
+</blockquote>
+<p>在词向量训练任务中，softmax函数有如下：</p>
+<p>$$p(w|c) = \frac{\exp(h^\top v_w)}{\sum_{w_i \in V} \exp(h^\top v_{w_i})}=\frac{\exp(h^\top v_w)}{Z(h)}$$</p>
+<p>其中，$h$是隐藏层的输出， $v_{w_i}$是w对应的输出词向量（即softmax的权重矩阵）,$V$是词典，$c$是上下文。</p>
+<p><strong>在神经网络语言模型中，一般会把$C$压缩为$h$。</strong>
+从上面的公式可以看出，softmax函数的分母是对所有词典进行遍历求和，当$V$的size比较小的时候，softmax的求导以及梯度下降速度较快，但是当$V$的size比较大的时候，softmax的分母需要遍历所有的样本进行求和，因此速度较慢，对于此问题，业界提出了多种方法来解决该问题，常见的方法有Noise Contrastive Estimation(NCE)，negative sampling，sampling softmx算法等，接下来分别讲解一下两种算法。</p>
+<h2 id="noise-contrastive-estimation算法"><a href="#noise-contrastive-estimation算法" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Noise Contrastive Estimation算法</h2>
+<blockquote>
+<p>对于每一个训练样本（x, T)，我们训练binary classification，而不是multiclass classification。具体一点，我们对于每个样本，拆分成一个真实的（x,y) pair,另外我们随机产生k个Noise的（x,y）pair,这样我们就可以用来训练处这样的binary classifier。</p>
+<p>用概率来表示，这个问题由之前的P(y|x) 通过x预测所有y，换成了P(x,y)，计算x,y同时存在的概率，换言之，从基于特征x求y的最大后验概率，变成基于特征X和y，共同出现的最大后验概率。</p>
+</blockquote>
+<p>假设共有m个样$(l_i,c_i)$, 建模:
+\begin{equation}
+P\left(l_{i} \mid c_{i}\right)=\frac{u_{\theta}\left(l_{i}, c_{i}\right)}{\sum_{i}^{n} u_{\theta}\left(l_{j}, c_{i}\right)}=\frac{u_{\theta}\left(l_{i}, c_{i}\right)}{Z_{i}}
+\end{equation}
+假设负例label从某个分布$Q(l_i)$中抽取, 且抽取$k$次. 正例从上面的分布抽取, 则有:
+$(l_i,c_i)$真实样本的概率：
+\begin{equation}
+P\left(\text { True } \mid l_{i}, c_{i}\right)=\frac{P\left(l_{i} \mid c_{i}\right)}{k Q\left(l_{i}\right)+P\left(l_{i} \mid c_{i}\right)}=P\left(T \mid l_{i}, c_{i}\right)
+\end{equation}
+$(l_i,c_i)$负样本的概率：
+\begin{equation}
+P\left(\text { False } \mid l_{i}, c_{i}\right)=\frac{k Q\left(c_{i}\right)}{k Q\left(l_{i}\right)+P\left(l_{i} \mid c_{i}\right)}=P\left(F \mid l_{i}, c_{i}\right)
+\end{equation}
+最终最大化log似然估计, 损失函数:
+\begin{equation}
+J(\theta) = \prod_{(w,c) \in T} P(T|w,c;\theta) \prod_{(w,c) \in Neg} P(F|w,c;\theta)
+\end{equation}
+\begin{equation}
+L=\sum_{i}^{n}\left(\log P\left(T \mid l_{i}, c_{i}\right)+k \sum_{i=0, L_{x} \sim Q\left(l_{i}\right)}^{k} \log P\left(F \mid L_{x}, c_{i}\right)\right)
+\end{equation}</p>
+<h2 id="negative-sampling算法"><a href="#negative-sampling算法" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>negative sampling算法</h2>
+<p>负采样Negative Sampling是NCE的一个变种，概率的定义有所区别。</p>
+<p>建模, 作为二分类softmax损失.
+\begin{equation}
+P\left(T \mid l_{i}, c_{i}\right)=\frac{u_{\theta}\left(l_{i}, c_{i}\right)}{1+u_{\theta}\left(l_{i}, c_{i}\right)}=\sigma\left(u_{\theta}\left(l_{i}, c_{i}\right)\right)
+\end{equation}
+\begin{equation}
+P\left(F \mid l_{i}, c_{i}\right)=1-P\left(T \mid l_{i}, c_{i}\right)=\frac{1}{1+u_{\theta}\left(l_{i}, c_{i}\right)}=1-\sigma\left(u_{\theta}\left(l_{i}, c_{i}\right)\right)
+\end{equation}</p>
+<p>最终最大化log似然估计略(和NCE相同), 负例的采样时, 为全体样本的所有$l$不消重的均匀采样,或者每个$l$采到的概率为:
+\begin{equation}
+P\left(l_{x}\right)=\frac{\operatorname{cnt}\left(l_{x}\right)^{0.75}}{\sum_{y \in L} \operatorname{cnt}\left(l_{y}\right)^{0.75}}
+\end{equation}</p>
+<p>注意，构造样本时，要注意正负样本的比例，如果考虑所有的负样本，会导致正负比例失衡，模型权重会被负样本带偏。</p>
+<h2 id="sampling-softmax算法sampled_softmax_loss"><a href="#sampling-softmax算法sampled_softmax_loss" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>sampling softmax算法(sampled_softmax_loss)</h2>
+<blockquote>
+<p>Sampled softmax方法不同于nce方法，nce是把多分类问题转化成二分类，而sampled softmax方法则是只抽取一部分样本计算softmax。训练的时候不需要特别精准的softmax归一化概率，只需要一个粗略值做back propoagation就好了。<strong>这么粗糙的算法，可能会导致分布不一致问题？？？</strong></p>
+</blockquote>
+<p>如果损失函数采用交叉熵损失函数:
+\begin{equation}
+H(q,p) = - \sum_x q(x) \log p(x)
+\end{equation}</p>
+<p>这里q是真实期望分布,例如 $q=[0,…1,…,0]$，p是模型输出分布，对应最上面的softmax公式。</p>
+<p>对于一个样本，可得交叉熵损失函数(这里把模型的参数统称为$\theta$):
+\begin{equation}
+J_\theta = - \text{log} \dfrac{\text{exp}({h^\top v_{w}})}{\sum_{w_i \in V} \text{exp}({h^\top v_{w_i}})}
+\end{equation}
+假设：$\mathcal{E}(w)=-h^\top v_{w}$, 则：
+\begin{equation}
+J_\theta =  \mathcal{E}(w) + \text{log} \sum_{w_i \in V} \text{exp}( - \mathcal{E}(w_i))
+\end{equation}
+对$\theta$求梯度得：
+\begin{equation}
+\nabla_\theta J_\theta = \nabla_\theta \mathcal{E}(w) + \sum_{w_i \in V} \dfrac{\text{exp}(- \mathcal{E}(w_i))}{\sum_{w_i \in V} \text{exp}(- \mathcal{E}(w_i))} \nabla_\theta (- \mathcal{E}(w_i))
+\end{equation}
+已知：$p(w_i) = \dfrac{\text{exp}(- \mathcal{E}(w_i))}{\sum_{w_i \in V} \text{exp}- \mathcal{E}(w_i))}$,
+\begin{equation}
+\nabla_\theta J_\theta =  \nabla_\theta \mathcal{E}(w) - \sum_{w_i \in V} P(w_i) \nabla_\theta (\mathcal{E}(w_i))
+\end{equation}</p>
+<p>对于梯度公式的第二部分，可以认为是$\nabla_\theta (\mathcal{E}(w_i))$对于softmax输出$P(w_i)$的期望，即：
+\begin{equation}
+\sum_{w_i \in V} P(w_i) \nabla_\theta \mathcal{E}(w_i) =  \mathbb{E}_{w_i \sim P}[\nabla_\theta \mathcal{E}(w_i)]
+\end{equation}
+上面的这个公式就是控制softmax采样需要优化的部分。</p>
+<p>根据传统的重要性采样方法，按照如下公式计算期望：
+\begin{equation}
+\frac{1}{N} \sum_{w_i \sim  Q(w)}\frac{P(w_i)}{Q(w_i)}\nabla_\theta \mathcal{E}(w_i) \approx \mathbb{E}_{w_i \sim P}[\nabla_\theta \mathcal{E}(w_i)]
+\end{equation}
+其中$N$是从分布$Q$(我们自己定义的一个容易采样的分布)中采样的样本数，但是这种方法仍然需要计算$P(wi)$，而$P(wi)$的计算又需要softmax做归一化，这是我们不想看到的，所以要使用一种有偏估计的方法。</p>
+<p>Softmax公式的分母部分：
+\begin{equation}
+Z(h)=\sum_{w_i \in V} \text{exp}(- \mathcal{E}(w_i))=M\sum_{w_i \in V} (\frac{1}{M})\cdot \text{exp}(- \mathcal{E}(w_i))
+\end{equation}
+公式中$\sum_{w_i \in V} (\frac{1}{M})\cdot \text{exp}(- \mathcal{E}(w_i))$是一种期望形式，因而可以通过采样方法进行估计得到$Z(h)$, 对于$Z(h)$的采样候选分布仍旧选择$Q$分布。
+则可以得到：
+\begin{equation}
+Z(h)=\hat{Z}(h)=\frac{M}{N}\sum_{w_i \sim  Q(w)}\frac{\hat{R}(w_i)\text{exp}(- \mathcal{E}(w_i))}{Q(w_i)}=\frac{M}{N}\sum_{w_i \sim  Q(w)}\frac{\text{exp}(- \mathcal{E}(w_i))}{M\cdot Q(w_i)}
+\end{equation}
+上式中的$\hat{R}(w_i)$代表概率$\frac{1}{M}$，约去$M$可得：
+\begin{equation}
+\hat{Z}(h)=\frac{1}{N}\sum_{w_i \sim  Q(w)}\frac{\text{exp}(- \mathcal{E}(w_i))}{ Q(w_i)}
+\end{equation}
+到这里，我们就可以用$\hat{Z}(h)$去近似$Z(h)$了。</p>
+<blockquote>
+<p>现在理一下思路：<strong>给定候选分布Q，传统采样方法需要计算P，也就是说需要计算分母Z，这是我们不想看到的。幸运的是分母Z仍然可以通过采样得到，采样Z的时候，仍然采用候选分布Q。</strong></p>
+</blockquote>
+<p>\begin{equation}
+\frac{1}{N}  \sum_{w_i \sim  Q(w)}\frac{P(w_i)}{Q(w_i)} \nabla _\theta \mathcal{E}(w_i)  \approx  \mathbb{E}_{w_i \sim P}[\nabla _\theta \mathcal{E}(w_i)]
+\end{equation}</p>
+<p>\begin{equation}
+\frac{1}{N}\sum_{w_i \sim  Q(w)}\frac{\hat{P}(w_i)}{Q(w_i)}\nabla _\theta \mathcal{E}(w_i)  \approx  \mathbb{E}_{w_i \sim P}[\nabla _\theta \mathcal{E}(w_i)]
+\end{equation}
+其中 $\hat{P}(wi)$代表采样方式获得的概率：
+\begin{equation}
+\hat{P}(w_i)=\frac{\text{exp}(- \mathcal{E}(w_i))}{\hat{Z}(h)}
+\end{equation}
+可得：
+\begin{equation}
+\mathbb{E}_{w_i \sim P}[\nabla_\theta \mathcal{E}(w_i)]\approx \frac{1}{N}\sum_{w_i \sim  Q(w)}\frac{\text{exp}(- \mathcal{E}(w_i))}{Q(w_i)\hat{Z}(h)}\nabla_\theta \mathcal{E}(w_i)
+\end{equation}
+现在我们就从$Q$分布中采样$N$个样本，组成集合$J$，最终得到：
+\begin{equation}
+\mathbb{E}_{w_i \sim P}[\nabla_\theta \mathcal{E}(w_i)]\approx \frac{\sum_{w_j \in J}\text{exp}(- \mathcal{E}(w_j))\nabla_\theta \mathcal{E}(w_j)/Q(w_j)}{\sum_{w_j \in J}\text{exp}(- \mathcal{E}(w_j))/Q(w_j)}
+\end{equation}
+整体梯度为：
+\begin{equation}
+\nabla_\theta J_\theta = : \nabla_\theta \mathcal{E}(w) - \frac{\sum_{w_j \in J}\text{exp}(- \mathcal{E}(w_j))\nabla_\theta \mathcal{E}(w_j)/Q(w_j)}{\sum_{w_j \in J}\text{exp}(- \mathcal{E}(w_j))/Q(w_j)}
+\end{equation}</p>
+<h2 id="tensorflow的采样方法candidate-sampling"><a href="#tensorflow的采样方法candidate-sampling" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Tensorflow的采样方法：candidate sampling</h2>
+<p>假如我们有一个多分类任务或者多标签分类任务，给定训练集$(x_i,T_i)$，其中xixi表示上下文，$T_i$表示目标类别(可能有多个).可以用word2vec中的negtive sampling方法来举例，使用cbow方法，也就是使用上下文$x_i$来预测中心词(单个target$T_i$)，或者使用skip-gram方法，也就是使用中心词$x_i$来预测上下文(多个target($T_i$)).</p>
+<p>我们想学习到一个通用函数$F(x,y)$来表征上下文$x$和目标类$y$的关系，如Word2vec里面，使用上下文预测下个单词的概率。</p>
+<p>完整的训练方法，如使用softmax或者Logistic回归需要对每个训练数据计算所有类$y\in L$的概率$F(x,y)$，当$|L|$非常大的时候，训练将非常耗时。</p>
+<p>&ldquo;candidate sampling&quot;训练方法包括为每一个训练数据$(x_i,T_i)$构造一个训练任务，使得我们只需要使用一个较小的候选集合$C_i\in L$，就能评估$F(x,y)$,典型的，candidate set $C_i$包含目标类别$T_i$和一些随机采样的类别$S_i\in L$：$C_i = T_i \cup S_i$
+, $S_i$的选择可能依赖 $x_i$和 $T_i$，也可能不依赖。 $F(x,y)$可以使用神经网络计算来表征(也就是TensorFlow里面常用的logits)</p>
+<p><img src="https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="candidate sampling">
+其中：</p>
+<ul>
+<li>$Q(y|x)$表示的是给定context $x_i$采样到$y$的概率</li>
+<li>$K(x)$表示任意不以来候选集的函数</li>
+<li>$logistic-training-loss = \sum_{i}(\sum_{y \in POS_i} log(1+exp(-G(x_i,y)) )+\sum_{y \in NEG_i} log(1+exp(G(x_i,y)) ))$</li>
+<li>$softmax-training-loss = \sum_{i}(-log(\frac{exp(G(x_i,t_i))}{\sum_{y \in POS_i \cup NEG_i} exp(G(x_i,y))}))$</li>
+</ul>
+<blockquote>
+<p>在使用tensoflow的时候，我们有时候会纠结选择什么样的损失函数比较好，softmax和logistic在表达形式上是有点区别的，但是也不是很大，而且对于普通的softmax_cross_entropy_with_logits和sigmoid_cross_entropy_with_logits也都能够进行多分类任务，那么他们之间的区别是什么的？</p>
+<p>就我个人所想到的，使用sigmoid_cross_entropy_with_logits和softmax_cross_entropy_with_logits的最大的区别是类别的排他性，在分类任务中，<strong>使用softmax_cross_entropy_with_logits我们一般是选择单个标签的分类，因为其具有排他性</strong>，说白了，softmax_cross_entropy_with_logits需要的是一个类别概率分布，其分布应该服从多项分布(也就是多项logistic regression)，我们训练是让结果尽量靠近这种概率分布，不是说softmax_cross_entropy_with_logits不能进行多分，事实上<strong>softmax_cross_entropy_with_logits是支持多个类别的，其参数labels也没有限制只使用一个类别</strong>，当使用softmax_cross_entropy_with_logits进行多分类时候，以二类为例，我们可以设置真实类别的对应labels上的位置是0.5,0.5，训练使得这个文本尽量倾向这种分布，在test阶段，可以选择两个计算概率最大的类作为类别标签，从这种角度说，使用softmax_cross_entropy_with_logits进行多分，实际上类似于计算文本的主题分布。</p>
+<p><strong>对于sigmoid_cross_entropy_with_logits，公式可以看出，sigmoid_cross_entropy_with_logits其实是训练出了多个分类器，对于有n个标签的分类问题，其实质是分成了n个二分类问题，这点和softmax_cross_entropy_with_logits有着本质的区别。</strong></p>
+</blockquote>
+<p>tensorflow提供了下面两种candidate sample方法</p>
+<ul>
+<li>tf.nn.nce_loss</li>
+<li>tf.nn.sampled_softmax_loss</li>
+</ul>
+<p>tf.nn.nce_loss使用的是logistic, 而tf.nn.sampled_softmax_loss采用的是softmax loss，其实这两者的区别也主要在这儿，采用logistic loss的本质上还是训练n个分类器，而使用softmax loss的其实只是训练了一个主题分类器，tf.nn.nce_loss主要思路也是判断给定context $C_i$和训练数据$x_i$，判断每一个$y_i$是不是target label，而 tf.nn.sampled_softmax_loss则是使得在target label上的分布概率最大化。</p>
+<p>对于多标签多类别的分类任务使用Logistic比较好，对于多标签单类别的分类任务使用softmax比较好，采样中，采用tf.nn.sampled_softmax_loss训练cbow模型比较好，而 tf.nn.nce_loss训练skip-gram比较好。</p>
+<h2 id="tensorflow-源码解析"><a href="#tensorflow-源码解析" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>tensorflow 源码解析：</h2>
+<blockquote>
+<p><code>_compute_sampled_logits</code>输入隐藏层输出和真标签，在里面采样获得S集，并计算，返回的就是<code>F（x,y）-logQ</code>，在nce_loss和sampled_softmax_loss中都调用它进行采样，详细的源码解释在下面</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">sampled_softmax_loss</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span>
+                         <span class="n">biases</span><span class="p">,</span>
+                         <span class="n">labels</span><span class="p">,</span>
+                         <span class="n">inputs</span><span class="p">,</span>
+                         <span class="n">num_sampled</span><span class="p">,</span>
+                         <span class="n">num_classes</span><span class="p">,</span>
+                         <span class="n">num_true</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="n">sampled_values</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                         <span class="n">remove_accidental_hits</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                         <span class="n">partition_strategy</span><span class="o">=</span><span class="s2">&#34;mod&#34;</span><span class="p">,</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s2">&#34;sampled_softmax_loss&#34;</span><span class="p">,</span>
+                         <span class="n">seed</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="n">logits</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">_compute_sampled_logits</span><span class="p">(</span>
+      <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span>
+      <span class="n">biases</span><span class="o">=</span><span class="n">biases</span><span class="p">,</span>
+      <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+      <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
+      <span class="n">num_sampled</span><span class="o">=</span><span class="n">num_sampled</span><span class="p">,</span>
+      <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+      <span class="n">num_true</span><span class="o">=</span><span class="n">num_true</span><span class="p">,</span>
+      <span class="n">sampled_values</span><span class="o">=</span><span class="n">sampled_values</span><span class="p">,</span>
+      <span class="n">subtract_log_q</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+      <span class="n">remove_accidental_hits</span><span class="o">=</span><span class="n">remove_accidental_hits</span><span class="p">,</span>
+      <span class="n">partition_strategy</span><span class="o">=</span><span class="n">partition_strategy</span><span class="p">,</span>
+      <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+      <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+  <span class="n">labels</span> <span class="o">=</span> <span class="n">array_ops</span><span class="o">.</span><span class="n">stop_gradient</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&#34;labels_stop_gradient&#34;</span><span class="p">)</span>
+  <span class="n">sampled_losses</span> <span class="o">=</span> <span class="n">nn_ops</span><span class="o">.</span><span class="n">softmax_cross_entropy_with_logits_v2</span><span class="p">(</span>
+      <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">logits</span><span class="o">=</span><span class="n">logits</span><span class="p">)</span>
+  <span class="c1"># sampled_losses is a [batch_size] tensor.</span>
+  <span class="k">return</span> <span class="n">sampled_losses</span>
+</code></pre></td></tr></table></div>
+</div>
+</div><p><code>_compute_sampled_logits</code>的参数和返回</p>
+<div class="highlight"><div class="chroma">
+<div class="table-container"><table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python">  <span class="n">Args</span><span class="p">:</span>
+    <span class="n">weights</span><span class="p">:</span> <span class="n">A</span> <span class="sb">`Tensor`</span> <span class="n">of</span> <span class="n">shape</span> <span class="sb">`[num_classes, dim]`</span><span class="p">,</span> <span class="ow">or</span> <span class="n">a</span> <span class="nb">list</span> <span class="n">of</span> <span class="sb">`Tensor`</span>
+        <span class="n">objects</span> <span class="n">whose</span> <span class="n">concatenation</span> <span class="n">along</span> <span class="n">dimension</span> <span class="mi">0</span> <span class="n">has</span> <span class="n">shape</span>
+        <span class="p">[</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">dim</span><span class="p">]</span><span class="o">.</span>  <span class="n">The</span> <span class="p">(</span><span class="n">possibly</span><span class="o">-</span><span class="n">sharded</span><span class="p">)</span> <span class="k">class</span> <span class="nc">embeddings</span><span class="o">.</span>
+    <span class="n">biases</span><span class="p">:</span> <span class="n">A</span> <span class="sb">`Tensor`</span> <span class="n">of</span> <span class="n">shape</span> <span class="sb">`[num_classes]`</span><span class="o">.</span>  <span class="n">The</span> <span class="k">class</span> <span class="nc">biases</span><span class="o">.</span>
+<span class="err">这里我用</span><span class="n">L指代所有的类别的集合</span><span class="err">，</span><span class="n">h指代隐藏层向量维度</span><span class="err">，这两个维度就是</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">h</span><span class="p">],[</span><span class="n">L</span><span class="p">]</span>
+
+<span class="n">weights</span> <span class="n">biases就是我们的上下文embedding</span><span class="p">,</span><span class="err">你把</span><span class="n">embedding传进去</span><span class="err">，</span>
+<span class="err">他采样之后就用输出</span><span class="n">h和这个embedding相乘</span><span class="err">，只计算那些被采样的样品就可以了。</span>
+<span class="err">还有一个就是注意</span><span class="n">weights的shape</span><span class="p">,</span><span class="n">dim是在后面的</span>
+<span class="err">他在</span><span class="n">sampled_softmax_loss调用中也强调了</span><span class="err">，你训练的时候才用，像下面这样有个选择</span>
+
+<span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&#34;train&#34;</span><span class="p">:</span>
+  <span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sampled_softmax_loss</span><span class="p">(</span>
+      <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span>
+      <span class="n">biases</span><span class="o">=</span><span class="n">biases</span><span class="p">,</span>
+      <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+      <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
+      <span class="o">...</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&#34;eval&#34;</span><span class="p">:</span>
+  <span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">weights</span><span class="p">))</span>
+  <span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">bias_add</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">biases</span><span class="p">)</span>
+  <span class="n">labels_one_hot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+  <span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax_cross_entropy_with_logits</span><span class="p">(</span>
+      <span class="n">labels</span><span class="o">=</span><span class="n">labels_one_hot</span><span class="p">,</span>
+      <span class="n">logits</span><span class="o">=</span><span class="n">logits</span><span class="p">)</span>
+<span class="n">eval的时候乘法weights有一个transpose</span>
+
+
+    <span class="n">labels</span><span class="p">:</span> <span class="n">A</span> <span class="sb">`Tensor`</span> <span class="n">of</span> <span class="nb">type</span> <span class="sb">`int64`</span> <span class="ow">and</span> <span class="n">shape</span> <span class="err">`</span><span class="p">[</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">num_true</span><span class="p">]</span><span class="err">`</span><span class="o">.</span> <span class="n">The</span> <span class="n">target</span> <span class="n">classes</span><span class="o">.</span>  <span class="n">Note</span> <span class="n">that</span> <span class="n">this</span> <span class="n">format</span> <span class="n">differs</span> <span class="kn">from</span>
+        <span class="nn">the</span> <span class="sb">`labels`</span> <span class="n">argument</span> <span class="n">of</span> <span class="sb">`nn.softmax_cross_entropy_with_logits`</span><span class="o">.</span>
+<span class="err">这里</span><span class="n">labels就是标签</span><span class="err">，他也提到了与上面</span><span class="n">eval的时候输入是不一样的</span><span class="err">，那个需要你进行一个</span><span class="n">one_hot</span>
+<span class="n">num_true如果我们用softmax就是1</span><span class="err">，其他的就是多标签</span>
+<span class="n">shape是</span><span class="p">[</span><span class="n">m</span><span class="p">,</span><span class="n">T</span><span class="p">],</span><span class="n">m是batch的大小</span>
+
+    <span class="n">inputs</span><span class="p">:</span> <span class="n">A</span> <span class="sb">`Tensor`</span> <span class="n">of</span> <span class="n">shape</span> <span class="sb">`[batch_size, dim]`</span><span class="o">.</span>  <span class="n">The</span> <span class="n">forward</span>
+        <span class="n">activations</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">network</span><span class="o">.</span>
+<span class="err">这就是</span><span class="n">h</span> <span class="err">输出</span>
+<span class="p">[</span><span class="n">m</span><span class="p">,</span><span class="n">h</span><span class="p">]</span>
+
+    <span class="n">num_sampled</span><span class="p">:</span> <span class="n">An</span> <span class="sb">`int`</span><span class="o">.</span>  <span class="n">The</span> <span class="n">number</span> <span class="n">of</span> <span class="n">classes</span> <span class="n">to</span> <span class="n">randomly</span> <span class="n">sample</span> <span class="n">per</span> <span class="n">batch</span><span class="o">.</span>
+<span class="err">在这里可以看出，是一个批次，用同样的</span><span class="n">sampled的类</span><span class="err">，这个就是集合</span><span class="n">S的大小</span>
+<span class="err">用指代</span><span class="n">S</span>
+
+    <span class="n">num_classes</span><span class="p">:</span> <span class="n">An</span> <span class="sb">`int`</span><span class="o">.</span> <span class="n">The</span> <span class="n">number</span> <span class="n">of</span> <span class="n">possible</span> <span class="n">classes</span><span class="o">.</span>
+<span class="err">就是所有的类别，词表</span><span class="n">L的大小</span>
+
+    <span class="n">num_true</span><span class="p">:</span> <span class="n">An</span> <span class="sb">`int`</span><span class="o">.</span>  <span class="n">The</span> <span class="n">number</span> <span class="n">of</span> <span class="n">target</span> <span class="n">classes</span> <span class="n">per</span> <span class="n">training</span> <span class="n">example</span><span class="o">.</span>
+<span class="err">用</span><span class="n">T指代</span>
+<span class="err">源码里有一个注意：</span>
+  <span class="n">Note</span><span class="p">:</span> <span class="n">In</span> <span class="n">the</span> <span class="n">case</span> <span class="n">where</span> <span class="n">num_true</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> 
+<span class="n">we</span> <span class="n">assign</span> <span class="n">to</span> <span class="n">each</span> <span class="n">target</span> <span class="k">class</span>  <span class="nc">the</span> <span class="n">target</span> <span class="n">probability</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">num_true</span> 
+<span class="n">so</span> <span class="n">that</span> <span class="n">the</span> <span class="n">target</span> <span class="n">probabilities</span>  <span class="nb">sum</span> <span class="n">to</span> <span class="mi">1</span> <span class="n">per</span><span class="o">-</span><span class="n">example</span><span class="o">.</span>
+<span class="err">就是说如果有</span><span class="n">T个真目标类</span><span class="err">，那每个真类别的采样概率</span><span class="n">Q就是1</span><span class="o">/</span><span class="n">T</span><span class="p">,</span><span class="err">有点像上面文章里的</span><span class="mi">1</span><span class="o">/|</span><span class="n">V</span><span class="o">|</span><span class="err">，</span>
+<span class="err">但这里我也有个疑问，如果我们是</span><span class="mi">1</span><span class="err">个标签，那</span><span class="n">Q就是1了吗</span><span class="err">？但论文中也没提到正样本的</span><span class="n">Q怎么计算</span>
+
+
+
+
+    <span class="n">sampled_values</span><span class="p">:</span> <span class="n">a</span> <span class="nb">tuple</span> <span class="n">of</span> <span class="p">(</span><span class="sb">`sampled_candidates`</span><span class="p">,</span> <span class="sb">`true_expected_count`</span><span class="p">,</span>
+        <span class="sb">`sampled_expected_count`</span><span class="p">)</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">a</span> <span class="sb">`*_candidate_sampler`</span> <span class="n">function</span><span class="o">.</span>
+        <span class="p">(</span><span class="k">if</span> <span class="bp">None</span><span class="p">,</span> <span class="n">we</span> <span class="n">default</span> <span class="n">to</span> <span class="sb">`log_uniform_candidate_sampler`</span><span class="p">)</span>
+<span class="err">这里如果</span><span class="n">none</span><span class="err">，函数会自己调用的</span><span class="n">log_uniform_candidate_sampler</span><span class="err">。</span>
+<span class="err">但如果你要用其他采样，你就得把采样后的结果是一个元组给他，格式我们也下面介绍。</span>
+<span class="err">其余采样方法这个我们下文再详细介绍。</span>
+
+    <span class="n">subtract_log_q</span><span class="p">:</span> <span class="n">A</span> <span class="sb">`bool`</span><span class="o">.</span>  <span class="n">whether</span> <span class="n">to</span> <span class="n">subtract</span> <span class="n">the</span> <span class="n">log</span> <span class="n">expected</span> <span class="n">count</span> <span class="n">of</span>
+        <span class="n">the</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">sample</span> <span class="n">to</span> <span class="n">get</span> <span class="n">the</span> <span class="n">logits</span> <span class="n">of</span> <span class="n">the</span> <span class="n">true</span> <span class="n">labels</span><span class="o">.</span>
+        <span class="n">Default</span> <span class="ow">is</span> <span class="bp">True</span><span class="o">.</span>  <span class="n">Turn</span> <span class="n">off</span> <span class="k">for</span> <span class="n">Negative</span> <span class="n">Sampling</span><span class="o">.</span>
+<span class="err">是否减去</span><span class="n">logQ</span><span class="err">，按上面那个表格</span><span class="n">NCE和sampled</span> <span class="n">softmax都要减的</span><span class="err">，负采样不减。</span>
+
+
+
+    <span class="n">remove_accidental_hits</span><span class="p">:</span>  <span class="n">A</span> <span class="sb">`bool`</span><span class="o">.</span>  <span class="n">whether</span> <span class="n">to</span> <span class="n">remove</span> <span class="s2">&#34;accidental hits&#34;</span>
+        <span class="n">where</span> <span class="n">a</span> <span class="n">sampled</span> <span class="k">class</span> <span class="nc">equals</span> <span class="n">one</span> <span class="n">of</span> <span class="n">the</span> <span class="n">target</span> <span class="n">classes</span><span class="o">.</span>  <span class="n">Default</span> <span class="ow">is</span>
+        <span class="bp">True</span><span class="o">.</span>
+<span class="err">如果采样到真标签了怎么办，是否删掉这次采样，默认是</span><span class="n">True要删掉</span>
+<span class="err">百度</span><span class="n">paddle里说如果为真</span><span class="err">，如果一个</span><span class="n">sample</span><span class="p">[</span><span class="n">i</span><span class="err">，</span><span class="n">j</span><span class="p">]</span><span class="err">意外地碰到了真标签，</span>
+<span class="err">那么相应的</span><span class="n">sampled_logits</span><span class="p">[</span><span class="n">i</span><span class="err">，</span><span class="n">j</span><span class="p">]</span><span class="err">将被减去</span><span class="mf">1e20</span><span class="err">，使其</span><span class="n">SoftMax结果接近零</span><span class="err">。默认值为</span><span class="bp">True</span><span class="err">。</span>
+<span class="err">框架多还是有好处的</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">paddlepaddle</span><span class="o">.</span><span class="n">org</span><span class="o">.</span><span class="n">cn</span><span class="o">/</span><span class="n">documentation</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">zh</span><span class="o">/</span><span class="n">api_cn</span><span class="o">/</span><span class="n">layers_cn</span><span class="o">/</span><span class="n">sampled_softmax_with_cross_entropy_cn</span><span class="o">.</span><span class="n">html</span><span class="c1">#sampled-softmax-with-cross-entropy</span>
+
+<span class="err">下面来自上面的博客</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">narcissuscyn</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="mi">2018</span><span class="o">/</span><span class="mo">07</span><span class="o">/</span><span class="mo">03</span><span class="o">/</span><span class="n">CandidateSampling</span><span class="o">/</span> 
+<span class="err">其实两个</span><span class="n">loss的核心代码都是_compute_sampled_logits</span><span class="err">，但是在实现上不同的地方有两点：</span>
+<span class="n">sampled_softmax_loss是有去重的</span><span class="err">，也就是</span><span class="n">remove_accidental_hits</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+<span class="err">但是</span><span class="n">nce_loss是不去重的</span><span class="err">，我们从上面的表也能看出来。</span>
+<span class="n">sampled_softmax_loss采用的是softmax</span><span class="o">+</span><span class="n">CE</span><span class="err">，但是</span><span class="n">nce_loss采用的是sigmod</span><span class="o">+</span><span class="n">CE</span>
+
+
+    <span class="n">partition_strategy</span><span class="p">:</span> <span class="n">A</span> <span class="n">string</span> <span class="n">specifying</span> <span class="n">the</span> <span class="n">partitioning</span> <span class="n">strategy</span><span class="p">,</span> <span class="n">relevant</span>
+        <span class="k">if</span> <span class="sb">`len(weights) &gt; 1`</span><span class="o">.</span> <span class="n">Currently</span> <span class="sb">`&#34;div&#34;`</span> <span class="ow">and</span> <span class="sb">`&#34;mod&#34;`</span> <span class="n">are</span> <span class="n">supported</span><span class="o">.</span>
+        <span class="n">Default</span> <span class="ow">is</span> <span class="sb">`&#34;mod&#34;`</span><span class="o">.</span> <span class="n">See</span> <span class="sb">`tf.nn.embedding_lookup`</span> <span class="k">for</span> <span class="n">more</span> <span class="n">details</span><span class="o">.</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="n">A</span> <span class="n">name</span> <span class="k">for</span> <span class="n">the</span> <span class="n">operation</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span><span class="o">.</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="n">random</span> <span class="n">seed</span> <span class="k">for</span> <span class="n">candidate</span> <span class="n">sampling</span><span class="o">.</span> <span class="n">Default</span> <span class="n">to</span> <span class="bp">None</span><span class="p">,</span> <span class="n">which</span> <span class="n">doesn</span><span class="s1">&#39;t set</span>
+        <span class="n">the</span> <span class="n">op</span><span class="o">-</span><span class="n">level</span> <span class="n">random</span> <span class="n">seed</span> <span class="k">for</span> <span class="n">candidate</span> <span class="n">sampling</span><span class="o">.</span>
+
+  <span class="n">Returns</span><span class="p">:</span>
+    <span class="n">out_logits</span><span class="p">:</span> <span class="sb">`Tensor`</span> <span class="nb">object</span> <span class="k">with</span> <span class="n">shape</span>
+        <span class="sb">`[batch_size, num_true + num_sampled]`</span><span class="p">,</span> <span class="k">for</span> <span class="n">passing</span> <span class="n">to</span> <span class="n">either</span>
+        <span class="sb">`nn.sigmoid_cross_entropy_with_logits`</span> <span class="p">(</span><span class="n">NCE</span><span class="p">)</span> <span class="ow">or</span>
+        <span class="sb">`nn.softmax_cross_entropy_with_logits`</span> <span class="p">(</span><span class="n">sampled</span> <span class="n">softmax</span><span class="p">)</span><span class="o">.</span>
+<span class="err">输出格式就是</span><span class="p">[</span><span class="n">m</span><span class="p">,</span><span class="n">T</span><span class="o">+</span><span class="n">S</span><span class="p">]</span>
+    <span class="n">out_labels</span><span class="p">:</span> <span class="n">A</span> <span class="n">Tensor</span> <span class="nb">object</span> <span class="k">with</span> <span class="n">the</span> <span class="n">same</span> <span class="n">shape</span> <span class="k">as</span> <span class="sb">`out_logits`</span><span class="o">.</span>
+<span class="err">输出格式也是</span><span class="p">[</span><span class="n">m</span><span class="p">,</span><span class="n">T</span><span class="o">+</span><span class="n">S</span><span class="p">]</span>
+</code></pre></td></tr></table></div>
+</div>
+</div>
+            </div>
+
+            
+
+
+        </article>
+
+        
+
+        
+    <div class="updated-badge-container">
+        <span title="Updated @ 2021-03-14 20:50:45 CST" style="cursor:help">
+
+<svg xmlns="http://www.w3.org/2000/svg" width="130" height="20" class="updated-badge"><linearGradient id="b" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="a"><rect width="130" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#a)"><path class="updated-badge-left" d="M0 0h55v20H0z"/><path class="updated-badge-right" d="M55 0h75v20H55z"/><path fill="url(#b)" d="M0 0h130v20H0z"/></g><g fill="#fff" text-anchor="middle" font-size="110"><text x="285" y="150" fill="#010101" fill-opacity=".3" textLength="450" transform="scale(.1)">updated</text><text x="285" y="140" textLength="450" transform="scale(.1)">updated</text><text x="915" y="150" fill="#010101" fill-opacity=".3" textLength="650" transform="scale(.1)">2021-03-14</text><text x="915" y="140" textLength="650" transform="scale(.1)">2021-03-14</text></g></svg>
+        </span></div>
+
+
+
+        
+
+
+        <div class="post-share">
+
+        
+
+        <div class="share-items">
+
+            
+                <div class="share-item twitter">
+                    
+                    <a href="https://twitter.com/share?url=https://gsscsd.github.io/post/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/&amp;text=%e4%bb%8eword2vec%e5%88%b0negative%20sampling&amp;hashtags=%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0,&amp;via=reuixiy" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon twitter-icon"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item facebook">
+                    
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://gsscsd.github.io/post/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/&amp;hashtag=%23%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon facebook-icon"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item linkedin">
+                    
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://gsscsd.github.io/post/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/&amp;title=%e4%bb%8eword2vec%e5%88%b0negative%20sampling&amp;summary=%20%e5%88%b0%e7%9b%ae%e5%89%8d%e4%b8%ba%e6%ad%a2%ef%bc%8cword2vec%e7%ae%97%e6%b3%95%e4%b8%8d%e5%8d%95%e5%8d%95%e6%98%afnlp%e7%9a%84%e5%9f%ba%e7%a1%80%ef%bc%8c%e4%b9%9f%e6%88%90%e4%b8%ba%e6%8e%a8%e8%8d%90%e5%92%8c%e6%90%9c%e7%b4%a2%e7%9a%84%e5%9f%ba%e7%a1%80%ef%bc%8c%e6%9c%ac%e6%96%87%e8%ae%b0%e5%bd%95%e4%b8%80%e4%b8%8bword2vec%e7%ae%97%e6%b3%95%e4%b8%ad%e7%9a%84negative%20sampling%e6%96%b9%e6%a1%88%ef%bc%8c%e5%b9%b6%e5%9f%ba%e4%ba%8e%e6%ad%a4%e8%ae%b0%e5%bd%95%e4%ba%86%e5%85%b6%e4%bb%96%e7%9a%84sampling%e6%96%b9%e6%b3%95%e3%80%82%0a%e5%8f%82%e8%80%83%e9%93%be%e6%8e%a5%ef%bc%9a%0a%20https://zhuanlan.zhihu.com/p/76568362/%20https://blog.csdn.net/yimingsilence/article/details/105920987%20https://zhuanlan.zhihu.com/p/129824834%20https://narcissuscyn.github.io/2018/07/03/CandidateSampling/%20https://www.zhihu.com/question/50043438%20https://blog.csdn.net/wangpeng138375/article/details/75151064%20https://zhuanlan.zhihu.com/p/45368976%20https://zhuanlan.zhihu.com/p/45014864%20https://zhuanlan.zhihu.com/p/27234078%20https://www.cnblogs.com/pinard/p/7249903.html%20https://www.cnblogs.com/peghoty/p/3857839.html%20https://www.zhihu.com/question/386144477%20https://blog.csdn.net/weixin_40901056/article/details/88568344%20https://blog.csdn.net/u010223750/article/details/69948463%20%20&amp;source=Listener" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon linkedin-icon"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item telegram">
+                    
+                    <a href="https://t.me/share/url?url=https://gsscsd.github.io/post/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/&amp;text=%e4%bb%8eword2vec%e5%88%b0negative%20sampling" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="icon telegram-icon"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9l-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item weibo">
+                    
+                    <a href="https://service.weibo.com/share/share.php?&amp;url=https://gsscsd.github.io/post/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/&amp;title=%e4%bb%8eword2vec%e5%88%b0negative%20sampling&amp;pic=https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&amp;searchPic=false" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon weibo-icon"><path d="M407 177.6c7.6-24-13.4-46.8-37.4-41.7-22 4.8-28.8-28.1-7.1-32.8 50.1-10.9 92.3 37.1 76.5 84.8-6.8 21.2-38.8 10.8-32-10.3zM214.8 446.7C108.5 446.7 0 395.3 0 310.4c0-44.3 28-95.4 76.3-143.7C176 67 279.5 65.8 249.9 161c-4 13.1 12.3 5.7 12.3 6 79.5-33.6 140.5-16.8 114 51.4-3.7 9.4 1.1 10.9 8.3 13.1 135.7 42.3 34.8 215.2-169.7 215.2zm143.7-146.3c-5.4-55.7-78.5-94-163.4-85.7-84.8 8.6-148.8 60.3-143.4 116s78.5 94 163.4 85.7c84.8-8.6 148.8-60.3 143.4-116zM347.9 35.1c-25.9 5.6-16.8 43.7 8.3 38.3 72.3-15.2 134.8 52.8 111.7 124-7.4 24.2 29.1 37 37.4 12 31.9-99.8-55.1-195.9-157.4-174.3zm-78.5 311c-17.1 38.8-66.8 60-109.1 46.3-40.8-13.1-58-53.4-40.3-89.7 17.7-35.4 63.1-55.4 103.4-45.1 42 10.8 63.1 50.2 46 88.5zm-86.3-30c-12.9-5.4-30 .3-38 12.9-8.3 12.9-4.3 28 8.6 34 13.1 6 30.8.3 39.1-12.9 8-13.1 3.7-28.3-9.7-34zm32.6-13.4c-5.1-1.7-11.4.6-14.3 5.4-2.9 5.1-1.4 10.6 3.7 12.9 5.1 2 11.7-.3 14.6-5.4 2.8-5.2 1.1-10.9-4-12.9z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item douban">
+                    
+                    <a href="https://www.douban.com/share/service?href=https://gsscsd.github.io/post/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/&amp;name=%e4%bb%8eword2vec%e5%88%b0negative%20sampling&amp;text=%20%e5%88%b0%e7%9b%ae%e5%89%8d%e4%b8%ba%e6%ad%a2%ef%bc%8cword2vec%e7%ae%97%e6%b3%95%e4%b8%8d%e5%8d%95%e5%8d%95%e6%98%afnlp%e7%9a%84%e5%9f%ba%e7%a1%80%ef%bc%8c%e4%b9%9f%e6%88%90%e4%b8%ba%e6%8e%a8%e8%8d%90%e5%92%8c%e6%90%9c%e7%b4%a2%e7%9a%84%e5%9f%ba%e7%a1%80%ef%bc%8c%e6%9c%ac%e6%96%87%e8%ae%b0%e5%bd%95%e4%b8%80%e4%b8%8bword2vec%e7%ae%97%e6%b3%95%e4%b8%ad%e7%9a%84negative%20sampling%e6%96%b9%e6%a1%88%ef%bc%8c%e5%b9%b6%e5%9f%ba%e4%ba%8e%e6%ad%a4%e8%ae%b0%e5%bd%95%e4%ba%86%e5%85%b6%e4%bb%96%e7%9a%84sampling%e6%96%b9%e6%b3%95%e3%80%82%0a%e5%8f%82%e8%80%83%e9%93%be%e6%8e%a5%ef%bc%9a%0a%20https://zhuanlan.zhihu.com/p/76568362/%20https://blog.csdn.net/yimingsilence/article/details/105920987%20https://zhuanlan.zhihu.com/p/129824834%20https://narcissuscyn.github.io/2018/07/03/CandidateSampling/%20https://www.zhihu.com/question/50043438%20https://blog.csdn.net/wangpeng138375/article/details/75151064%20https://zhuanlan.zhihu.com/p/45368976%20https://zhuanlan.zhihu.com/p/45014864%20https://zhuanlan.zhihu.com/p/27234078%20https://www.cnblogs.com/pinard/p/7249903.html%20https://www.cnblogs.com/peghoty/p/3857839.html%20https://www.zhihu.com/question/386144477%20https://blog.csdn.net/weixin_40901056/article/details/88568344%20https://blog.csdn.net/u010223750/article/details/69948463%20%20" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon douban-icon"><path d="M.643.92v2.412h22.714V.92H.643zm1.974 4.926v9.42h18.764v-9.42H2.617zm2.72 2.408H18.69v4.605H5.338V8.254zm1.657 7.412l-2.512.938c1.037 1.461 1.87 2.825 2.512 4.091H0v2.385h24v-2.385h-6.678c.818-1.176 1.589-2.543 2.303-4.091l-2.73-.938a29.952 29.952 0 01-2.479 5.03h-4.75c-.786-1.962-1.677-3.641-2.672-5.03Z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item qq">
+                    
+                    <a href="https://connect.qq.com/widget/shareqq/index.html?url=https://gsscsd.github.io/post/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/&amp;title=%e4%bb%8eword2vec%e5%88%b0negative%20sampling&amp;summary=%20%e5%88%b0%e7%9b%ae%e5%89%8d%e4%b8%ba%e6%ad%a2%ef%bc%8cword2vec%e7%ae%97%e6%b3%95%e4%b8%8d%e5%8d%95%e5%8d%95%e6%98%afnlp%e7%9a%84%e5%9f%ba%e7%a1%80%ef%bc%8c%e4%b9%9f%e6%88%90%e4%b8%ba%e6%8e%a8%e8%8d%90%e5%92%8c%e6%90%9c%e7%b4%a2%e7%9a%84%e5%9f%ba%e7%a1%80%ef%bc%8c%e6%9c%ac%e6%96%87%e8%ae%b0%e5%bd%95%e4%b8%80%e4%b8%8bword2vec%e7%ae%97%e6%b3%95%e4%b8%ad%e7%9a%84negative%20sampling%e6%96%b9%e6%a1%88%ef%bc%8c%e5%b9%b6%e5%9f%ba%e4%ba%8e%e6%ad%a4%e8%ae%b0%e5%bd%95%e4%ba%86%e5%85%b6%e4%bb%96%e7%9a%84sampling%e6%96%b9%e6%b3%95%e3%80%82%0a%e5%8f%82%e8%80%83%e9%93%be%e6%8e%a5%ef%bc%9a%0a%20https://zhuanlan.zhihu.com/p/76568362/%20https://blog.csdn.net/yimingsilence/article/details/105920987%20https://zhuanlan.zhihu.com/p/129824834%20https://narcissuscyn.github.io/2018/07/03/CandidateSampling/%20https://www.zhihu.com/question/50043438%20https://blog.csdn.net/wangpeng138375/article/details/75151064%20https://zhuanlan.zhihu.com/p/45368976%20https://zhuanlan.zhihu.com/p/45014864%20https://zhuanlan.zhihu.com/p/27234078%20https://www.cnblogs.com/pinard/p/7249903.html%20https://www.cnblogs.com/peghoty/p/3857839.html%20https://www.zhihu.com/question/386144477%20https://blog.csdn.net/weixin_40901056/article/details/88568344%20https://blog.csdn.net/u010223750/article/details/69948463%20%20&amp;pics=https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&amp;site=Listener" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon qq-icon"><path d="M433.754 420.445c-11.526 1.393-44.86-52.741-44.86-52.741 0 31.345-16.136 72.247-51.051 101.786 16.842 5.192 54.843 19.167 45.803 34.421-7.316 12.343-125.51 7.881-159.632 4.037-34.122 3.844-152.316 8.306-159.632-4.037-9.045-15.25 28.918-29.214 45.783-34.415-34.92-29.539-51.059-70.445-51.059-101.792 0 0-33.334 54.134-44.859 52.741-5.37-.65-12.424-29.644 9.347-99.704 10.261-33.024 21.995-60.478 40.144-105.779C60.683 98.063 108.982.006 224 0c113.737.006 163.156 96.133 160.264 214.963 18.118 45.223 29.912 72.85 40.144 105.778 21.768 70.06 14.716 99.053 9.346 99.704z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item qzone">
+                    
+                    <a href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://gsscsd.github.io/post/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/&amp;title=%e4%bb%8eword2vec%e5%88%b0negative%20sampling&amp;summary=%20%e5%88%b0%e7%9b%ae%e5%89%8d%e4%b8%ba%e6%ad%a2%ef%bc%8cword2vec%e7%ae%97%e6%b3%95%e4%b8%8d%e5%8d%95%e5%8d%95%e6%98%afnlp%e7%9a%84%e5%9f%ba%e7%a1%80%ef%bc%8c%e4%b9%9f%e6%88%90%e4%b8%ba%e6%8e%a8%e8%8d%90%e5%92%8c%e6%90%9c%e7%b4%a2%e7%9a%84%e5%9f%ba%e7%a1%80%ef%bc%8c%e6%9c%ac%e6%96%87%e8%ae%b0%e5%bd%95%e4%b8%80%e4%b8%8bword2vec%e7%ae%97%e6%b3%95%e4%b8%ad%e7%9a%84negative%20sampling%e6%96%b9%e6%a1%88%ef%bc%8c%e5%b9%b6%e5%9f%ba%e4%ba%8e%e6%ad%a4%e8%ae%b0%e5%bd%95%e4%ba%86%e5%85%b6%e4%bb%96%e7%9a%84sampling%e6%96%b9%e6%b3%95%e3%80%82%0a%e5%8f%82%e8%80%83%e9%93%be%e6%8e%a5%ef%bc%9a%0a%20https://zhuanlan.zhihu.com/p/76568362/%20https://blog.csdn.net/yimingsilence/article/details/105920987%20https://zhuanlan.zhihu.com/p/129824834%20https://narcissuscyn.github.io/2018/07/03/CandidateSampling/%20https://www.zhihu.com/question/50043438%20https://blog.csdn.net/wangpeng138375/article/details/75151064%20https://zhuanlan.zhihu.com/p/45368976%20https://zhuanlan.zhihu.com/p/45014864%20https://zhuanlan.zhihu.com/p/27234078%20https://www.cnblogs.com/pinard/p/7249903.html%20https://www.cnblogs.com/peghoty/p/3857839.html%20https://www.zhihu.com/question/386144477%20https://blog.csdn.net/weixin_40901056/article/details/88568344%20https://blog.csdn.net/u010223750/article/details/69948463%20%20&amp;pics=https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&amp;site=Listener" title="" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon qzone-icon"><path d="M23.985 9.202c-.032-.099-.127-.223-.334-.258-.207-.036-7.351-1.406-7.351-1.406s-.105-.022-.198-.07c-.092-.047-.127-.167-.127-.167S12.447.956 12.349.77C12.25.583 12.104.532 12 .532c-.104 0-.251.051-.349.238-.098.186-3.626 6.531-3.626 6.531s-.035.12-.128.167c-.092.047-.197.07-.197.07S.556 8.908.348 8.943c-.208.036-.302.16-.333.258a.477.477 0 0 0 .125.449l5.362 5.49s.072.08.119.172c.016.104.005.21.005.21s-1.189 7.242-1.22 7.45.075.369.159.43c.083.062.233.106.421.013.189-.093 6.812-3.261 6.812-3.261s.098-.044.201-.061c.103-.017.201.061.201.061s6.623 3.168 6.812 3.261c.188.094.338.049.421-.013a.463.463 0 0 0 .159-.43c-.021-.14-.93-5.677-.93-5.677.876-.54 1.425-1.039 1.849-1.747-2.594.969-6.006 1.717-9.415 1.866-.915.041-2.41.097-3.473-.015-.678-.071-1.17-.144-1.243-.438-.053-.215.054-.46.545-.831a2640.5 2640.5 0 0 1 2.861-2.155c1.285-.968 3.559-2.47 3.559-2.731 0-.285-2.144-.781-4.037-.781-1.945 0-2.275.132-2.811.168-.488.034-.769.005-.804-.138-.06-.248.183-.389.588-.568.709-.314 1.86-.594 1.984-.626.194-.052 3.082-.805 5.618-.535 1.318.14 3.244.668 3.244 1.276 0 .342-1.721 1.494-3.225 2.597-1.149.843-2.217 1.561-2.217 1.688 0 .342 3.533 1.241 6.689 1.01l.003-.022c.048-.092.119-.172.119-.172l5.362-5.49a.477.477 0 0 0 .127-.449z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item qrcode">
+                    <div class="qrcode-container" title=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon qrcode-icon"><path d="M0 224h192V32H0v192zM64 96h64v64H64V96zm192-64v192h192V32H256zm128 128h-64V96h64v64zM0 480h192V288H0v192zm64-128h64v64H64v-64zm352-64h32v128h-96v-32h-32v96h-64V288h96v32h64v-32zm0 160h32v32h-32v-32zm-64 0h32v32h-32v-32z"/></svg><div id="qrcode-img"></div>
+                    </div>
+                    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+
+<script>
+    var typeNumber = 0;
+    var errorCorrectionLevel = 'L';
+    var qr = qrcode(typeNumber, errorCorrectionLevel);
+    qr.addData('https:\/\/gsscsd.github.io\/post\/%E4%BB%8Eword2vec%E5%88%B0negative_sampling\/');
+    qr.make();
+    document.getElementById('qrcode-img').innerHTML = qr.createImgTag();
+</script>
+
+                </div>
+            
+
+        </div>
+
+    </div>
+
+
+
+
+        
+    
+    
+        <div class="related-posts">
+            <h2 class="related-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon related-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"/></svg></h2>
+            <ul class="related-list">
+                
+                    <li class="related-item">
+                        <a href="/post/softmax%E4%B8%8Esigmoid%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E8%81%94%E7%B3%BB/" class="related-link">Softmax与sigmoid的区别与联系</a>
+                    </li>
+                
+                    <li class="related-item">
+                        <a href="/post/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A81/" class="related-link">PyTorch快速入门1</a>
+                    </li>
+                
+                    <li class="related-item">
+                        <a href="/post/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A80/" class="related-link">Pytorch快速入门0</a>
+                    </li>
+                
+                    <li class="related-item">
+                        <a href="/post/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/" class="related-link">tensorflow综合实例之MNIST</a>
+                    </li>
+                
+                    <li class="related-item">
+                        <a href="/post/tensorflow%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" class="related-link">tensorflow实例与线性回归</a>
+                    </li>
+                
+            </ul>
+        </div>
+    
+
+
+
+        
+    
+        <div class="post-tags">
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>深度学习</a>
+                
+            
+        </div>
+    
+
+
+
+        
+    <footer class="minimal-footer">
+        
+            <div class="post-tag"><a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag" class="post-tag-link">#深度学习</a></div>
+        
+        
+        
+            
+                <div class="post-category">
+                    <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category-link">深度学习</a>
+                </div>
+            
+        
+    </footer>
+
+
+
+        
+
+
+        
+    
+        
+        
+    
+    
+    
+    
+        <ul class="post-nav">
+            
+                <li class="post-nav-prev">
+                    <a href="/post/softmax%E4%B8%8Esigmoid%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E8%81%94%E7%B3%BB/" rel="prev">&lt; Softmax与sigmoid的区别与联系</a>
+                </li>
+            
+            
+                <li class="post-nav-next">
+                    <a href="/post/%E7%BB%88%E7%AB%AF%E5%B7%A5%E5%85%B7tmux/" rel="next">终端工具Tmux &gt;</a>
+                </li>
+            
+        </ul>
+    
+
+
+
+        
+
+
+    </div>
+</main>
+
+
+            
+    <div id="back-to-top" class="back-to-top">
+        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon arrow-up"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg></a>
+    </div>
+
+
+            
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="site-info">©&nbsp;2017–2021&nbsp;<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon footer-icon"><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg>&nbsp;Listener</div><div class="powered-by">Powered by <a href="https://github.com/gohugoio/hugo" target="_blank" rel="noopener">Hugo</a> | Theme is <a href="https://github.com/reuixiy/hugo-theme-meme" target="_blank" rel="noopener">MemE</a></div><div class="site-copyright"></div>
+
+            
+
+
+            <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\[','\]']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: {
+                equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"]
+            }
+        }
+    });
+</script>
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+        </div>
+    </footer>
+
+
+        </div>
+        
+
+        
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/medium-zoom@latest/dist/medium-zoom.min.js"></script>
+
+<script>
+    mediumZoom(document.querySelectorAll('div.post-body img'), {
+        background: 'hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.95)'
+    })
+</script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/instant.page@3.0.0/instantpage.min.js" type="module" defer></script>
+
+
+
+
+
+
+
+    </body>
+</html>
