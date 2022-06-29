@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Docker学习笔记 - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="Docker学习笔记" />
+<meta property="og:description" content="
+近期用到docker做实验，因此记录一下学习docker的笔记.
+参考链接：
+
+一篇不一样的docker原理解析
+一篇不一样的docker原理解析 提高篇
+Docker 核心技术与实现原理
+终于有人把 Docker 讲清楚了，万字详解！
+docker 镜像基本原理和核心概念
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-01-23T09:57:14+08:00" />
+<meta property="article:modified_time" content="2021-01-23T09:57:14+08:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="Docker学习笔记"/>
+<meta name="twitter:description" content="
+近期用到docker做实验，因此记录一下学习docker的笔记.
+参考链接：
+
+一篇不一样的docker原理解析
+一篇不一样的docker原理解析 提高篇
+Docker 核心技术与实现原理
+终于有人把 Docker 讲清楚了，万字详解！
+docker 镜像基本原理和核心概念
+
+"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://gsscsd.github.io/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" /><link rel="prev" href="https://gsscsd.github.io/neovim-coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/" /><link rel="next" href="https://gsscsd.github.io/eclipse-theia%E6%95%99%E7%A8%8B/" /><link rel="stylesheet" href="/css/style.min.931bc4ad2d28eb74379d23c35d88889e10d86e4fb73a8e095952c2617800dcce223d542ddf6f22eb6db537ea777ccee425cbdcb03ad216de7941dc3a1574cdfc.css" integrity="sha512-kxvErS0o63Q3nSPDXYiInhDYbk+3Oo4JWVLCYXgA3M4iPVQt328i6221N+p3fM7kJcvcsDrSFt55Qdw6FXTN/A=="><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Docker学习笔记",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "linux, docker","wordcount":  6787 ,
+        "url": "https:\/\/gsscsd.github.io\/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0\/","datePublished": "2021-01-23T09:57:14+08:00","dateModified": "2021-01-23T09:57:14+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Docker学习笔记</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Gsscsd</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/docker/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>docker</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-01-23">2021-01-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6787 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 14 分钟&nbsp;<span id="/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="leancloud_visitors" data-flag-title="Docker学习笔记">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#docker的前世今生">docker的前世今生</a>
+      <ul>
+        <li><a href="#传统虚拟机概念">传统虚拟机概念</a></li>
+        <li><a href="#容器化概念">容器化概念</a></li>
+      </ul>
+    </li>
+    <li><a href="#docker的核心技术">docker的核心技术</a>
+      <ul>
+        <li><a href="#namespaces">Namespaces</a></li>
+        <li><a href="#进程">进程</a></li>
+        <li><a href="#网络">网络</a></li>
+        <li><a href="#挂载点">挂载点</a></li>
+        <li><a href="#cgroups">CGroups</a></li>
+        <li><a href="#存储驱动">存储驱动</a></li>
+        <li><a href="#aufs">AUFS</a></li>
+      </ul>
+    </li>
+    <li><a href="#docker架构">docker架构</a></li>
+    <li><a href="#docker使用">docker使用</a>
+      <ul>
+        <li><a href="#docker配置">docker配置</a></li>
+        <li><a href="#简单入门命令">简单入门命令</a></li>
+        <li><a href="#docker-image-命令">docker image 命令</a></li>
+        <li><a href="#仓库相关">仓库相关</a></li>
+        <li><a href="#容器相关">容器相关</a></li>
+        <li><a href="#镜像相关命令">镜像相关命令</a></li>
+        <li><a href="#docker-run时参数">docker run时参数</a></li>
+        <li><a href="#dockerfile">Dockerfile</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>近期用到docker做实验，因此记录一下学习docker的笔记.</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/22382728" target="_blank" rel="noopener noreffer ">一篇不一样的docker原理解析</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/22403015" target="_blank" rel="noopener noreffer ">一篇不一样的docker原理解析 提高篇</a></li>
+<li><a href="http://dockone.io/article/2941" target="_blank" rel="noopener noreffer ">Docker 核心技术与实现原理</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/269485082?utm_source=wechat_session" target="_blank" rel="noopener noreffer ">终于有人把 Docker 讲清楚了，万字详解！</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/108409686?utm_source=wechat_session" target="_blank" rel="noopener noreffer ">docker 镜像基本原理和核心概念</a></li>
+</ul>
+</blockquote>
+<h2 id="docker的前世今生">docker的前世今生</h2>
+<p>docker是一个开源的应用容器引擎，基于Go语言开发的一种虚拟化技术，可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到任何流行的linux服务器。docker底层是一种LXC技术，在LXC的基础之上，docker提供了一系列更强大的功能。</p>
+<blockquote>
+<p>LXC为Linux Container的简写。可以提供轻量级的虚拟化，以便隔离进程和资源，而且不需要提供指令解释机制以及全虚拟化的其他复杂性。相当于C++中的NameSpace。容器有效地将由单个操作系统管理的资源划分到孤立的组中，以更好地在孤立的组之间平衡有冲突的资源使用需求。</p>
+<p>与传统虚拟化技术相比，它的优势在于：</p>
+<ul>
+<li>与宿主机使用同一个内核，性能损耗小；</li>
+<li>不需要指令级模拟；</li>
+<li>不需要即时(Just-in-time)编译；</li>
+<li>容器可以在CPU核心的本地运行指令，不需要任何专门的解释机制；</li>
+<li>避免了准虚拟化和系统调用替换中的复杂性；</li>
+<li>轻量级隔离，在隔离的同时还提供共享机制，以实现容器与宿主机的资源共享。</li>
+<li>总结：Linux Container是一种轻量级的虚拟化的手段。</li>
+</ul>
+<p>Linux Container提供了在单一可控主机节点上支持多个相互隔离的server container同时执行的机制。Linux Container有点像chroot，提供了一个拥有自己进程和网络空间的虚拟环境，但又有别于虚拟机，因为lxc是一种操作系统层次上的资源的虚拟化。</p>
+</blockquote>
+<h3 id="传统虚拟机概念">传统虚拟机概念</h3>
+<blockquote>
+<p>广义来说，虚拟机是一种模拟系统，即在软件层面上通过<strong>模拟硬件</strong>的输入和输出，让虚拟机的操作系统得以运行在没有物理硬件的环境中（也就是宿主机的操作系统上），其中能够模拟出硬件输入输出，让虚拟机的操作系统可以启动起来的程序，被叫做hypervisor。</p>
+<p>传统虚拟机的核心技术是通过软件模拟硬件，从而让虚拟机的操作系统运行起来，<strong>当宿主机的硬件架构和虚拟硬件架构一致时，不模拟硬件输入输出，只是做下真实硬件输入输出的搬运工，那么虚拟机的指令执行速度，就可以和宿主机一致了</strong>，而当宿主机的硬件架构和虚拟机硬件架构不一致时，需要<strong>模拟硬件的输入输出</strong>，此时虚拟机启动和运行速度相对就比较慢了。</p>
+<p>经典的例子：</p>
+<ul>
+<li>在linux系统上可以通过vm或者virtual软件安装Windows系统，虚拟windows系统速度和原生系统速度差不多</li>
+<li>在linux或者Windows系统上模拟android系统，则很慢，原因是android架构和windows的架构不一致</li>
+</ul>
+</blockquote>
+<h3 id="容器化概念">容器化概念</h3>
+<blockquote>
+<p>一般来说，虚拟机都会有自己的kernel，自己的硬件，这样虚拟机启动的时候需要先做开机自检，启动kernel，启动用户进程等一系列行为，虽然现在电脑运行速度挺快，但是这一系列检查做下来，也要几十秒，也就是虚拟机需要几十秒来启动。</p>
+<p>计算机科学家发现其实我们创建虚拟机也不一定需要模拟硬件的输入和输出，假如宿主机和虚拟机他们的kernel是一致的，就不用做硬件输入输出的搬运工了，只需要做kernel输入输出的搬运工即可，为了有别于硬件层面的虚拟机，这种虚拟机被命名为 操作系统层虚拟化，也被叫做容器。</p>
+</blockquote>
+<blockquote>
+<p>在虚拟机的系统中，虚拟机认为自己有独立的文件系统，进程系统，内存系统，等等一系列，所以为了让容器接近虚拟机，也需要有独立的文件系统，进程系统，内存系统，等等一系列，为了达成这一目的，主机系统采用的办法是：只要隔离容器不让它看到主机的文件系统，进程系统，内存系统，等等一系列，那么容器系统就是一个接近虚拟机的玩意了</p>
+</blockquote>
+<h2 id="docker的核心技术">docker的核心技术</h2>
+<h3 id="namespaces">Namespaces</h3>
+<blockquote>
+<p>命名空间（namespaces）是 Linux 为我们提供的用于分离进程树、网络接口、挂载点以及进程间通信等资源的方法。在日常使用 Linux 或者 macOS 时，我们并没有运行多个完全分离的服务器的需要，但是如果我们在服务器上启动了多个服务，这些服务其实会相互影响的，每一个服务都能看到其他服务的进程，也可以访问宿主机器上的任意文件，这是很多时候我们都不愿意看到的，我们更希望运行在同一台机器上的不同服务能做到完全隔离，就像运行在多台不同的机器上一样。</p>
+<p>在这种情况下，一旦服务器上的某一个服务被入侵，那么入侵者就能够访问当前机器上的所有服务和文件，这也是我们不想看到的，而 Docker 其实就通过 Linux 的 Namespaces 对不同的容器实现了隔离。</p>
+<p>Linux 的命名空间机制提供了以下七种不同的命名空间，包括 CLONE_NEWCGROUP、CLONE_NEWIPC、CLONE_NEWNET、CLONE_NEWNS、CLONE_NEWPID、CLONE_NEWUSER 和 CLONE_NEWUTS，通过这七个选项我们能在创建新的进程时设置新进程应该在哪些资源上与宿主机器进行隔离。</p>
+</blockquote>
+<h3 id="进程">进程</h3>
+<blockquote>
+<p>进程是 Linux 以及现在操作系统中非常重要的概念，它表示一个正在执行的程序，也是在现代分时系统中的一个任务单元。在linux系统里面，有两个进程非常特殊，一个是 pid 为 1 的 /sbin/init 进程，另一个是 pid 为 2 的 kthreadd 进程，这两个进程都是被 Linux 中的上帝进程 idle 创建出来的，其中前者负责执行内核的一部分初始化工作和系统配置，也会创建一些类似 getty 的注册进程，而后者负责管理和调度其他的内核进程。</p>
+</blockquote>
+<h3 id="网络">网络</h3>
+<blockquote>
+<p>如果 Docker 的容器通过 Linux 的命名空间完成了与宿主机进程的网络隔离，但是却有没有办法通过宿主机的网络与整个互联网相连，就会产生很多限制，所以 Docker 虽然可以通过命名空间创建一个隔离的网络环境，但是 Docker 中的服务仍然需要与外界相连才能发挥作用。</p>
+<p>每一个使用 docker run 启动的容器其实都具有单独的网络命名空间，Docker 为我们提供了四种不同的网络模式，Host、Container、None 和 Bridge 模式。</p>
+<p>在默认情况下，每一个容器在创建时都会创建一对虚拟网卡，两个虚拟网卡组成了数据的通道，其中一个会放在创建的容器中，会加入到名为 docker0 网桥中。docker0 会为每一个容器分配一个新的 IP 地址并将 docker0 的 IP 地址设置为默认的网关。网桥 docker0 通过 iptables 中的配置与宿主机器上的网卡相连，所有符合条件的请求都会通过 iptables 转发到 docker0 并由网桥分发给对应的机器。</p>
+<p>Docker 通过 Linux 的命名空间实现了网络的隔离，又通过 iptables 进行数据包转发，让 Docker 容器能够优雅地为宿主机器或者其他容器提供服务。</p>
+</blockquote>
+<h3 id="挂载点">挂载点</h3>
+<blockquote>
+<p>虽然我们已经通过 Linux 的命名空间解决了进程和网络隔离的问题，在 Docker 进程中我们已经没有办法访问宿主机器上的其他进程并且限制了网络的访问，但是 Docker 容器中的进程仍然能够访问或者修改宿主机器上的其他目录，这是我们不希望看到的。</p>
+<p>在新的进程中创建隔离的挂载点命名空间需要在 clone 函数中传入 CLONE_NEWNS，这样子进程就能得到父进程挂载点的拷贝，如果不传入这个参数子进程对文件系统的读写都会同步回父进程以及整个主机的文件系统。</p>
+<p>如果一个容器需要启动，那么它一定需要提供一个根文件系统（rootfs），容器需要使用这个文件系统来创建一个新的进程，所有二进制的执行都必须在这个根文件系统中。</p>
+</blockquote>
+<h3 id="cgroups">CGroups</h3>
+<blockquote>
+<p>我们通过 Linux 的命名空间为新创建的进程隔离了文件系统、网络并与宿主机器之间的进程相互隔离，但是命名空间并不能够为我们提供物理资源上的隔离，比如 CPU 或者内存，如果在同一台机器上运行了多个对彼此以及宿主机器一无所知的『容器』，这些容器却共同占用了宿主机器的物理资源。</p>
+<p>如果其中的某一个容器正在执行 CPU 密集型的任务，那么就会影响其他容器中任务的性能与执行效率，导致多个容器相互影响并且抢占资源。如何对多个容器的资源使用进行限制就成了解决进程虚拟资源隔离之后的主要问题，而 Control Groups（简称 CGroups）就是能够隔离宿主机器上的物理资源，例如 CPU、内存、磁盘 I/O 和网络带宽。</p>
+<p>每一个 CGroup 下面都有一个 tasks 文件，其中存储着属于当前控制组的所有进程的 pid，作为负责 cpu 的子系统，cpu.cfs_quota_us 文件中的内容能够对 CPU 的使用作出限制，如果当前文件的内容为 50000，那么当前控制组中的全部进程的 CPU 占用率不能超过 50%。</p>
+<p>如果系统管理员想要控制 Docker 某个容器的资源使用率就可以在 docker 这个父控制组下面找到对应的子控制组并且改变它们对应文件的内容，当然我们也可以直接在程序运行时就使用参数，让 Docker 进程去改变相应文件中的内容。</p>
+<p>当我们使用 Docker 关闭掉正在运行的容器时，Docker 的子控制组对应的文件夹也会被 Docker 进程移除，Docker 在使用 CGroup 时其实也只是做了一些创建文件夹改变文件内容的文件操作，不过 CGroup 的使用也确实解决了我们限制子容器资源占用的问题，系统管理员能够为多个容器合理的分配资源并且不会出现多个容器互相抢占资源的问题。</p>
+</blockquote>
+<h3 id="存储驱动">存储驱动</h3>
+<blockquote>
+<p>想要理解 Docker 使用的存储驱动，我们首先需要理解 Docker 是如何构建并且存储镜像的，也需要明白 Docker 的镜像是如何被每一个容器所使用的；Docker 中的每一个镜像都是由一系列只读的层组成的，Dockerfile 中的每一个命令都会在已有的只读层上创建一个新的层：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">FROM ubuntu:15.04
+</span></span><span class="line"><span class="cl">COPY . /app
+</span></span><span class="line"><span class="cl">RUN make /app
+</span></span><span class="line"><span class="cl">CMD python /app/app.py
+</span></span></code></pre></td></tr></table>
+</div>
+</div></blockquote>
+<blockquote>
+<p>当镜像被 docker run 命令创建时就会在镜像的最上层添加一个可写的层，也就是容器层，所有对于运行时容器的修改其实都是对这个容器读写层的修改。</p>
+<p>容器和镜像的区别就在于，所有的镜像都是只读的，而每一个容器其实等于镜像加上一个可读写的层，也就是同一个镜像可以对应多个容器。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="http://dockone.io/uploads/article/20190625/6bfb353b9c10c0cbdbcd7fca18e92607.png"
+        data-srcset="http://dockone.io/uploads/article/20190625/6bfb353b9c10c0cbdbcd7fca18e92607.png, http://dockone.io/uploads/article/20190625/6bfb353b9c10c0cbdbcd7fca18e92607.png 1.5x, http://dockone.io/uploads/article/20190625/6bfb353b9c10c0cbdbcd7fca18e92607.png 2x"
+        data-sizes="auto"
+        alt="http://dockone.io/uploads/article/20190625/6bfb353b9c10c0cbdbcd7fca18e92607.png"
+        title="http://dockone.io/uploads/article/20190625/6bfb353b9c10c0cbdbcd7fca18e92607.png" /></p>
+</blockquote>
+<h3 id="aufs">AUFS</h3>
+<blockquote>
+<p>AUFS  即 Advanced UnionFS，作为联合文件系统，它能够将不同文件夹中的层联合（Union）到了同一个文件夹中，这些文件夹在 AUFS 中称作分支，整个『联合』的过程被称为联合挂载（Union Mount）。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="http://dockone.io/uploads/article/20190625/15caedce18dad8d83e2ed3d02e29df03.png"
+        data-srcset="http://dockone.io/uploads/article/20190625/15caedce18dad8d83e2ed3d02e29df03.png, http://dockone.io/uploads/article/20190625/15caedce18dad8d83e2ed3d02e29df03.png 1.5x, http://dockone.io/uploads/article/20190625/15caedce18dad8d83e2ed3d02e29df03.png 2x"
+        data-sizes="auto"
+        alt="http://dockone.io/uploads/article/20190625/15caedce18dad8d83e2ed3d02e29df03.png"
+        title="http://dockone.io/uploads/article/20190625/15caedce18dad8d83e2ed3d02e29df03.png" />
+每一个镜像层或者容器层都是 /var/lib/docker/ 目录下的一个子文件夹；在 Docker 中，所有镜像层和容器层的内容都存储在 /var/lib/docker/aufs/diff/ 目录中。
+而 /var/lib/docker/aufs/layers/ 中存储着镜像层的元数据，每一个文件都保存着镜像层的元数据，最后的 /var/lib/docker/aufs/mnt/ 包含镜像或者容器层的挂载点，最终会被 Docker 通过联合的方式进行组装。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="http://dockone.io/uploads/article/20190625/e9ebb37a706756da7dcbd826fa613299.png"
+        data-srcset="http://dockone.io/uploads/article/20190625/e9ebb37a706756da7dcbd826fa613299.png, http://dockone.io/uploads/article/20190625/e9ebb37a706756da7dcbd826fa613299.png 1.5x, http://dockone.io/uploads/article/20190625/e9ebb37a706756da7dcbd826fa613299.png 2x"
+        data-sizes="auto"
+        alt="http://dockone.io/uploads/article/20190625/e9ebb37a706756da7dcbd826fa613299.png"
+        title="http://dockone.io/uploads/article/20190625/e9ebb37a706756da7dcbd826fa613299.png" />
+上面的这张图片非常好的展示了组装的过程，每一个镜像层都是建立在另一个镜像层之上的，同时所有的镜像层都是只读的，只有每个容器最顶层的容器层才可以被用户直接读写，所有的容器都建立在一些底层服务（Kernel）上，包括命名空间、控制组、rootfs 等等，这种容器的组装方式提供了非常大的灵活性，只读的镜像层通过共享也能够减少磁盘的占用。</p>
+</blockquote>
+<h2 id="docker架构">docker架构</h2>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://pic2.zhimg.com/80/v2-39f153682084c122b29d06e445c83855_1440w.jpg"
+        data-srcset="https://pic2.zhimg.com/80/v2-39f153682084c122b29d06e445c83855_1440w.jpg, https://pic2.zhimg.com/80/v2-39f153682084c122b29d06e445c83855_1440w.jpg 1.5x, https://pic2.zhimg.com/80/v2-39f153682084c122b29d06e445c83855_1440w.jpg 2x"
+        data-sizes="auto"
+        alt="https://pic2.zhimg.com/80/v2-39f153682084c122b29d06e445c83855_1440w.jpg"
+        title="https://pic2.zhimg.com/80/v2-39f153682084c122b29d06e445c83855_1440w.jpg" /></p>
+<blockquote>
+<p>docker daemon就是docker的守护进程即server端，可以是远程的，也可以是本地的，这个不是C/S架构吗，客户端Docker client 是通过rest api进行通信</p>
+<p>docker cli 用来管理容器和镜像，客户端提供一个只读镜像，然后通过镜像可以创建多个容器，这些容器可以只是一个RFS（Root file system根文件系统），也可以ishi一个包含了用户应用的RFS，容器再docker client中只是要给进程，两个进程之间互不可见</p>
+<p>用户不能与server直接交互，但可以通过与容器这个桥梁来交互，由于是操作系统级别的虚拟技术，中间的损耗几乎可以不计</p>
+<p>以 docker pull为例讲解，docker 的工作：docker client 组织配置和参数，把 pull 指令发送给 docker server，server 端接收到指令之后会交给对应的 handler。handler 会新开一个 CmdPull job 运行，这个 job 在 docker daemon 启动的时候被注册进来，所以控制权就到了 docker daemon 这边。docker daemon 是怎么根据传过来的 registry 地址、repo 名、image 名和tag 找到要下载的镜像呢？具体流程如下：</p>
+<ol>
+<li>获取 repo 下面所有的镜像 id：GET /repositories/{repo}/images</li>
+<li>获取 repo 下面所有 tag 的信息: GET /repositories/{repo}/tags</li>
+<li>根据 tag 找到对应的镜像 uuid，并下载该镜像</li>
+</ol>
+<ul>
+<li>获取该镜像的 history 信息，并依次下载这些镜像层: GET /images/{image_id}/ancestry</li>
+<li>如果这些镜像层已经存在，就 skip，不存在的话就继续</li>
+<li>获取镜像层的 json 信息：GET /images/{image_id}/json</li>
+<li>下载镜像内容： GET /images/{image_id}/layer</li>
+<li>下载完成后，把下载的内容存放到本地的 UnionFS 系统</li>
+<li>在 TagStore 添加刚下载的镜像信息</li>
+</ul>
+</blockquote>
+<h2 id="docker使用">docker使用</h2>
+<h3 id="docker配置">docker配置</h3>
+<p><code>vim /usr/lib/systemd/system/docker.service </code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yml" data-lang="yml"><span class="line"><span class="cl"><span class="p">[</span><span class="l">Unit]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Description=Docker Application Container Engine</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Documentation=http://docs.docker.com</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">After=network.target</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Wants=docker-storage-setup.service</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Requires=docker-cleanup.timer</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">[</span><span class="l">Service]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Type=notify</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">NotifyAccess=main</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">EnvironmentFile=-/run/containers/registries.conf</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">EnvironmentFile=-/etc/sysconfig/docker</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">EnvironmentFile=-/etc/sysconfig/docker-storage</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">EnvironmentFile=-/etc/sysconfig/docker-network</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Environment=GOTRACEBACK=crash</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Environment=DOCKER_HTTP_HOST_COMPAT=1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Environment=PATH=/usr/libexec/docker:/usr/bin:/usr/sbin</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">ExecStart=/usr/bin/dockerd-current --registry-mirror=https://rfcod7oz.mirror.aliyuncs.com \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>--<span class="l">add-runtime docker-runc=/usr/libexec/docker/docker-runc-current \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>--<span class="l">default-runtime=docker-runc \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>--<span class="l">exec-opt native.cgroupdriver=systemd \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>--<span class="l">userland-proxy-path=/usr/libexec/docker/docker-proxy-current \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>--<span class="l">init-path=/usr/libexec/docker/docker-init-current \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>--<span class="l">seccomp-profile=/etc/docker/seccomp.json \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="l">$OPTIONS \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="l">$DOCKER_STORAGE_OPTIONS \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="l">$DOCKER_NETWORK_OPTIONS \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="l">$ADD_REGISTRY \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="l">$BLOCK_REGISTRY \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="l">$INSECURE_REGISTRY \</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="l">$REGISTRIES</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">ExecReload=/bin/kill -s HUP $MAINPID</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">LimitNOFILE=1048576</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">LimitNPROC=1048576</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">LimitCORE=infinity</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">TimeoutStartSec=0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">Restart=on-abnormal</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">KillMode=process</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">[</span><span class="l">Install]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">WantedBy=multi-user.target</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果更改存储目录就添加<code>--graph=/opt/docker</code>,如果要更改DNS<code>--dns=xxxx的方式指定</code></p>
+<h3 id="简单入门命令">简单入门命令</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">docker images <span class="c1"># 查看已经下载的镜像</span>
+</span></span><span class="line"><span class="cl">docker  save nginx &gt;/tmp/nginx.tar.gz <span class="c1"># 导出镜像</span>
+</span></span><span class="line"><span class="cl">docker rmi -f nginx <span class="c1"># 删除镜像</span>
+</span></span><span class="line"><span class="cl">docker load &lt;/tmp/nginx.tar.gz <span class="c1"># 导入镜像</span>
+</span></span><span class="line"><span class="cl">docker ps <span class="c1"># 查看容器</span>
+</span></span><span class="line"><span class="cl">docker <span class="nb">exec</span> -it mynginx sh <span class="c1"># 交互式进入容器</span>
+</span></span><span class="line"><span class="cl">docker ps -a 　　　　　　<span class="c1">#-a :显示所有的容器，包括未运行的</span>
+</span></span><span class="line"><span class="cl">docker inspect mynginx <span class="c1"># 查看容器详细信息</span>
+</span></span><span class="line"><span class="cl">docker logs  -f mynginx  <span class="c1"># -f  挂起这个终端，动态查看日志</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="docker-image-命令">docker image 命令</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">docker images ：列出 docker host 机器上的镜像，可以使用 -f 进行过滤
+</span></span><span class="line"><span class="cl">docker build：从 Dockerfile 中构建出一个镜像
+</span></span><span class="line"><span class="cl">docker history：列出某个镜像的历史
+</span></span><span class="line"><span class="cl">docker import：从 tarball 中创建一个新的文件系统镜像
+</span></span><span class="line"><span class="cl">docker pull：从 docker registry 拉去镜像
+</span></span><span class="line"><span class="cl">docker push：把本地镜像推送到 registry
+</span></span><span class="line"><span class="cl">docker rmi： 删除镜像
+</span></span><span class="line"><span class="cl">docker save：把镜像保存为 tar 文件
+</span></span><span class="line"><span class="cl">docker search：在 docker hub 上搜索镜像
+</span></span><span class="line"><span class="cl">docker tag：为镜像打上 tag 标记
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="仓库相关">仓库相关</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">docker search <span class="nv">$KEY_WORD</span>              <span class="c1"># 查找镜像</span>
+</span></span><span class="line"><span class="cl">docker pull <span class="nv">$REGISTRY</span>:<span class="nv">$TAG</span>           <span class="c1"># 获取镜像</span>
+</span></span><span class="line"><span class="cl">docker push <span class="nv">$IMAGE_NAME</span>:<span class="nv">$IMAGE_TAG</span>   <span class="c1"># 推送镜像到仓库，需要先登录</span>
+</span></span><span class="line"><span class="cl">docker login <span class="nv">$REGISTRY_URL</span>           <span class="c1"># 登录仓库</span>
+</span></span><span class="line"><span class="cl">docker <span class="nb">logout</span> <span class="nv">$REGISTRY_URL</span>          <span class="c1"># 退出仓库</span>
+</span></span><span class="line"><span class="cl">docker info                          <span class="c1"># 显示Docker详细的系统信息，可查看仓库地址</span>
+</span></span><span class="line"><span class="cl">docker --help                        <span class="c1"># 显示Docker的帮助信息</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="容器相关">容器相关</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">docker attach <span class="nv">$CONTAINER_ID</span>  <span class="c1"># 启动一个已存在的docker容器</span>
+</span></span><span class="line"><span class="cl">docker stop <span class="nv">$CONTAINER_ID</span>    <span class="c1"># 停止docker容器</span>
+</span></span><span class="line"><span class="cl">docker start <span class="nv">$CONTAINER_ID</span>   <span class="c1"># 启动docker容器</span>
+</span></span><span class="line"><span class="cl">docker restart <span class="nv">$CONTAINER_ID</span> <span class="c1"># 重启docker容器</span>
+</span></span><span class="line"><span class="cl">docker <span class="nb">kill</span> <span class="nv">$CONTAINER_ID</span>    <span class="c1"># 强制关闭docker容器</span>
+</span></span><span class="line"><span class="cl">docker pause <span class="nv">$CONTAINER_ID</span>   <span class="c1"># 暂停容器</span>
+</span></span><span class="line"><span class="cl">docker unpause <span class="nv">$CONTAINER_ID</span> <span class="c1"># 恢复暂停的容器</span>
+</span></span><span class="line"><span class="cl">docker rename <span class="nv">$CONTAINER_ID</span>  <span class="c1"># 重新命名docker容器</span>
+</span></span><span class="line"><span class="cl">docker rm <span class="nv">$CONTAINER_ID</span>      <span class="c1"># 删除容器</span>
+</span></span><span class="line"><span class="cl">docker <span class="nb">exec</span> <span class="nv">$CONTAINER_ID</span>    <span class="c1"># 运行已启动的容器 可以使用该命令配合-it进入容器交互执行</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">docker logs <span class="nv">$CONTAINER_ID</span>    <span class="c1"># 查看docker容器运行日志，确保正常运行</span>
+</span></span><span class="line"><span class="cl">docker inspect <span class="nv">$CONTAINER_ID</span> <span class="c1"># 查看container的容器属性，比如ip等等</span>
+</span></span><span class="line"><span class="cl">docker port <span class="nv">$CONTAINER_ID</span>    <span class="c1"># 查看container的端口映射</span>
+</span></span><span class="line"><span class="cl">docker top <span class="nv">$CONTAINER_ID</span>     <span class="c1"># 查看容器中正在运行的进程</span>
+</span></span><span class="line"><span class="cl">docker commit <span class="nv">$CONTAINER_ID</span> <span class="nv">$NEW_IMAGE_NAME</span>:<span class="nv">$NEW_IMAGE_TAG</span> <span class="c1"># 将容器保存为镜像</span>
+</span></span><span class="line"><span class="cl">docker ps -a                 <span class="c1"># 查看所有容器</span>
+</span></span><span class="line"><span class="cl">docker stats                 <span class="c1"># 查看容器的资源使用情况</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Ctrl+P+Q进行退出容器，正常退出不关闭容器，如果使用exit退出，那么在退出之后会关闭容器
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="镜像相关命令">镜像相关命令</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">docker images                      <span class="c1"># 查看本地镜像</span>
+</span></span><span class="line"><span class="cl">docker rmi <span class="nv">$IMAGE_ID</span>               <span class="c1"># 删除本地镜像</span>
+</span></span><span class="line"><span class="cl">docker inspect <span class="nv">$IMAGE_ID</span>           <span class="c1"># 查看镜像详情</span>
+</span></span><span class="line"><span class="cl">docker save <span class="nv">$IMAGE_ID</span> &gt; 文件路径   <span class="c1"># 保存镜像为离线文件</span>
+</span></span><span class="line"><span class="cl">docker save -o 文件路径 <span class="nv">$IMAGE_ID</span>  <span class="c1"># 保存镜像为离线文件</span>
+</span></span><span class="line"><span class="cl">docker load &lt; 文件路径             <span class="c1"># 加载文件为docker镜像</span>
+</span></span><span class="line"><span class="cl">docker load -i 文件路径            <span class="c1"># 加载文件为docker镜像</span>
+</span></span><span class="line"><span class="cl">docker tag <span class="nv">$IMAGE_ID</span> <span class="nv">$NEW_IMAGE_NAME</span>:<span class="nv">$NEW_IMAGE_TAG</span>  <span class="c1"># 修改镜像TAG</span>
+</span></span><span class="line"><span class="cl">docker run 参数 <span class="nv">$IMAGE_ID</span> <span class="nv">$CMD</span>     <span class="c1"># 运行一个镜像</span>
+</span></span><span class="line"><span class="cl">docker <span class="nb">history</span> <span class="nv">$IMAGE_ID</span>           <span class="c1"># 显示镜像每层的变更内容</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="docker-run时参数">docker run时参数</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># -d，后台运行容器, 并返回容器ID；不指定时, 启动后开始打印日志, Ctrl+C退出命令同时会关闭容器</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -i，以交互模式运行容器, 通常与-t同时使用</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -t，为容器重新分配一个伪输入终端, 通常与-i同时使用</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --name container_name，设置容器名称, 不指定时随机生成</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -h container_hostname，设置容器的主机名, 默认随机生成</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --dns 8.8.8.8，指定容器使用的DNS服务器, 默认和宿主机一致</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -e docker_host=172.17.0.1，设置环境变量</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --cpuset=&#34;0-2&#34; or --cpuset=&#34;0,1,2&#34;，绑定容器到指定CPU运行</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -m 100M，设置容器使用内存最大值</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --net bridge，指定容器的网络连接类型, 支持bridge/host/none/container四种类型</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --ip 172.18.0.13，为容器指定固定IP（需要使用自定义网络none）</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --expose 8081 --expose 8082，开放一个端口或一组端口，会覆盖镜像设置中开放的端口</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -p [宿主机端口]:[容器内端口]，宿主机到容器的端口映射，可指定宿主机的要监听的IP，默认为0.0.0.0</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -P，注意是大写的, 宿主机随机指定一组可用的端口映射容器expose的所有端口</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -v [宿主机目录路径]:[容器内目录路径]，挂载宿主机的指定目录（或文件）到容器内的指定目录（或文件）</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --add-host [主机名]:[IP]，为容器hosts文件追加host, 默认会在hosts文件最后追加[主机名]:[容器IP]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --volumes-from [其他容器名]，将其他容器的数据卷添加到此容器</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --link [其他容器名]:[在该容器中的别名]，添加链接到另一个容器，在本容器hosts文件中加入关联容器的记录，效果类似于--add-host</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="dockerfile">Dockerfile</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">FROM ,  从一个基础镜像构建新的镜像
+</span></span><span class="line"><span class="cl">FROM ubuntu
+</span></span><span class="line"><span class="cl">MAINTAINER ,  维护者信息
+</span></span><span class="line"><span class="cl">MAINTAINER William &lt;wlj@nicescale.com&gt;
+</span></span><span class="line"><span class="cl">ENV ,  设置环境变量
+</span></span><span class="line"><span class="cl">ENV TEST <span class="m">1</span>
+</span></span><span class="line"><span class="cl">RUN ,  非交互式运行 shell 命令
+</span></span><span class="line"><span class="cl">RUN apt-get -y update
+</span></span><span class="line"><span class="cl">RUN apt-get -y install nginx
+</span></span><span class="line"><span class="cl">ADD ,  将外部文件拷贝到镜像里 ,src 可以为 url
+</span></span><span class="line"><span class="cl">ADD http://nicescale.com/ /data/nicescale.tgz
+</span></span><span class="line"><span class="cl">WORKDIR /path/to/workdir,  设置工作目录
+</span></span><span class="line"><span class="cl">WORKDIR /var/www
+</span></span><span class="line"><span class="cl">USER ,  设置用户 ID
+</span></span><span class="line"><span class="cl">USER nginx
+</span></span><span class="line"><span class="cl">VULUME &lt;<span class="c1">#dir&gt;,  设置 volume</span>
+</span></span><span class="line"><span class="cl">VOLUME <span class="o">[</span>‘/data’<span class="o">]</span>
+</span></span><span class="line"><span class="cl">EXPOSE ,  暴露哪些端口
+</span></span><span class="line"><span class="cl">EXPOSE <span class="m">80</span> <span class="m">443</span>
+</span></span><span class="line"><span class="cl">ENTRYPOINT <span class="o">[</span>‘executable’, ‘param1’,’param2’<span class="o">]</span> 执行命令
+</span></span><span class="line"><span class="cl">ENTRYPOINT <span class="o">[</span><span class="s2">&#34;/usr/sbin/nginx&#34;</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl">CMD <span class="o">[</span>“param1”,”param2”<span class="o">]</span>
+</span></span><span class="line"><span class="cl">CMD <span class="o">[</span><span class="s2">&#34;start&#34;</span><span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-01-23</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" data-title="Docker学习笔记"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" data-title="Docker学习笔记"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/baidu.svg" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/linux/">linux</a>,&nbsp;<a href="/tags/docker/">docker</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/neovim-coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/" class="prev" rel="prev" title="Neovim&#43;Coc.nvim配置 终端代码编辑环境"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Neovim+Coc.nvim配置 终端代码编辑环境</a>
+            <a href="/eclipse-theia%E6%95%99%E7%A8%8B/" class="next" rel="next" title="Eclipse Theia教程">Eclipse Theia教程<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Gsscsd</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.5.0/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.6867e554c019e9277423b0f08fa2f10633c0b4a2e736319d9fe99f73a35a205705d41b0fa3615656587f72e0f073de501a6fc69f66f2aa479482864f959af053.js" integrity="sha512-aGflVMAZ6Sd0I7Dwj6LxBjPAtKLnNjGdn+mfc6NaIFcF1BsPo2FWVlh/cuDwc95QGm/Gn2byqkeUgoZPlZrwUw=="></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.918bdd059e2c518e24c32fb5fd89144a49778f21f2166db93bf1e2ed311b3589660feb5777210257aee209f6d8bdde8c296883e34ff8bf4d5338f4be53132976.js" integrity="sha512-kYvdBZ4sUY4kwy+1/YkUSkl3jyHyFm25O/Hi7TEbNYlmD+tXdyECV67iCfbYvd6MKWiD40/4v01TOPS+UxMpdg=="></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/copy-tex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.8f3907fa55b08d1250417a302a5836b4095aeba0e8de276226fbabed0058c004aec93be43d27a90cb1c7b80dffd331535aae064d507b1c9f140b42edb18d7d90.js" integrity="sha512-jzkH+lWwjRJQQXowKlg2tAla66Do3idiJvur7QBYwASuyTvkPSepDLHHuA3/0zFTWq4GTVB7HJ8UC0LtsY19kA=="></script></body>
+</html>

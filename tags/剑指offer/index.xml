@@ -1,0 +1,139 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>剑指Offer - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/%E5%89%91%E6%8C%87offer/</link>
+        <description>剑指Offer - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 18 Apr 2019 15:19:27 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/%E5%89%91%E6%8C%87offer/" rel="self" type="application/rss+xml" /><item>
+    <title>剑指Offer之正则表达式匹配</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%B9%E9%85%8D/</link>
+    <pubDate>Thu, 18 Apr 2019 15:19:27 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%B9%E9%85%8D/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>请实现一个函数用来匹配包括&rsquo;.&lsquo;和&rsquo;<em>&lsquo;的正则表达式。模式中的字符&rsquo;.&lsquo;表示任意一个字符，而&rsquo;</em>&lsquo;表示它前面的字符可以出现任意次（包含0次）。 在本题中，匹配是指字符串的所有字符匹配整个模式。例如，字符串&quot;aaa&quot;与模式&quot;a.a&quot;和&quot;ab<em>ac</em>a&quot;匹配，但是与&quot;aa.a&quot;和&quot;ab*a&quot;均不匹配</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之顺时针打印矩阵</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%A1%BA%E6%97%B6%E9%92%88%E6%89%93%E5%8D%B0%E7%9F%A9%E9%98%B5/</link>
+    <pubDate>Thu, 18 Apr 2019 15:07:31 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%A1%BA%E6%97%B6%E9%92%88%E6%89%93%E5%8D%B0%E7%9F%A9%E9%98%B5/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述:</h3>
+<blockquote>
+<p>输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字，例如，如果输入如下4 X 4矩阵： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 则依次打印出数字1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10.</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之翻转单词顺序列</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E7%BF%BB%E8%BD%AC%E5%8D%95%E8%AF%8D%E9%A1%BA%E5%BA%8F%E5%88%97/</link>
+    <pubDate>Wed, 17 Apr 2019 21:27:58 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E7%BF%BB%E8%BD%AC%E5%8D%95%E8%AF%8D%E9%A1%BA%E5%BA%8F%E5%88%97/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>牛客最近来了一个新员工Fish，每天早晨总是会拿着一本英文杂志，写些句子在本子上。同事Cat对Fish写的内容颇感兴趣，有一天他向Fish借来翻看，但却读不懂它的意思。例如，“student. a am I”。后来才意识到，这家伙原来把句子单词的顺序翻转了，正确的句子应该是“I am a student.”。Cat对一一的翻转这些单词顺序可不在行，你能帮助他么？</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之数组中的逆序对</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%8E%92%E5%88%97/</link>
+    <pubDate>Tue, 16 Apr 2019 20:35:22 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%8E%92%E5%88%97/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述:</h3>
+<blockquote>
+<p>输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。</p>
+<p>输入一个字符串,长度不超过9(可能有字符重复),字符只包括大小写字母。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之数组中的逆序对</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%80%86%E5%BA%8F%E5%AF%B9/</link>
+    <pubDate>Tue, 16 Apr 2019 14:02:54 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%80%86%E5%BA%8F%E5%AF%B9/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<p>在数组中的两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。输入一个数组,求出这个数组中的逆序对的总数P。并将P对1000000007取模的结果输出。 即输出P%1000000007</p>
+<h4 id="输入描述">输入描述:</h4>
+<p>题目保证输入的数组中没有的相同的数字数据范围：	对于%50的数据,size&lt;=10^4对于%75的数据,size&lt;=10^5	对于%100的数据,size&lt;=2*10^5</p>
+<p>示例1</p>
+<h4 id="输入">输入</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="输出">输出</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"> <span class="mi">7</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>]]></description>
+</item>
+<item>
+    <title>剑指Offer之链表中倒数第k个结点</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9/</link>
+    <pubDate>Mon, 15 Apr 2019 21:32:08 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>输入一个链表，输出该链表中倒数第k个结点。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之删除链表中重复的结点</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%87%8D%E5%A4%8D%E7%9A%84%E7%BB%93%E7%82%B9/</link>
+    <pubDate>Mon, 15 Apr 2019 15:30:46 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%87%8D%E5%A4%8D%E7%9A%84%E7%BB%93%E7%82%B9/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。 例如，链表1-&gt;2-&gt;3-&gt;3-&gt;4-&gt;4-&gt;5 处理后为 1-&gt;2-&gt;5</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之复杂链表的复制</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</link>
+    <pubDate>Mon, 15 Apr 2019 15:25:11 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head。（注意，输出结果中请不要返回参数中的节点引用，否则判题程序会直接返回空）</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之丑数</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%B8%91%E6%95%B0/</link>
+    <pubDate>Mon, 15 Apr 2019 15:04:05 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%B8%91%E6%95%B0/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>把只包含质因子2、3和5的数称作丑数（Ugly Number）。例如6、8都是丑数，但14不是，因为它包含质因子7。 习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之序列化二叉树</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%BA%8F%E5%88%97%E5%8C%96%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+    <pubDate>Mon, 15 Apr 2019 14:41:23 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%BA%8F%E5%88%97%E5%8C%96%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>请实现两个函数，分别用来序列化和反序列化二叉树</p>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

@@ -1,0 +1,96 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>link - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/link/</link>
+        <description>link - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 15 Apr 2019 21:32:08 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/link/" rel="self" type="application/rss+xml" /><item>
+    <title>剑指Offer之链表中倒数第k个结点</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9/</link>
+    <pubDate>Mon, 15 Apr 2019 21:32:08 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>输入一个链表，输出该链表中倒数第k个结点。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之删除链表中重复的结点</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%87%8D%E5%A4%8D%E7%9A%84%E7%BB%93%E7%82%B9/</link>
+    <pubDate>Mon, 15 Apr 2019 15:30:46 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%87%8D%E5%A4%8D%E7%9A%84%E7%BB%93%E7%82%B9/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。 例如，链表1-&gt;2-&gt;3-&gt;3-&gt;4-&gt;4-&gt;5 处理后为 1-&gt;2-&gt;5</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之复杂链表的复制</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</link>
+    <pubDate>Mon, 15 Apr 2019 15:25:11 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head。（注意，输出结果中请不要返回参数中的节点引用，否则判题程序会直接返回空）</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之合并两个排序的链表</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%8E%92%E5%BA%8F%E7%9A%84%E9%93%BE%E8%A1%A8/</link>
+    <pubDate>Mon, 08 Apr 2019 20:34:07 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%8E%92%E5%BA%8F%E7%9A%84%E9%93%BE%E8%A1%A8/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之反转链表</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</link>
+    <pubDate>Thu, 04 Apr 2019 20:19:30 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>输入一个链表，反转链表后，输出新链表的表头。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之链表中环的入口结点</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%8E%AF%E7%9A%84%E5%85%A5%E5%8F%A3%E7%BB%93%E7%82%B9/</link>
+    <pubDate>Sat, 30 Mar 2019 19:43:43 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%8E%AF%E7%9A%84%E5%85%A5%E5%8F%A3%E7%BB%93%E7%82%B9/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>给一个链表，若其中包含环，请找出该链表的环的入口结点，否则，输出null。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之两个链表的第一个公共结点</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%AC%E5%85%B1%E7%BB%93%E7%82%B9/</link>
+    <pubDate>Wed, 27 Mar 2019 21:44:26 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%AC%E5%85%B1%E7%BB%93%E7%82%B9/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>输入两个链表，找出它们的第一个公共结点。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之从尾到头打印链表</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BB%8E%E5%B0%BE%E5%88%B0%E5%A4%B4%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/</link>
+    <pubDate>Thu, 17 Jan 2019 14:15:46 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BB%8E%E5%B0%BE%E5%88%B0%E5%A4%B4%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>输入一个链表，按链表值从尾到头的顺序返回一个ArrayList。</p>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

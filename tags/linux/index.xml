@@ -1,0 +1,36 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>linux - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/linux/</link>
+        <description>linux - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sat, 20 Feb 2021 22:14:03 &#43;0800</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/linux/" rel="self" type="application/rss+xml" /><item>
+    <title>终端工具Tmux</title>
+    <link>https://gsscsd.github.io/%E7%BB%88%E7%AB%AF%E5%B7%A5%E5%85%B7tmux/</link>
+    <pubDate>Sat, 20 Feb 2021 22:14:03 &#43;0800</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E7%BB%88%E7%AB%AF%E5%B7%A5%E5%85%B7tmux/</guid>
+    <description><![CDATA[<blockquote>
+<p>Tmux 的全称是 Terminal MUtipleXer，及终端复用软件。顾名思义，它的主要功能就是在你关闭终端窗口之后保持进程的运行，此外 Tmux 的另一个重大功能就是分屏</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>Docker学习笔记</title>
+    <link>https://gsscsd.github.io/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Sat, 23 Jan 2021 09:57:14 &#43;0800</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[<blockquote>
+<p>近期用到docker做实验，因此记录一下学习docker的笔记.</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/22382728" target="_blank" rel="noopener noreffer ">一篇不一样的docker原理解析</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/22403015" target="_blank" rel="noopener noreffer ">一篇不一样的docker原理解析 提高篇</a></li>
+<li><a href="http://dockone.io/article/2941" target="_blank" rel="noopener noreffer ">Docker 核心技术与实现原理</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/269485082?utm_source=wechat_session" target="_blank" rel="noopener noreffer ">终于有人把 Docker 讲清楚了，万字详解！</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/108409686?utm_source=wechat_session" target="_blank" rel="noopener noreffer ">docker 镜像基本原理和核心概念</a></li>
+</ul>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

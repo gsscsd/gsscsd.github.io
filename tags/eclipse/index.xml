@@ -1,0 +1,30 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Eclipse - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/eclipse/</link>
+        <description>Eclipse - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sat, 23 Jan 2021 22:02:42 &#43;0800</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/eclipse/" rel="self" type="application/rss+xml" /><item>
+    <title>Eclipse Theia教程</title>
+    <link>https://gsscsd.github.io/eclipse-theia%E6%95%99%E7%A8%8B/</link>
+    <pubDate>Sat, 23 Jan 2021 22:02:42 &#43;0800</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/eclipse-theia%E6%95%99%E7%A8%8B/</guid>
+    <description><![CDATA[<blockquote>
+<p>Theia 是 Eclipse 推出的云端和桌面 IDE 平台，完全开源。Theia 是基于 VS Code 开发的，它的模块化特性非常适合二次开发，比如华为云 CloudIDE、阿里云 Function Compute IDE 便是基于 Theia 开发。</p>
+<p>参考链接：</p>
+<ul>
+<li>
+<p><a href="https://blog.hvnobug.com/post/remote-ide" target="_blank" rel="noopener noreffer ">打造你的 Could IDE</a></p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/144866584" target="_blank" rel="noopener noreffer ">随时随地敲代码，基于Theia快速部署自己的云开发环境</a></p>
+</li>
+<li>
+<p><a href="https://theia-ide.org/docs/composing_applications" target="_blank" rel="noopener noreffer ">Theia官方文档</a></p>
+</li>
+</ul>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

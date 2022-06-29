@@ -1,0 +1,24 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Pytorch - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/pytorch/</link>
+        <description>Pytorch - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 15 Jan 2019 18:26:49 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/pytorch/" rel="self" type="application/rss+xml" /><item>
+    <title>PyTorch快速入门1</title>
+    <link>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A81/</link>
+    <pubDate>Tue, 15 Jan 2019 18:26:49 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A81/</guid>
+    <description><![CDATA[<p>在学习了<code>PyTorch</code>的<code>Tensor、Variable和autograd</code>之后，已经可以实现简单的深度学习模型，然而使用<code>autograd</code>实现的深度学习模型，其抽象程度比较较低，如果用其来实现深度学习模型，则需要编写的代码量极大。在这种情况下，<code>torch.nn</code>应运而生，其是专门为深度学习而设计的模块。<code>torch.nn</code>的核心数据结构是<code>Module</code>，它是一个抽象概念，既可以表示神经网络中的某个层（layer），也可以表示一个包含很多层的神经网络。在实际使用中，最常见的做法是继承<code>nn.Module</code>，撰写自己的网络层。</p>]]></description>
+</item>
+<item>
+    <title>Pytorch快速入门0</title>
+    <link>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A80/</link>
+    <pubDate>Sat, 05 Jan 2019 17:52:39 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A80/</guid>
+    <description><![CDATA[为什么选择PyTorch 简洁：PyTorch的设计追求最少的封装，尽量避免重复造轮子。不像TensorFlow中充斥着session、gra]]></description>
+</item>
+</channel>
+</rss>

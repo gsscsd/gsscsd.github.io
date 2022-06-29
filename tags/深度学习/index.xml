@@ -1,0 +1,125 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>深度学习 - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</link>
+        <description>深度学习 - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 14 Mar 2021 20:24:47 &#43;0800</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+    <title>Softmax与sigmoid的区别与联系</title>
+    <link>https://gsscsd.github.io/softmax%E4%B8%8Esigmoid%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E8%81%94%E7%B3%BB/</link>
+    <pubDate>Sun, 14 Mar 2021 20:24:47 &#43;0800</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/softmax%E4%B8%8Esigmoid%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E8%81%94%E7%B3%BB/</guid>
+    <description><![CDATA[<h2 id="前言">前言：</h2>
+<p>后续记录一下softmax函数与sigmoid函数的区别</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://www.jianshu.com/p/36beb5ff76db" target="_blank" rel="noopener noreffer ">https://www.jianshu.com/p/36beb5ff76db</a></li>
+</ul>]]></description>
+</item>
+<item>
+    <title>从word2vec到negative sampling</title>
+    <link>https://gsscsd.github.io/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/</link>
+    <pubDate>Sat, 13 Mar 2021 20:29:58 &#43;0800</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/</guid>
+    <description><![CDATA[<blockquote>
+<p>到目前为止，word2vec算法不单单是nlp的基础，也成为推荐和搜索的基础，本文记录一下word2vec算法中的negative sampling方案，并基于此记录了其他的sampling方法。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/76568362/" target="_blank" rel="noopener noreffer ">https://zhuanlan.zhihu.com/p/76568362/</a></li>
+<li><a href="https://blog.csdn.net/yimingsilence/article/details/105920987" target="_blank" rel="noopener noreffer ">https://blog.csdn.net/yimingsilence/article/details/105920987</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/129824834" target="_blank" rel="noopener noreffer ">https://zhuanlan.zhihu.com/p/129824834</a></li>
+<li><a href="https://narcissuscyn.github.io/2018/07/03/CandidateSampling/" target="_blank" rel="noopener noreffer ">https://narcissuscyn.github.io/2018/07/03/CandidateSampling/</a></li>
+<li><a href="https://www.zhihu.com/question/50043438" target="_blank" rel="noopener noreffer ">https://www.zhihu.com/question/50043438</a></li>
+<li><a href="https://blog.csdn.net/wangpeng138375/article/details/75151064" target="_blank" rel="noopener noreffer ">https://blog.csdn.net/wangpeng138375/article/details/75151064</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/45368976" target="_blank" rel="noopener noreffer ">https://zhuanlan.zhihu.com/p/45368976</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/45014864" target="_blank" rel="noopener noreffer ">https://zhuanlan.zhihu.com/p/45014864</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/27234078" target="_blank" rel="noopener noreffer ">https://zhuanlan.zhihu.com/p/27234078</a></li>
+<li><a href="https://www.cnblogs.com/pinard/p/7249903.html" target="_blank" rel="noopener noreffer ">https://www.cnblogs.com/pinard/p/7249903.html</a></li>
+<li><a href="https://www.cnblogs.com/peghoty/p/3857839.html" target="_blank" rel="noopener noreffer ">https://www.cnblogs.com/peghoty/p/3857839.html</a></li>
+<li><a href="https://www.zhihu.com/question/386144477" target="_blank" rel="noopener noreffer ">https://www.zhihu.com/question/386144477</a></li>
+<li><a href="https://blog.csdn.net/weixin_40901056/article/details/88568344" target="_blank" rel="noopener noreffer ">https://blog.csdn.net/weixin_40901056/article/details/88568344</a></li>
+<li><a href="https://blog.csdn.net/u010223750/article/details/69948463" target="_blank" rel="noopener noreffer ">https://blog.csdn.net/u010223750/article/details/69948463</a></li>
+</ul>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>PyTorch快速入门1</title>
+    <link>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A81/</link>
+    <pubDate>Tue, 15 Jan 2019 18:26:49 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A81/</guid>
+    <description><![CDATA[<p>在学习了<code>PyTorch</code>的<code>Tensor、Variable和autograd</code>之后，已经可以实现简单的深度学习模型，然而使用<code>autograd</code>实现的深度学习模型，其抽象程度比较较低，如果用其来实现深度学习模型，则需要编写的代码量极大。在这种情况下，<code>torch.nn</code>应运而生，其是专门为深度学习而设计的模块。<code>torch.nn</code>的核心数据结构是<code>Module</code>，它是一个抽象概念，既可以表示神经网络中的某个层（layer），也可以表示一个包含很多层的神经网络。在实际使用中，最常见的做法是继承<code>nn.Module</code>，撰写自己的网络层。</p>]]></description>
+</item>
+<item>
+    <title>机器学习案例之NLP文本分类</title>
+    <link>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/</link>
+    <pubDate>Mon, 07 Jan 2019 08:43:05 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/</guid>
+    <description><![CDATA[<h2 id="传统文本分类方法"><strong>传统文本分类方法</strong></h2>
+<p>文本分类问题算是自然语言处理领域中一个非常经典的问题了，相关研究最早可以追溯到上世纪50年代，当时是通过专家规则（Pattern）进行分类，甚至在80年代初一度发展到利用知识工程建立专家系统，这样做的好处是短平快的解决top问题，但显然天花板非常低，不仅费时费力，覆盖的范围和准确率都非常有限。</p>]]></description>
+</item>
+<item>
+    <title>Pytorch快速入门0</title>
+    <link>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A80/</link>
+    <pubDate>Sat, 05 Jan 2019 17:52:39 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A80/</guid>
+    <description><![CDATA[为什么选择PyTorch 简洁：PyTorch的设计追求最少的封装，尽量避免重复造轮子。不像TensorFlow中充斥着session、gra]]></description>
+</item>
+<item>
+    <title>tensorflow综合实例之MNIST</title>
+    <link>https://gsscsd.github.io/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/</link>
+    <pubDate>Wed, 02 Jan 2019 18:54:44 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/</guid>
+    <description><![CDATA[在本篇文章中，使用两种方法来做MNIST分类，一个是全连接层，一个是CNN。 MNIST 数据集来自美国国家标准与技术研究所， National Institute of Standards and Technology (NIST)。]]></description>
+</item>
+<item>
+    <title>tensorflow实例与线性回归</title>
+    <link>https://gsscsd.github.io/tensorflow%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</link>
+    <pubDate>Sat, 29 Dec 2018 15:16:08 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/tensorflow%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</guid>
+    <description><![CDATA[<blockquote>
+<p>在本篇文章中，我们使用四种方法来实现线性回归模型，然后在使用tensoflow实现一个二次函数拟合模型。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>tensorflow之Graph、Session</title>
+    <link>https://gsscsd.github.io/tensorflow%E4%B9%8Bgraphsession/</link>
+    <pubDate>Fri, 28 Dec 2018 16:54:20 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/tensorflow%E4%B9%8Bgraphsession/</guid>
+    <description><![CDATA[<blockquote>
+<p>学习完tensorflow变量常量等基本量的操作，意味着最基本的东西都有了，使用这些基本的操作，我们就做一些数学运算，至于接下来如何操作基本量和组成更大的计算图，那就需要学习Graph和Session了。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>tensorflow之Tensor、Variable</title>
+    <link>https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/</link>
+    <pubDate>Thu, 27 Dec 2018 21:19:49 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/</guid>
+    <description><![CDATA[<h3 id="为什么选择tensorflow">为什么选择tensorflow</h3>
+<blockquote>
+<p>TensorFlow 无可厚非地能被认定为 神经网络中最好用的库之一。它擅长的任务就是训练深度神经网络.通过使用TensorFlow我们就可以快速的入门神经网络，大大降低了深度学习（也就是深度神经网络）的开发成本和开发难度.。TensorFlow 的开源性，让所有人都能使用并且维护， 巩固它. 使它能迅速更新, 提升。</p>
+<p>现在新版本的tensorflow除了支持Graph Execution之外，还提供了Eager Execution。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>keras详细介绍</title>
+    <link>https://gsscsd.github.io/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/</link>
+    <pubDate>Thu, 27 Dec 2018 10:44:21 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/</guid>
+    <description><![CDATA[<h3 id="计算图与张量">计算图与张量</h3>
+<blockquote>
+<p>要说Pytorch/Tensorflow/Keras，就不能不提它的符号主义特性</p>
+<p>事实上，Pytorch也好，Tensorflow也好，其实是一款符号主义的计算框架，未必是专为深度学习设计的。假如你有一个与深度学习完全无关的计算任务想运行在GPU上，你完全可以通过Pytorch/Tensorflow编写和运行。</p>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>OpenCV之feature2d组件 - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="OpenCV之feature2d组件" />
+<meta property="og:description" content="
+角点检测
+特征检测与匹配
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/opencv%E4%B9%8Bfeature2d%E7%BB%84%E4%BB%B6/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-03-28T09:55:42+00:00" />
+<meta property="article:modified_time" content="2019-03-28T09:55:42+00:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="OpenCV之feature2d组件"/>
+<meta name="twitter:description" content="
+角点检测
+特征检测与匹配
+"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://gsscsd.github.io/opencv%E4%B9%8Bfeature2d%E7%BB%84%E4%BB%B6/" /><link rel="prev" href="https://gsscsd.github.io/opencv%E4%B9%8B%E7%9B%B4%E6%96%B9%E5%9B%BE%E5%92%8C%E5%8C%B9%E9%85%8D/" /><link rel="next" href="https://gsscsd.github.io/opencv%E4%B9%8Bpractice/" /><link rel="stylesheet" href="/css/style.min.931bc4ad2d28eb74379d23c35d88889e10d86e4fb73a8e095952c2617800dcce223d542ddf6f22eb6db537ea777ccee425cbdcb03ad216de7941dc3a1574cdfc.css" integrity="sha512-kxvErS0o63Q3nSPDXYiInhDYbk+3Oo4JWVLCYXgA3M4iPVQt328i6221N+p3fM7kJcvcsDrSFt55Qdw6FXTN/A=="><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "OpenCV之feature2d组件",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/opencv%E4%B9%8Bfeature2d%E7%BB%84%E4%BB%B6\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "OpenCV","wordcount":  2270 ,
+        "url": "https:\/\/gsscsd.github.io\/opencv%E4%B9%8Bfeature2d%E7%BB%84%E4%BB%B6\/","datePublished": "2019-03-28T09:55:42+00:00","dateModified": "2019-03-28T09:55:42+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">OpenCV之feature2d组件</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Gsscsd</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/opencv/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>OpenCV</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2019-03-28">2019-03-28</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2270 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 5 分钟&nbsp;<span id="/opencv%E4%B9%8Bfeature2d%E7%BB%84%E4%BB%B6/" class="leancloud_visitors" data-flag-title="OpenCV之feature2d组件">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#角点检测">角点检测</a>
+          <ul>
+            <li><a href="#harris角点检测">Harris角点检测</a></li>
+          </ul>
+        </li>
+        <li><a href="#特征检测与匹配">特征检测与匹配</a>
+          <ul>
+            <li><a href="#surf特征点检测">SURF特征点检测</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>角点检测</p>
+<p>特征检测与匹配</p>
+</blockquote>
+<h3 id="角点检测">角点检测</h3>
+<h4 id="harris角点检测">Harris角点检测</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//以灰度模式载入图像并显示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Mat</span> <span class="n">srcImage</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;srcImage&#34;</span><span class="p">,</span> <span class="n">srcImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//进行Harris角点检测找出角点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Mat</span> <span class="n">cornerStrength</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cornerHarris</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">cornerStrength</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//对灰度图进行阈值操作，得到二值图并显示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Mat</span> <span class="n">harrisCorner</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">threshold</span><span class="p">(</span><span class="n">cornerStrength</span><span class="p">,</span> <span class="n">harrisCorner</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">THRESH_BINARY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;harrisCorner&#34;</span><span class="p">,</span> <span class="n">harrisCorner</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cp">#define WINDOW_NAME1 &#34;dstImage&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define WINDOW_NAME2 &#34;scaledImage&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="n">Mat</span> <span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">,</span> <span class="n">grayImage</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">thresh</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span> <span class="c1">//当前阈值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">max_thresh</span> <span class="o">=</span> <span class="mi">175</span><span class="p">;</span> <span class="c1">//最大阈值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">on_CornerHarris</span><span class="p">(</span><span class="kt">int</span> <span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Show</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Show</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">srcImage</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">srcImage</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no, srcImage is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;srcImage&#34;</span><span class="p">,</span> <span class="n">srcImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">dstImage</span> <span class="o">=</span> <span class="n">srcImage</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cvtColor</span><span class="p">(</span><span class="n">dstImage</span><span class="p">,</span> <span class="n">grayImage</span><span class="p">,</span> <span class="n">CV_BGR2GRAY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//imshow(&#34;grayImage&#34;, grayImage);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//创建窗口和滚动条
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">namedWindow</span><span class="p">(</span><span class="n">WINDOW_NAME1</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;CornerHarris&#34;</span><span class="p">,</span> <span class="n">WINDOW_NAME1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">thresh</span><span class="p">,</span> <span class="n">max_thresh</span><span class="p">,</span> <span class="n">on_CornerHarris</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">on_CornerHarris</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Show</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n\n\t\t\t</span><span class="s">【欢迎来到Harris角点检测示例程序~】</span><span class="se">\n\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n\n\t</span><span class="s">请调整滚动条观察图像效果</span><span class="se">\n\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n\t\t\t\t\t\t\t\t\t\t</span><span class="s"> by 晴宝&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">on_CornerHarris</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//1.定义一些局部变量
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Mat</span> <span class="n">n_dstImage</span><span class="p">;</span><span class="c1">//目标图
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Mat</span> <span class="n">normImage</span><span class="p">;</span><span class="c1">//归一化后的图
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Mat</span> <span class="n">scaledImage</span><span class="p">;</span><span class="c1">//线性变换后的八位无符号整型的图
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//2.初始化
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//置零当前需要显示的两幅图，即清除上一次调用此函数时他们的值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">n_dstImage</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span><span class="n">srcImage</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">CV_32FC1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dstImage</span> <span class="o">=</span> <span class="n">srcImage</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//3.正式检测
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//进行角点检测
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cornerHarris</span><span class="p">(</span><span class="n">grayImage</span><span class="p">,</span> <span class="n">n_dstImage</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="n">BORDER_DEFAULT</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//归一化与转换
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">normalize</span><span class="p">(</span><span class="n">n_dstImage</span><span class="p">,</span> <span class="n">normImage</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="n">CV_32FC1</span><span class="p">,</span> <span class="n">Mat</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//将归一化的图像线性变换成8位无符号整型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">convertScaleAbs</span><span class="p">(</span><span class="n">normImage</span><span class="p">,</span> <span class="n">scaledImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//4.进行绘制
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//将检测到的，且符合阈值条件的角点绘制出来
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">normImage</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">normImage</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">normImage</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">thresh</span> <span class="o">+</span> <span class="mi">80</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">circle</span><span class="p">(</span><span class="n">dstImage</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="mi">5</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="n">circle</span><span class="p">(</span><span class="n">scaledImage</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="mi">5</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="n">WINDOW_NAME1</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="n">WINDOW_NAME2</span><span class="p">,</span> <span class="n">scaledImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="特征检测与匹配">特征检测与匹配</h3>
+<h4 id="surf特征点检测">SURF特征点检测</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">//SURF特征点检测
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">  1.使用FeatureDetector接口发现兴趣点
+</span></span></span><span class="line"><span class="cl"><span class="cm">  2.使用SurFeatureDetector以及其函数detect来实现检测过程
+</span></span></span><span class="line"><span class="cl"><span class="cm">  3.使用函数drawKeypoints绘制检测到的关键点
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/features2d/features2d.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/xfeatures2d.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/core/core.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="o">::</span><span class="n">xfeatures2d</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Show</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Show</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">srcImage1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">srcImage2</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;5.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">srcImage1</span><span class="p">.</span><span class="n">data</span> <span class="o">||</span> <span class="o">!</span><span class="n">srcImage2</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no, srcImage is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;srcImage1&#34;</span><span class="p">,</span> <span class="n">srcImage1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;srcImage2&#34;</span><span class="p">,</span> <span class="n">srcImage2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//定义需要用到的变量和类
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">int</span> <span class="n">minHessian</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span> <span class="c1">//定义SURF中的hessian阈值特征值检测算子
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//SurfFeatureDetector detector(minHessian);//定义一个SurfFeatureDetector（SURF）特征检测对象
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Ptr</span><span class="o">&lt;</span><span class="n">SURF</span><span class="o">&gt;</span> <span class="n">surfDetector</span> <span class="o">=</span> <span class="n">SURF</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span> <span class="n">keypoints_1</span><span class="p">,</span> <span class="n">keypoints_2</span><span class="p">;</span><span class="c1">//vector模板类是能够存放任意类型的动态数组，能够增加和压缩数据
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//调用detect函数检测出SURF特征关键点，保存在vector容器中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//detector.detect(srcImage1, keypoints_1);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//detector.detect(srcImage2, keypoints_2);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">surfDetector</span><span class="o">-&gt;</span><span class="n">detect</span><span class="p">(</span><span class="n">srcImage1</span><span class="p">,</span> <span class="n">keypoints_1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">surfDetector</span><span class="o">-&gt;</span><span class="n">detect</span><span class="p">(</span><span class="n">srcImage2</span><span class="p">,</span> <span class="n">keypoints_2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//绘制特征关键点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Mat</span> <span class="n">img_keypoints_1</span><span class="p">,</span> <span class="n">img_keypoints_2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">drawKeypoints</span><span class="p">(</span><span class="n">srcImage1</span><span class="p">,</span> <span class="n">keypoints_1</span><span class="p">,</span> <span class="n">img_keypoints_1</span><span class="p">,</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">DrawMatchesFlags</span><span class="o">::</span><span class="n">DEFAULT</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">drawKeypoints</span><span class="p">(</span><span class="n">srcImage2</span><span class="p">,</span> <span class="n">keypoints_2</span><span class="p">,</span> <span class="n">img_keypoints_2</span><span class="p">,</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">DrawMatchesFlags</span><span class="o">::</span><span class="n">DEFAULT</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;img_keypoints_1&#34;</span><span class="p">,</span> <span class="n">img_keypoints_1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;img_keypoints_2&#34;</span><span class="p">,</span> <span class="n">img_keypoints_2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Show</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n\n\t</span><span class="s">欢迎来到【SURF特征检测】示例程序~</span><span class="se">\n\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n\t</span><span class="s">按键操作说明：</span><span class="se">\n\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\t\t</span><span class="s">键盘按键任意键 - 退出程序</span><span class="se">\n\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\n\n\t\t\t\t\t\t\t\t</span><span class="s"> by 晴宝</span><span class="se">\n\n\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">///*
+</span></span></span><span class="line"><span class="cl"><span class="c1">//程序的核心思想：
+</span></span></span><span class="line"><span class="cl"><span class="c1">//  1.使用DescriptorExtractor接口来寻找关键点对应的特征向量
+</span></span></span><span class="line"><span class="cl"><span class="c1">//	2.使用SurfdescriptorExtractor以及它的函数compute来完成特定的计算
+</span></span></span><span class="line"><span class="cl"><span class="c1">//	3.使用BruteForceMatcher来匹配特征向量
+</span></span></span><span class="line"><span class="cl"><span class="c1">//	4.使用函数drawMatches来绘制检测到的匹配点
+</span></span></span><span class="line"><span class="cl"><span class="c1">//*/
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/features2d/features2d.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/xfeatures2d.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/core/core.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="o">::</span><span class="n">xfeatures2d</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Show</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Show</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">srcImage1</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">srcImage2</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;5.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">srcImage1</span><span class="p">.</span><span class="n">data</span> <span class="o">||</span> <span class="o">!</span><span class="n">srcImage2</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no, srcImage is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//使用SURF算子检测关键点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">int</span> <span class="n">minHessian</span> <span class="o">=</span> <span class="mi">700</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//Ptr&lt;SIFT&gt; SiftDescriptor = SIFT::create();
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Ptr</span><span class="o">&lt;</span><span class="n">SURF</span><span class="o">&gt;</span> <span class="n">surfDetector</span> <span class="o">=</span> <span class="n">SURF</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span> <span class="c1">//海塞矩阵阈值，在这里调整精度，值越大点越少，越精准 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span> <span class="n">keyPoints1</span><span class="p">,</span> <span class="n">keyPoints2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//调用detect函数检测出SURF特征关键点，保存在vector容器中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">surfDetector</span><span class="o">-&gt;</span><span class="n">detect</span><span class="p">(</span><span class="n">srcImage1</span><span class="p">,</span> <span class="n">keyPoints1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">surfDetector</span><span class="o">-&gt;</span><span class="n">detect</span><span class="p">(</span><span class="n">srcImage2</span><span class="p">,</span> <span class="n">keyPoints2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//计算描述符（特征向量）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//特征点描述，为下边的特征点匹配做准备    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Ptr</span><span class="o">&lt;</span><span class="n">SURF</span><span class="o">&gt;</span> <span class="n">SurfDescriptor</span> <span class="o">=</span> <span class="n">SURF</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">descriptors1</span><span class="p">,</span> <span class="n">descriptors2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">SurfDescriptor</span><span class="o">-&gt;</span><span class="n">compute</span><span class="p">(</span><span class="n">srcImage1</span><span class="p">,</span> <span class="n">keyPoints1</span><span class="p">,</span> <span class="n">descriptors1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">SurfDescriptor</span><span class="o">-&gt;</span><span class="n">compute</span><span class="p">(</span><span class="n">srcImage2</span><span class="p">,</span> <span class="n">keyPoints2</span><span class="p">,</span> <span class="n">descriptors2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//使用BruteForce进行匹配
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//实例化一个匹配器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//BruteForceMatcher&lt;L2&lt;float&gt;&gt; matcher;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">BFMatcher</span> <span class="n">matcher</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="n">matches</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//匹配两幅图中的描述子（descriptors）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">matcher</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">descriptors1</span><span class="p">,</span> <span class="n">descriptors2</span><span class="p">,</span> <span class="n">matches</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//绘制从两个图像中匹配出的关键点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Mat</span> <span class="n">imgMatches</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//进行绘制
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">drawMatches</span><span class="p">(</span><span class="n">srcImage1</span><span class="p">,</span> <span class="n">keyPoints1</span><span class="p">,</span> <span class="n">srcImage2</span><span class="p">,</span> <span class="n">keyPoints2</span><span class="p">,</span> <span class="n">matches</span><span class="p">,</span> <span class="n">imgMatches</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;imgMatches&#34;</span><span class="p">,</span> <span class="n">imgMatches</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Show</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n\n\t</span><span class="s">欢迎来到【SURF特征描述】示例程序~</span><span class="se">\n\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n\t\t\t\t\t\t\t</span><span class="s"> by 晴宝</span><span class="se">\n\n\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;opencv2/core.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;opencv2/core/utility.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;opencv2/core/ocl.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;opencv2/imgcodecs.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;opencv2/highgui.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;opencv2/features2d.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;opencv2/calib3d.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;opencv2/imgproc.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span><span class="cpf">&#34;opencv2/flann.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span><span class="cpf">&#34;opencv2/xfeatures2d.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span><span class="cpf">&#34;opencv2/ml.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="o">::</span><span class="n">xfeatures2d</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="o">::</span><span class="n">ml</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">a</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">,</span> <span class="n">IMREAD_GRAYSCALE</span><span class="p">);</span>    <span class="c1">//读取灰度图像
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Mat</span> <span class="n">b</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;5.jpg&#34;</span><span class="p">,</span> <span class="n">IMREAD_GRAYSCALE</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">Ptr</span><span class="o">&lt;</span><span class="n">SURF</span><span class="o">&gt;</span> <span class="n">surf</span><span class="p">;</span>      <span class="c1">//创建方式和2中的不一样
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">surf</span> <span class="o">=</span> <span class="n">SURF</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="mi">800</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">BFMatcher</span> <span class="n">matcher</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">vector</span><span class="o">&lt;</span><span class="n">KeyPoint</span><span class="o">&gt;</span><span class="n">key1</span><span class="p">,</span> <span class="n">key2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">vector</span><span class="o">&lt;</span><span class="n">DMatch</span><span class="o">&gt;</span> <span class="n">matches</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">surf</span><span class="o">-&gt;</span><span class="n">detectAndCompute</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">key1</span><span class="p">,</span> <span class="n">c</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">surf</span><span class="o">-&gt;</span><span class="n">detectAndCompute</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">Mat</span><span class="p">(),</span> <span class="n">key2</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">matcher</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">matches</span><span class="p">);</span>       <span class="c1">//匹配
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">sort</span><span class="p">(</span><span class="n">matches</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">matches</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>  <span class="c1">//筛选匹配点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">vector</span><span class="o">&lt;</span> <span class="n">DMatch</span> <span class="o">&gt;</span> <span class="n">good_matches</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">ptsPairs</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">matches</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.15</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ptsPairs</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ptsPairs</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">good_matches</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">outimg</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">drawMatches</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">key1</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">key2</span><span class="p">,</span> <span class="n">good_matches</span><span class="p">,</span> <span class="n">outimg</span><span class="p">,</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(),</span> <span class="n">DrawMatchesFlags</span><span class="o">::</span><span class="n">NOT_DRAW_SINGLE_POINTS</span><span class="p">);</span>  <span class="c1">//绘制匹配点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">obj</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">scene</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">good_matches</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">obj</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">key1</span><span class="p">[</span><span class="n">good_matches</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">queryIdx</span><span class="p">].</span><span class="n">pt</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">scene</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">key2</span><span class="p">[</span><span class="n">good_matches</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">trainIdx</span><span class="p">].</span><span class="n">pt</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">obj_corners</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">obj_corners</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">obj_corners</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">obj_corners</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="n">rows</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">obj_corners</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="n">rows</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point2f</span><span class="o">&gt;</span> <span class="n">scene_corners</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">H</span> <span class="o">=</span> <span class="n">findHomography</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">RANSAC</span><span class="p">);</span>      <span class="c1">//寻找匹配的图像
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">perspectiveTransform</span><span class="p">(</span><span class="n">obj_corners</span><span class="p">,</span> <span class="n">scene_corners</span><span class="p">,</span> <span class="n">H</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">line</span><span class="p">(</span><span class="n">outimg</span><span class="p">,</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">a</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">a</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">LINE_AA</span><span class="p">);</span>       <span class="c1">//绘制
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">line</span><span class="p">(</span><span class="n">outimg</span><span class="p">,</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">a</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">a</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">LINE_AA</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">line</span><span class="p">(</span><span class="n">outimg</span><span class="p">,</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">a</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">a</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">LINE_AA</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">line</span><span class="p">(</span><span class="n">outimg</span><span class="p">,</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">a</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">scene_corners</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">Point2f</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">a</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">LINE_AA</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;aaaa&#34;</span><span class="p">,</span> <span class="n">outimg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cvWaitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2019-03-28</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/opencv%E4%B9%8Bfeature2d%E7%BB%84%E4%BB%B6/" data-title="OpenCV之feature2d组件"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/opencv%E4%B9%8Bfeature2d%E7%BB%84%E4%BB%B6/" data-title="OpenCV之feature2d组件"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/baidu.svg" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/opencv/">opencv</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/opencv%E4%B9%8B%E7%9B%B4%E6%96%B9%E5%9B%BE%E5%92%8C%E5%8C%B9%E9%85%8D/" class="prev" rel="prev" title="OpenCV之直方图和匹配"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>OpenCV之直方图和匹配</a>
+            <a href="/opencv%E4%B9%8Bpractice/" class="next" rel="next" title="OpenCV之Practice">OpenCV之Practice<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Gsscsd</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.5.0/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.6867e554c019e9277423b0f08fa2f10633c0b4a2e736319d9fe99f73a35a205705d41b0fa3615656587f72e0f073de501a6fc69f66f2aa479482864f959af053.js" integrity="sha512-aGflVMAZ6Sd0I7Dwj6LxBjPAtKLnNjGdn+mfc6NaIFcF1BsPo2FWVlh/cuDwc95QGm/Gn2byqkeUgoZPlZrwUw=="></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.918bdd059e2c518e24c32fb5fd89144a49778f21f2166db93bf1e2ed311b3589660feb5777210257aee209f6d8bdde8c296883e34ff8bf4d5338f4be53132976.js" integrity="sha512-kYvdBZ4sUY4kwy+1/YkUSkl3jyHyFm25O/Hi7TEbNYlmD+tXdyECV67iCfbYvd6MKWiD40/4v01TOPS+UxMpdg=="></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/copy-tex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.8f3907fa55b08d1250417a302a5836b4095aeba0e8de276226fbabed0058c004aec93be43d27a90cb1c7b80dffd331535aae064d507b1c9f140b42edb18d7d90.js" integrity="sha512-jzkH+lWwjRJQQXowKlg2tAla66Do3idiJvur7QBYwASuyTvkPSepDLHHuA3/0zFTWq4GTVB7HJ8UC0LtsY19kA=="></script></body>
+</html>

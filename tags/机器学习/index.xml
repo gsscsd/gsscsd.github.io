@@ -1,0 +1,70 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>机器学习 - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+        <description>机器学习 - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 01 Apr 2019 18:18:06 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+    <title>机器学习复习笔记之感知机</title>
+    <link>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E6%84%9F%E7%9F%A5%E6%9C%BA/</link>
+    <pubDate>Mon, 01 Apr 2019 18:18:06 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E6%84%9F%E7%9F%A5%E6%9C%BA/</guid>
+    <description><![CDATA[<p>感知机可以说是最古老的分类方法之一了，在1957年就已经提出。今天看来它的分类模型在大多数时候泛化能力不强，但是它的原理却值得好好研究。因为研究透了感知机模型，学习支持向量机的话会降低不少难度。同时如果研究透了感知机模型，再学习神经网络，深度学习，也是一个很好的起点。因此，本文作为复习笔记，记录感知机的理论知识。</p>]]></description>
+</item>
+<item>
+    <title>监督学习</title>
+    <link>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</link>
+    <pubDate>Fri, 29 Mar 2019 10:04:21 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</guid>
+    <description><![CDATA[监督学习： 监督学习任务：回归 (用于预测某个值) 和 分类 (用于预测某个分类) 常见模型：K邻近值算法、线性回归、逻辑回归、支持向量机(SVM)、决]]></description>
+</item>
+<item>
+    <title>机器学习复习笔记之决策树</title>
+    <link>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%86%B3%E7%AD%96%E6%A0%91/</link>
+    <pubDate>Sat, 16 Mar 2019 21:12:36 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%86%B3%E7%AD%96%E6%A0%91/</guid>
+    <description><![CDATA[<p>决策树算法在机器学习中算是很经典的一个算法系列了。它既可以作为分类算法，也可以作为回归算法，同时也特别适合集成学习比如随机森林，更重要的是CART树是学习GBDT，XGBoost的基础。因此，本文作为复习笔记，记录决策树的理论知识。</p>]]></description>
+</item>
+<item>
+    <title>从一个例子看机器学习</title>
+    <link>https://gsscsd.github.io/%E4%BB%8E%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E7%9C%8B%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+    <pubDate>Sun, 03 Mar 2019 21:04:34 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E4%BB%8E%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E7%9C%8B%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</guid>
+    <description><![CDATA[<p>要想知道什么是机器学习，我们就需要首先理解机器是什么，机器就是电脑、芯片、代码这些东西。让电脑遵循人的指令，完成一件特定的任务从计算机发明那天开始就在研究了，现在的各种编程语言、数据结构和编程算法等都是在做这个。但是它们只能依赖于程序员输入的确定的代码才能 work，也就是说他们不能“自己学习”，这样对于有些问题就很尴尬，比如检测一张图片中有几个人，识别一句话中提到了几个人名，识别一张图片是不是黄图等等。这些任务要是写一个代码，依靠规则去实现，那还是非常困难。但是我们可以换个思路，让我们写代码去实现这些功能很困难，但是让我们去给图片打标签（比如给一批图，人为的打上是不是黄图的标签…）不是很简单的嘛，我们如果能让机器自己从打好标签的图片中自己学习那些是黄图不就万事大吉了嘛。这样看的话，标注的工作就对应了传统写代码中写规则匹配的工作。</p>]]></description>
+</item>
+<item>
+    <title>机器学习算法一锅端</title>
+    <link>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E4%B8%80%E9%94%85%E7%AB%AF/</link>
+    <pubDate>Sun, 03 Mar 2019 19:30:31 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E4%B8%80%E9%94%85%E7%AB%AF/</guid>
+    <description><![CDATA[<h4 id="最优的通用机器学习算法">最优的通用机器学习算法</h4>
+<p>在机器学习领域，一个基本的定理就是“没有免费的午餐”。换言之，就是没有算法能完美地解决所有问题，尤其是对监督学习而言（例如预测建模）。</p>
+<p>举例来说，你不能去说神经网络任何情况下都能比决策树更有优势，反之亦然。它们要受很多因素的影响，比如你的数据集的规模或结构。</p>
+<p>其结果是，在用给定的测试集来评估性能并挑选算法时，你应当根据具体的问题来采用不同的算法。</p>
+<p>当然，所选的算法必须要适用于你自己的问题，这就要求选择正确的机器学习任务。作为类比，如果你需要打扫房子，你可能会用到吸尘器、扫帚或是拖把，但你绝对不该掏出铲子来挖地。</p>
+<p>如果说最优的通用机器学习算法，那可能就是随机算法了，只要数据符合自然规律，那么随机算法的准确率在50%。</p>]]></description>
+</item>
+<item>
+    <title>机器学习案例之NLP文本分类</title>
+    <link>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/</link>
+    <pubDate>Mon, 07 Jan 2019 08:43:05 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/</guid>
+    <description><![CDATA[<h2 id="传统文本分类方法"><strong>传统文本分类方法</strong></h2>
+<p>文本分类问题算是自然语言处理领域中一个非常经典的问题了，相关研究最早可以追溯到上世纪50年代，当时是通过专家规则（Pattern）进行分类，甚至在80年代初一度发展到利用知识工程建立专家系统，这样做的好处是短平快的解决top问题，但显然天花板非常低，不仅费时费力，覆盖的范围和准确率都非常有限。</p>]]></description>
+</item>
+<item>
+    <title>机器学习案例之Titanic生存预测分析</title>
+    <link>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90/</link>
+    <pubDate>Sun, 06 Jan 2019 11:18:44 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90/</guid>
+    <description><![CDATA[Titanic是kaggle上的一道just for fun的题，没有奖金，但是数据整洁，适合用来练手，进行数据分析和机器学习。 这道题给的数据是泰坦]]></description>
+</item>
+</channel>
+</rss>

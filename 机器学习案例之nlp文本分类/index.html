@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>机器学习案例之NLP文本分类 - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="机器学习案例之NLP文本分类" />
+<meta property="og:description" content="传统文本分类方法
+文本分类问题算是自然语言处理领域中一个非常经典的问题了，相关研究最早可以追溯到上世纪50年代，当时是通过专家规则（Pattern）进行分类，甚至在80年代初一度发展到利用知识工程建立专家系统，这样做的好处是短平快的解决top问题，但显然天花板非常低，不仅费时费力，覆盖的范围和准确率都非常有限。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-01-07T08:43:05+00:00" />
+<meta property="article:modified_time" content="2019-01-07T08:43:05+00:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="机器学习案例之NLP文本分类"/>
+<meta name="twitter:description" content="传统文本分类方法
+文本分类问题算是自然语言处理领域中一个非常经典的问题了，相关研究最早可以追溯到上世纪50年代，当时是通过专家规则（Pattern）进行分类，甚至在80年代初一度发展到利用知识工程建立专家系统，这样做的好处是短平快的解决top问题，但显然天花板非常低，不仅费时费力，覆盖的范围和准确率都非常有限。"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" /><link rel="prev" href="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90/" /><link rel="next" href="https://gsscsd.github.io/python%E4%B9%8Bpandas%E7%AC%94%E8%AE%B0/" /><link rel="stylesheet" href="/css/style.min.931bc4ad2d28eb74379d23c35d88889e10d86e4fb73a8e095952c2617800dcce223d542ddf6f22eb6db537ea777ccee425cbdcb03ad216de7941dc3a1574cdfc.css" integrity="sha512-kxvErS0o63Q3nSPDXYiInhDYbk+3Oo4JWVLCYXgA3M4iPVQt328i6221N+p3fM7kJcvcsDrSFt55Qdw6FXTN/A=="><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "机器学习案例之NLP文本分类",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "机器学习, 深度学习, NLP","wordcount":  5592 ,
+        "url": "https:\/\/gsscsd.github.io\/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB\/","datePublished": "2019-01-07T08:43:05+00:00","dateModified": "2019-01-07T08:43:05+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">机器学习案例之NLP文本分类</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Gsscsd</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>机器学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2019-01-07">2019-01-07</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 5592 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 12 分钟&nbsp;<span id="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" class="leancloud_visitors" data-flag-title="机器学习案例之NLP文本分类">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#传统文本分类方法"><strong>传统文本分类方法</strong></a></li>
+    <li><a href="#深度学习-文本分类方法">**深度学习 **文本分类方法</a></li>
+    <li><a href="#实验报告说明">实验报告说明</a></li>
+    <li><a href="#项目链接">项目链接</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="传统文本分类方法"><strong>传统文本分类方法</strong></h2>
+<p>文本分类问题算是自然语言处理领域中一个非常经典的问题了，相关研究最早可以追溯到上世纪50年代，当时是通过专家规则（Pattern）进行分类，甚至在80年代初一度发展到利用知识工程建立专家系统，这样做的好处是短平快的解决top问题，但显然天花板非常低，不仅费时费力，覆盖的范围和准确率都非常有限。</p>
+<p>后来伴随着统计学习方法的发展，特别是90年代后互联网在线文本数量增长和机器学习学科的兴起，逐渐形成了一套解决大规模文本分类问题的经典玩法，这个阶段的主要套路是人工特征工程+浅层分类模型。训练文本分类器过程见下图：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/00.PNG"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/00.PNG, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/00.PNG 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/00.PNG 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/00.PNG"
+        title="img" /></p>
+<p>整个文本分类问题就拆分成了特征工程和分类器两部分。</p>
+<p><strong>1.1 特征工程</strong></p>
+<p>特征工程在机器学习中往往是最耗时耗力的，但却极其的重要。抽象来讲，机器学习问题是把数据转换成信息再提炼到知识的过程，特征是“数据&ndash;&gt;信息”的过程，决定了结果的上限，而分类器是“信息&ndash;&gt;知识”的过程，则是去逼近这个上限。然而特征工程不同于分类器模型，不具备很强的通用性，往往需要结合对特征任务的理解。</p>
+<p>文本分类问题所在的自然语言领域自然也有其特有的特征处理逻辑，传统分本分类任务大部分工作也在此处。文本特征工程分位文本预处理、特征提取、文本表示三个部分，最终目的是把文本转换成计算机可理解的格式，并封装足够用于分类的信息，即很强的特征表达能力。</p>
+<p><strong>1）文本预处理</strong></p>
+<p>文本预处理过程是在文本中提取关键词表示文本的过程，中文文本处理中主要包括文本分词和去停用词两个阶段。之所以进行分词，是因为很多研究表明特征粒度为词粒度远好于字粒度，其实很好理解，因为大部分分类算法不考虑词序信息，基于字粒度显然损失了过多“n-gram”信息。</p>
+<p>具体到中文分词，不同于英文有天然的空格间隔，需要设计复杂的分词算法。传统算法主要有基于字符串匹配的正向/逆向/双向最大匹配；基于理解的句法和语义分析消歧；基于统计的互信息/CRF方法。近年来随着深度学习的应用，WordEmbedding + Bi-LSTM+CRF方法逐渐成为主流，本文重点在文本分类，就不展开了。而停止词是文本中一些高频的代词连词介词等对文本分类无意义的词，通常维护一个停用词表，特征提取过程中删除停用表中出现的词，本质上属于特征选择的一部分。</p>
+<p>经过文本分词和去停止词之后，一个句子就变成了下图“ / ”分割的一个个关键词的形式：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">夏装 / 雪纺 / 条纹 / 短袖 / t恤 / 女 / 春 / 半袖 / 衣服 / 夏天 / 中长款 / 大码 / 胖mm / 显瘦 / 上衣 / 夏
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>2）文本表示和特征提取</strong></p>
+<p><strong>文本表示：</strong></p>
+<p>文本表示的目的是把文本预处理后的转换成计算机可理解的方式，是决定文本分类质量最重要的部分。传统做法常用词袋模型（BOW, Bag Of Words）或向量空间模型（Vector Space Model），最大的不足是忽略文本上下文关系，每个词之间彼此独立，并且无法表征语义信息。词袋模型的示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">               ( 0, 0, 0, 0, .... , 1, ... 0, 0, 0, 0)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>一般来说词库量至少都是百万级别，因此词袋模型有个两个最大的问题：高纬度、高稀疏性。词袋模型是向量空间模型的基础，因此向量空间模型通过特征项选择降低维度，通过特征权重计算增加稠密性。</p>
+<p><strong>特征提取：</strong></p>
+<p>向量空间模型的文本表示方法的特征提取对应特征项的选择和特征权重计算两部分。特征选择的基本思路是根据某个评价指标独立的对原始特征项（词项）进行评分排序，从中选择得分最高的一些特征项，过滤掉其余的特征项。常用的评价有文档频率、互信息、信息增益、χ²统计量等。</p>
+<p>特征权重主要是经典的TF-IDF方法及其扩展方法，主要思路是一个词的重要度与在类别内的词频成正比，与所有类别出现的次数成反比。</p>
+<p><strong>3）基于语义的文本表示</strong></p>
+<p>传统做法在文本表示方面除了向量空间模型，还有基于语义的文本表示方法，比如LDA主题模型、LSI/PLSI概率潜在语义索引等方法，一般认为这些方法得到的文本表示可以认为文档的深层表示，而word embedding文本分布式表示方法则是深度学习方法的重要基础，下文会展现。</p>
+<p><strong>1.2 分类器</strong></p>
+<p>分类器基本都是统计分类方法了，基本上大部分机器学习方法都在文本分类领域有所应用，比如朴素贝叶斯分类算法（Naïve Bayes）、KNN、SVM、最大熵和神经网络等等。</p>
+<h2 id="深度学习-文本分类方法">**深度学习 **文本分类方法</h2>
+<p>上面介绍了传统的文本分类做法，传统做法主要问题的文本表示是高纬度高稀疏的，特征表达能力很弱，而且神经网络很不擅长对此类数据的处理；此外需要人工进行特征工程，成本很高。而深度学习最初在之所以图像和语音取得巨大成功，一个很重要的原因是图像和语音原始数据是连续和稠密的，有局部相关性，。应用深度学习解决大规模文本分类问题最重要的是解决文本表示，再利用CNN/RNN等网络结构自动获取特征表达能力，去掉繁杂的人工特征工程，端到端的解决问题。接下来会分别介绍：</p>
+<p><strong>2.1 文本的分布式表示：词向量（word embedding）</strong></p>
+<p>分布式表示（Distributed Representation）其实Hinton 最早在1986年就提出了，基本思想是将每个词表达成 n 维稠密、连续的实数向量，与之相对的one-hot encoding向量空间只有一个维度是1，其余都是0。分布式表示最大的优点是具备非常powerful的特征表达能力，比如 n 维向量每维 k 个值，可以表征 <img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://www.zhihu.com/equation?tex=k%5E%7Bn%7D"
+        data-srcset="https://www.zhihu.com/equation?tex=k%5E%7Bn%7D, https://www.zhihu.com/equation?tex=k%5E%7Bn%7D 1.5x, https://www.zhihu.com/equation?tex=k%5E%7Bn%7D 2x"
+        data-sizes="auto"
+        alt="https://www.zhihu.com/equation?tex=k%5E%7Bn%7D"
+        title="k^{n}" /> 个概念。事实上，不管是神经网络的隐层，还是多个潜在变量的概率主题模型，都是应用分布式表示。下图是03年Bengio在 A Neural Probabilistic Language Model的网络结构：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/01.PNG"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/01.PNG, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/01.PNG 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/01.PNG 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/01.PNG"
+        title="img" /></p>
+<p>这篇文章提出的神经网络语言模型（NNLM，Neural Probabilistic Language Model）采用的是文本分布式表示，即每个词表示为稠密的实数向量。NNLM模型的目标是构建语言模型：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://pic4.zhimg.com/80/v2-855f785d33895960712509982199c4b4_hd.jpg"
+        data-srcset="https://pic4.zhimg.com/80/v2-855f785d33895960712509982199c4b4_hd.jpg, https://pic4.zhimg.com/80/v2-855f785d33895960712509982199c4b4_hd.jpg 1.5x, https://pic4.zhimg.com/80/v2-855f785d33895960712509982199c4b4_hd.jpg 2x"
+        data-sizes="auto"
+        alt="https://pic4.zhimg.com/80/v2-855f785d33895960712509982199c4b4_hd.jpg"
+        title="img" /></p>
+<p>词的分布式表示即词向量（word embedding）是训练语言模型的一个附加产物，即图中的Matrix C。</p>
+<p>尽管Hinton 86年就提出了词的分布式表示，Bengio 03年便提出了NNLM，词向量真正火起来是google Mikolov 13年发表的两篇word2vec的文章 Efficient Estimation of Word Representations in Vector Space  和 Distributed Representations of Words and Phrases and their Compositionality</p>
+<p>更重要的是发布了简单好用的  <strong>word2vec工具包</strong></p>
+<p>在语义维度上得到了很好的验证，极大的推进了文本分析的进程。下图是文中提出的CBOW 和 Skip-Gram两个模型的结构，基本类似于NNLM，不同的是模型去掉了非线性隐层，预测目标不同，CBOW是上下文词预测当前词，Skip-Gram则相反。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/02.PNG"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/02.PNG, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/02.PNG 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/02.PNG 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/02.PNG"
+        title="img" /></p>
+<p>除此之外，提出了Hierarchical Softmax 和 Negative Sample两个方法，很好的解决了计算有效性，事实上这两个方法都没有严格的理论证明，有些trick之处，非常的实用主义。实际上word2vec学习的向量和真正语义还有差距，更多学到的是具备相似上下文的词，比如“good”“bad”相似度也很高，反而是文本分类任务输入有监督的语义能够学到更好的语义表示，有机会后续系统分享下。</p>
+<p>至此，文本的表示通过词向量的表示方式，把文本数据从高纬度高稀疏的神经网络难处理的方式，变成了类似图像、语音的的连续稠密数据。深度学习算法本身有很强的数据迁移性，很多之前在图像领域很适用的深度学习算法比如CNN等也可以很好的迁移到文本领域了。</p>
+<p><strong>2.2 深度学习文本分类模型</strong></p>
+<p>词向量解决了文本表示的问题，文本分类模型则是利用CNN/RNN等深度学习网络及其变体解决自动特征提取（即特征表达）的问题。</p>
+<p><strong>1）fastText</strong></p>
+<p>fastText 是上文提到的 word2vec 作者 Mikolov 转战 Facebook 后16年7月刚发表的一篇论文 Bag of Tricks for Efficient Text Classification。 fastText 它极致简单，模型图见下：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/03.PNG"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/03.PNG, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/03.PNG 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/03.PNG 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/03.PNG"
+        title="img" /></p>
+<p>原理是把句子中所有的词向量进行平均（某种意义上可以理解为只有一个avg pooling特殊CNN），然后直接接 softmax 层。其实文章也加入了一些 n-gram 特征的 trick 来捕获局部序列信息。文章倒没太多信息量，算是“水文”吧，带来的思考是文本分类问题是有一些“线性”问题的部分，也就是说不必做过多的非线性转换、特征组合即可捕获很多分类信息，因此有些任务即便简单的模型便可以搞定了。</p>
+<p><strong>2）TextCNN</strong></p>
+<p>fastText 中的网络结果是完全没有考虑词序信息的，而它用的 n-gram 特征 trick 恰恰说明了局部序列信息的重要意义。卷积神经网络（CNN Convolutional Neural Network）最初在图像领域取得了巨大成功，核心点在于可以<strong>捕捉局部相关性</strong>，具体到文本分类任务中可以利用CNN来提取句子中类似 n-gram 的关键信息。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/03.PNG"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/03.PNG, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/03.PNG 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/03.PNG 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/03.PNG"
+        title="img" /></p>
+<p>TextCNN的详细过程原理图见下：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/05.PNG"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/05.PNG, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/05.PNG 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/05.PNG 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/05.PNG"
+        title="img" /></p>
+<p><strong>TextCNN详细过程</strong>：第一层是图中最左边的7乘5的句子矩阵，每行是词向量，维度=5，这个可以类比为图像中的原始像素点了。然后经过有 filter_size=(2,3,4) 的一维卷积层，每个filter_size 有两个输出 channel。第三层是一个1-max pooling层，这样不同长度句子经过pooling层之后都能变成定长的表示了，最后接一层全连接的 softmax 层，输出每个类别的概率。</p>
+<p><strong>特征</strong>：这里的特征就是词向量，有静态（static）和非静态（non-static）方式。static方式采用比如word2vec预训练的词向量，训练过程不更新词向量，实质上属于迁移学习了，特别是数据量比较小的情况下，采用静态的词向量往往效果不错。non-static则是在训练过程中更新词向量。推荐的方式是 non-static 中的 fine-tunning方式，它是以预训练（pre-train）的word2vec向量初始化词向量，训练过程中调整词向量，能加速收敛，当然如果有充足的训练数据和资源，直接随机初始化词向量效果也是可以的。</p>
+<p><strong>通道（Channels）</strong>：图像中可以利用 (R, G, B) 作为不同channel，而文本的输入的channel通常是不同方式的embedding方式（比如 word2vec或Glove），实践中也有利用静态词向量和fine-tunning词向量作为不同channel的做法。</p>
+<p><strong>一维卷积（conv-1d）</strong>：图像是二维数据，经过词向量表达的文本为一维数据，因此在TextCNN卷积用的是一维卷积。一维卷积带来的问题是需要设计通过不同 filter_size 的 filter 获取不同宽度的视野。</p>
+<p><strong>Pooling层</strong>：将 pooling 改成 (dynamic) k-max pooling ，pooling阶段保留 k 个最大的信息，保留了全局的序列信息。比如在情感分析场景，举个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">            “ 我觉得这个地方景色还不错，但是人也实在太多了 ”
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>虽然前半部分体现情感是正向的，全局文本表达的是偏负面的情感，利用 k-max pooling能够很好捕捉这类信息。</p>
+<p><strong>3）TextRNN</strong></p>
+<p>尽管TextCNN能够在很多任务里面能有不错的表现，但CNN有个最大问题是固定 filter_size 的视野，一方面无法建模更长的序列信息，另一方面 filter_size 的超参调节也很繁琐。CNN本质是做文本的特征表达工作，而自然语言处理中更常用的是递归神经网络（RNN, Recurrent Neural Network），能够更好的表达上下文信息。具体在文本分类任务中，Bi-directional RNN（实际使用的是双向LSTM）从某种意义上可以理解为可以捕获变长且双向的的 &ldquo;n-gram&rdquo; 信息。</p>
+<p>RNN算是在自然语言处理领域非常一个标配网络了，在序列标注/命名体识别/seq2seq模型等很多场景都有应用，[，下图LSTM用于网络结构原理示意图，示例中的是利用最后一个词的结果直接接全连接层softmax输出了。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/06.PNG"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/06.PNG, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/06.PNG 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/06.PNG 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/06.PNG"
+        title="img" /></p>
+<p><strong>4）TextRNN + Attention</strong></p>
+<p>CNN和RNN用在文本分类任务中尽管效果显著，但都有一个不足的地方就是不够直观，可解释性不好，特别是在分析badcase时候感受尤其深刻。而注意力（Attention）机制是自然语言处理领域一个常用的建模长时间记忆机制，能够很直观的给出每个词对结果的贡献，基本成了Seq2Seq模型的标配了。实际上文本分类从某种意义上也可以理解为一种特殊的Seq2Seq，所以考虑把Attention机制引入近来。</p>
+<p><strong>Attention机制介绍</strong>：</p>
+<p>以机器翻译为例简单介绍下，下图中 $x_t$ 是源语言的一个词，$y_t$  是目标语言的一个词，机器翻译的任务就是给定源序列得到目标序列。翻译 $y_t$ 的过程产生取决于上一个词 $y_{t - 1}$和源语言的词的表示 $h_j$（$x_j$ 的 bi-RNN 模型的表示），而每个词所占的权重是不一样的。比如源语言是中文 “我 / 是 / 中国人” 目标语言 “i / am / Chinese”，翻译出“Chinese”时候显然取决于“中国人”，而与“我 / 是”基本无关。下图公式$\alpha_{ij}$ 则是翻译英文第 $i$ 个词时，中文第 $j$ 个词的贡献，也就是注意力。显然在翻译“Chinese”时，“中国人”的注意力值非常大。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/07.PNG"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/07.PNG, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/07.PNG 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/07.PNG 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/07.PNG"
+        title="img" /></p>
+<p>Attention的核心point是在翻译每个目标词（或 预测商品标题文本所属类别）所用的上下文是不同的，这样的考虑显然是更合理的。</p>
+<p><strong>TextRNN + Attention 模型</strong>：</p>
+<p>下图是模型的网络结构图，它一方面用层次化的结构保留了文档的结构，另一方面在word-level和sentence-level。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/08.PNG"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/08.PNG, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/08.PNG 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/08.PNG 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/08.PNG"
+        title="img" /></p>
+<p>加入Attention之后最大的好处自然是能够直观的解释各个句子和词对分类类别的重要性。</p>
+<h2 id="实验报告说明">实验报告说明</h2>
+<blockquote>
+<p>在本次实验中，我们爬取了旅游评论数据集，总共有35706条数据，正样本为好评，负样本为差评，其中正样本有32460条，负样本有3246条。对于文本表示，我们使用VSM和word2vec模型。一共做了四种测试：</p>
+<ol>
+<li>VSM + RandomForestClassifier</li>
+<li>VSM + BernoulliNB</li>
+<li>word2vec + TextRNN</li>
+<li>word2vec + TextRNN + Attention</li>
+</ol>
+</blockquote>
+<p><strong>1.VSM + RandomForestClassifier</strong></p>
+<p>实验采用6-fold验证，<code>accuracy,precision,recall</code>如下所示：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/rf.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/rf.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/rf.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/rf.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/rf.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/rf.png" /></p>
+<p><strong>2.VSM + BernoulliNB</strong></p>
+<p>实验采用6-fold验证，<code>accuracy,precision,recall</code>如下所示：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/bnb.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/bnb.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/bnb.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/bnb.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/bnb.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/bnb.png" /></p>
+<p><strong>3.word2vec + TextRNN</strong></p>
+<p>双向GRU结构，模型结构参数如下：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/gru.PNG"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/gru.PNG, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/gru.PNG 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/gru.PNG 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/gru.PNG"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/gru.PNG" /></p>
+<p>实验结果如下所示：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_1_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_1_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_1_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_1_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_1_1.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_1_1.png" /></p>
+<p><strong>4.word2vec + TextRNN + Attention</strong></p>
+<p>LSTM加Attention模型，模型参数如下：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/lstm.PNG"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/lstm.PNG, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/lstm.PNG 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/lstm.PNG 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/lstm.PNG"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/lstm.PNG" /></p>
+<p>实验结果如下所示：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_2.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_2.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_2.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_2.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_2.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/nlp_big_project/image/Figure_2.png" /></p>
+<p>从上面四个实验，我们可以看出，传统的文本分类模型，效果还是不错的，其中RandomForestClassifier的效果要比BernoulliNB效果更好一些。深度学习的方法，acc大约也在0.9左右，训练集和测试集的acc相差不大。</p>
+<h2 id="项目链接">项目链接</h2>
+<p><a href="https://github.com/gsscsd/NLP-Project/tree/master/NLP%E7%9B%B8%E5%85%B3%E9%A1%B9%E7%9B%AE/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB-%E5%A4%A7%E4%BD%9C%E4%B8%9A" target="_blank" rel="noopener noreffer ">GitHub</a></p>
+<h2 id="参考">参考</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/25928551" target="_blank" rel="noopener noreffer ">深度学习（CNN RNN Attention）解决大规模文本分类问题 </a></p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2019-01-07</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" data-title="机器学习案例之NLP文本分类"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" data-title="机器学习案例之NLP文本分类"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/baidu.svg" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>,&nbsp;<a href="/tags/nlp/">NLP</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90/" class="prev" rel="prev" title="机器学习案例之Titanic生存预测分析"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>机器学习案例之Titanic生存预测分析</a>
+            <a href="/python%E4%B9%8Bpandas%E7%AC%94%E8%AE%B0/" class="next" rel="next" title="python之Pandas笔记">python之Pandas笔记<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Gsscsd</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.5.0/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.6867e554c019e9277423b0f08fa2f10633c0b4a2e736319d9fe99f73a35a205705d41b0fa3615656587f72e0f073de501a6fc69f66f2aa479482864f959af053.js" integrity="sha512-aGflVMAZ6Sd0I7Dwj6LxBjPAtKLnNjGdn+mfc6NaIFcF1BsPo2FWVlh/cuDwc95QGm/Gn2byqkeUgoZPlZrwUw=="></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.918bdd059e2c518e24c32fb5fd89144a49778f21f2166db93bf1e2ed311b3589660feb5777210257aee209f6d8bdde8c296883e34ff8bf4d5338f4be53132976.js" integrity="sha512-kYvdBZ4sUY4kwy+1/YkUSkl3jyHyFm25O/Hi7TEbNYlmD+tXdyECV67iCfbYvd6MKWiD40/4v01TOPS+UxMpdg=="></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/copy-tex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.8f3907fa55b08d1250417a302a5836b4095aeba0e8de276226fbabed0058c004aec93be43d27a90cb1c7b80dffd331535aae064d507b1c9f140b42edb18d7d90.js" integrity="sha512-jzkH+lWwjRJQQXowKlg2tAla66Do3idiJvur7QBYwASuyTvkPSepDLHHuA3/0zFTWq4GTVB7HJ8UC0LtsY19kA=="></script></body>
+</html>

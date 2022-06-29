@@ -1,0 +1,30 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>爬虫 - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/%E7%88%AC%E8%99%AB/</link>
+        <description>爬虫 - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 26 Oct 2017 22:47:02 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/%E7%88%AC%E8%99%AB/" rel="self" type="application/rss+xml" /><item>
+    <title>爬虫之糗事百科</title>
+    <link>https://gsscsd.github.io/%E7%88%AC%E8%99%AB%E4%B9%8B%E7%B3%97%E4%BA%8B%E7%99%BE%E7%A7%91/</link>
+    <pubDate>Thu, 26 Oct 2017 22:47:02 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E7%88%AC%E8%99%AB%E4%B9%8B%E7%B3%97%E4%BA%8B%E7%99%BE%E7%A7%91/</guid>
+    <description><![CDATA[<center >前言</center>
+<blockquote>
+<p>自己动手，丰衣足食。本来的想法是爬取糗事百科的段子，然后发送到自己的邮箱，这样可以在电脑上，定时运行爬虫，然后，在手机端看段子了。但是，qq邮箱的smtp，一直没有配置好，所以只能先把段子保存到本地，有时间在优化。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>爬虫之爬取小说</title>
+    <link>https://gsscsd.github.io/%E7%88%AC%E8%99%AB%E4%B9%8B%E7%88%AC%E5%8F%96%E5%B0%8F%E8%AF%B4/</link>
+    <pubDate>Sat, 21 Oct 2017 23:23:18 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E7%88%AC%E8%99%AB%E4%B9%8B%E7%88%AC%E5%8F%96%E5%B0%8F%E8%AF%B4/</guid>
+    <description><![CDATA[<h2 id="center-前言center"><center >前言</center></h2>
+<blockquote>
+<p>好久没写博客了，懒死了，为了培养同学对python的喜爱，顺手写了一个爬虫，也是对自己知识的巩固，其实，这个爬虫挺简单的，半小时就能写完，但是2.x的python，各种字符编码的转换，真心累，而且，转到3.x系列还很多bug，暂时就先这样吧，等有时间再优化。</p>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

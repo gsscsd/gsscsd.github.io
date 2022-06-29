@@ -1,0 +1,48 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>tensorflow - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/tensorflow/</link>
+        <description>tensorflow - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 02 Jan 2019 18:54:44 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/tensorflow/" rel="self" type="application/rss+xml" /><item>
+    <title>tensorflow综合实例之MNIST</title>
+    <link>https://gsscsd.github.io/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/</link>
+    <pubDate>Wed, 02 Jan 2019 18:54:44 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/</guid>
+    <description><![CDATA[在本篇文章中，使用两种方法来做MNIST分类，一个是全连接层，一个是CNN。 MNIST 数据集来自美国国家标准与技术研究所， National Institute of Standards and Technology (NIST)。]]></description>
+</item>
+<item>
+    <title>tensorflow实例与线性回归</title>
+    <link>https://gsscsd.github.io/tensorflow%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</link>
+    <pubDate>Sat, 29 Dec 2018 15:16:08 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/tensorflow%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</guid>
+    <description><![CDATA[<blockquote>
+<p>在本篇文章中，我们使用四种方法来实现线性回归模型，然后在使用tensoflow实现一个二次函数拟合模型。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>tensorflow之Graph、Session</title>
+    <link>https://gsscsd.github.io/tensorflow%E4%B9%8Bgraphsession/</link>
+    <pubDate>Fri, 28 Dec 2018 16:54:20 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/tensorflow%E4%B9%8Bgraphsession/</guid>
+    <description><![CDATA[<blockquote>
+<p>学习完tensorflow变量常量等基本量的操作，意味着最基本的东西都有了，使用这些基本的操作，我们就做一些数学运算，至于接下来如何操作基本量和组成更大的计算图，那就需要学习Graph和Session了。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>tensorflow之Tensor、Variable</title>
+    <link>https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/</link>
+    <pubDate>Thu, 27 Dec 2018 21:19:49 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/</guid>
+    <description><![CDATA[<h3 id="为什么选择tensorflow">为什么选择tensorflow</h3>
+<blockquote>
+<p>TensorFlow 无可厚非地能被认定为 神经网络中最好用的库之一。它擅长的任务就是训练深度神经网络.通过使用TensorFlow我们就可以快速的入门神经网络，大大降低了深度学习（也就是深度神经网络）的开发成本和开发难度.。TensorFlow 的开源性，让所有人都能使用并且维护， 巩固它. 使它能迅速更新, 提升。</p>
+<p>现在新版本的tensorflow除了支持Graph Execution之外，还提供了Eager Execution。</p>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

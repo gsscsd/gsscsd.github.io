@@ -1,0 +1,30 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>mxnet - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/mxnet/</link>
+        <description>mxnet - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 05 Dec 2017 11:22:07 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/mxnet/" rel="self" type="application/rss+xml" /><item>
+    <title>mxnet学习之多层感知机(MLP)</title>
+    <link>https://gsscsd.github.io/mxnet%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA-mlp/</link>
+    <pubDate>Tue, 05 Dec 2017 11:22:07 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/mxnet%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA-mlp/</guid>
+    <description><![CDATA[<center >**前言**</center>
+<blockquote>
+<p>多层感知器算法，网上有各种解析，以后有时间自己在来慢慢补充。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>mxnet学习之线性回归</title>
+    <link>https://gsscsd.github.io/mxnet%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</link>
+    <pubDate>Tue, 21 Nov 2017 14:29:11 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/mxnet%E5%AD%A6%E4%B9%A0%E4%B9%8B%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</guid>
+    <description><![CDATA[<center >**前言**</center>
+<blockquote>
+<p>深度学习模型太多了，tensorflow、theano、keras、mxnet等等，听说mxnet开发者们在斗鱼直播教学，所以趁机学习一波。</p>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

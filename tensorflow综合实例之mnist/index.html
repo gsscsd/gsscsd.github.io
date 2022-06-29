@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>tensorflow综合实例之MNIST - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="tensorflow综合实例之MNIST" />
+<meta property="og:description" content="在本篇文章中，使用两种方法来做MNIST分类，一个是全连接层，一个是CNN。 MNIST 数据集来自美国国家标准与技术研究所， National Institute of Standards and Technology (NIST)。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-01-02T18:54:44+00:00" />
+<meta property="article:modified_time" content="2019-01-02T18:54:44+00:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="tensorflow综合实例之MNIST"/>
+<meta name="twitter:description" content="在本篇文章中，使用两种方法来做MNIST分类，一个是全连接层，一个是CNN。 MNIST 数据集来自美国国家标准与技术研究所， National Institute of Standards and Technology (NIST)。"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://gsscsd.github.io/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/" /><link rel="prev" href="https://gsscsd.github.io/%E9%85%8D%E7%BD%AEhexo%E6%94%AF%E6%8C%81latex%E5%85%AC%E5%BC%8F/" /><link rel="next" href="https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A80/" /><link rel="stylesheet" href="/css/style.min.931bc4ad2d28eb74379d23c35d88889e10d86e4fb73a8e095952c2617800dcce223d542ddf6f22eb6db537ea777ccee425cbdcb03ad216de7941dc3a1574cdfc.css" integrity="sha512-kxvErS0o63Q3nSPDXYiInhDYbk+3Oo4JWVLCYXgA3M4iPVQt328i6221N+p3fM7kJcvcsDrSFt55Qdw6FXTN/A=="><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "tensorflow综合实例之MNIST",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "python, 深度学习, tensorflow","wordcount":  1726 ,
+        "url": "https:\/\/gsscsd.github.io\/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist\/","datePublished": "2019-01-02T18:54:44+00:00","dateModified": "2019-01-02T18:54:44+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">tensorflow综合实例之MNIST</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Gsscsd</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>深度学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2019-01-02">2019-01-02</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 1726 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 4 分钟&nbsp;<span id="/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/" class="leancloud_visitors" data-flag-title="tensorflow综合实例之MNIST">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#mnist分类0">MNIST分类0</a></li>
+        <li><a href="#mnist分类1">MNIST分类1</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>在本篇文章中，使用两种方法来做MNIST分类，一个是全连接层，一个是CNN。</p>
+</blockquote>
+<blockquote>
+<p>MNIST 数据集来自美国国家标准与技术研究所， National Institute of Standards and Technology (NIST)。训练集 (training set) 由来自 250 个不同人手写的数字构成，其中 50% 是高中学生，50% 来自人口普查局 (the Census Bureau) 的工作人员.。测试集(test set) 也是同样比例的手写数字数据。</p>
+<p>MNIST 数据集中有 60000 个训练样本和 10000 个测试样本，每个图片的大小是28×28。</p>
+</blockquote>
+<!--more -->
+<h3 id="mnist分类0">MNIST分类0</h3>
+<blockquote>
+<p>tensorflow实现MLP进行分类，使用两种方法来实现MLP，一种是手动前向计算，一种是使用tf.layersAPI。</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># 参考代码</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># mnist分类实例</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span> 
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># style设置</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">style</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">IPython</span> <span class="kn">import</span> <span class="n">display</span>
+</span></span><span class="line"><span class="cl"><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&#34;./data/mnist.npz&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">x_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">x_test</span><span class="p">,</span><span class="n">y_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;x_train&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;y_train&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s2">&#34;x_test&#34;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;y_test&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 数据规整</span>
+</span></span><span class="line"><span class="cl"><span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">784</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span> <span class="o">-</span> <span class="mf">0.5</span>
+</span></span><span class="line"><span class="cl"><span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">784</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span> <span class="o">-</span> <span class="mf">0.5</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 这个能生成一个OneHot的10维向量，作为Y_train的一行，这样Y_train就有60000行OneHot作为输出</span>
+</span></span><span class="line"><span class="cl"><span class="n">y_train</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="n">y_train</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  <span class="c1"># 整理输出</span>
+</span></span><span class="line"><span class="cl"><span class="n">y_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1"># 使用MBGD算法，设定batch_size为8</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># batchsize的获取</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">generatebatch</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">n_examples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">batch_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_examples</span> <span class="o">//</span> <span class="n">batch_size</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">start</span> <span class="o">=</span> <span class="n">batch_i</span><span class="o">*</span><span class="n">batch_size</span>
+</span></span><span class="line"><span class="cl">        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">batch_size</span>
+</span></span><span class="line"><span class="cl">        <span class="n">batch_xs</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="n">batch_ys</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">yield</span> <span class="n">batch_xs</span><span class="p">,</span> <span class="n">batch_ys</span> <span class="c1"># 生成每一个batch</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">modle_mlp_0</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;mlp0&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 第一隐藏层</span>
+</span></span><span class="line"><span class="cl">    <span class="n">w1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">784</span><span class="p">,</span><span class="mi">400</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">b1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">400</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">l1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">w1</span><span class="p">)</span> <span class="o">+</span> <span class="n">b1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">l1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 输出层</span>
+</span></span><span class="line"><span class="cl">    <span class="n">w2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">400</span><span class="p">,</span><span class="mi">10</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">b2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">10</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span><span class="n">w2</span><span class="p">)</span> <span class="o">+</span> <span class="n">b2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">out</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">modle_mlp_1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;mlp1&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 使用dense层</span>
+</span></span><span class="line"><span class="cl">    <span class="n">l1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">l1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 输出层</span>
+</span></span><span class="line"><span class="cl">    <span class="n">out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">out</span>
+</span></span><span class="line"><span class="cl"><span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 输入层</span>
+</span></span><span class="line"><span class="cl"><span class="n">tf_X</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,[</span><span class="kc">None</span><span class="p">,</span><span class="mi">784</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">tf_Y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,[</span><span class="kc">None</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># model的输出</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># mlp0</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># out = modle_mlp_0(tf_X)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># mlp1 </span>
+</span></span><span class="line"><span class="cl"><span class="n">out</span> <span class="o">=</span> <span class="n">model_mlp_1</span><span class="p">(</span><span class="n">tf_X</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># loss</span>
+</span></span><span class="line"><span class="cl"><span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf_Y</span><span class="o">*</span><span class="n">tf</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">out</span><span class="p">,</span><span class="mf">1e-11</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 优化</span>
+</span></span><span class="line"><span class="cl"><span class="n">train_step</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 计算准确率</span>
+</span></span><span class="line"><span class="cl"><span class="n">y_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">arg_max</span><span class="p">(</span><span class="n">out</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">bool_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">arg_max</span><span class="p">(</span><span class="n">tf_Y</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">y_pred</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">accuracy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">bool_pred</span><span class="p">,</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span> <span class="c1"># 准确率</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">100</span> 
+</span></span><span class="line"><span class="cl"><span class="n">accs</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span> <span class="c1"># 迭代1000个周期</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">batch_xs</span><span class="p">,</span><span class="n">batch_ys</span> <span class="ow">in</span> <span class="n">generatebatch</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">batch_size</span><span class="p">):</span> <span class="c1"># 每个周期进行MBGD算法</span>
+</span></span><span class="line"><span class="cl">            <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">train_step</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">tf_X</span><span class="p">:</span><span class="n">batch_xs</span><span class="p">,</span><span class="n">tf_Y</span><span class="p">:</span><span class="n">batch_ys</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">epoch</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">accuracy</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">tf_X</span><span class="p">:</span><span class="n">x_test</span><span class="p">,</span><span class="n">tf_Y</span><span class="p">:</span><span class="n">y_test</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">            <span class="n">accs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span><span class="n">res</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>mlp0的acc输出结果：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_0.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_0.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_0.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_0.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_0.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_0.png" /></p>
+<p>以下是mlp1的acc输出结果：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_1.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/mlp_mnist_1.png" /></p>
+<h3 id="mnist分类1">MNIST分类1</h3>
+<blockquote>
+<p>tensorflow实现CNN进行分类，采用两种方式，一种是自定义权重和偏置前向计算，一种是使用默认的API。</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># mnist CNN分类实例</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span> 
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># style设置</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">style</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">IPython</span> <span class="kn">import</span> <span class="n">display</span>
+</span></span><span class="line"><span class="cl"><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&#34;./data/mnist.npz&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">x_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">x_test</span><span class="p">,</span><span class="n">y_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;x_train&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;y_train&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s2">&#34;x_test&#34;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;y_test&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 数据规整</span>
+</span></span><span class="line"><span class="cl"><span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span> <span class="o">-</span> <span class="mf">0.5</span>
+</span></span><span class="line"><span class="cl"><span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span> <span class="o">-</span> <span class="mf">0.5</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 这个能生成一个OneHot的10维向量，作为Y_train的一行，这样Y_train就有60000行OneHot作为输出</span>
+</span></span><span class="line"><span class="cl"><span class="n">y_train</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="n">y_train</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  <span class="c1"># 整理输出</span>
+</span></span><span class="line"><span class="cl"><span class="n">y_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1"># 使用MBGD算法，设定batch_size为8</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># batchsize的获取</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">generatebatch</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">n_examples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">batch_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_examples</span> <span class="o">//</span> <span class="n">batch_size</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">start</span> <span class="o">=</span> <span class="n">batch_i</span><span class="o">*</span><span class="n">batch_size</span>
+</span></span><span class="line"><span class="cl">        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">batch_size</span>
+</span></span><span class="line"><span class="cl">        <span class="n">batch_xs</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="n">batch_ys</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">yield</span> <span class="n">batch_xs</span><span class="p">,</span> <span class="n">batch_ys</span> <span class="c1"># 生成每一个batch</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">model_cnn_0</span><span class="p">(</span><span class="n">tf_X</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;cnn1&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 第一卷积层+激活层</span>
+</span></span><span class="line"><span class="cl">    <span class="n">conv_filter_w1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">conv_filter_b1</span> <span class="o">=</span>  <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">10</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">relu_feature_maps1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">tf_X</span><span class="p">,</span> <span class="n">conv_filter_w1</span><span class="p">,</span><span class="n">strides</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;SAME&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">conv_filter_b1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">relu_feature_maps1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 池化层</span>
+</span></span><span class="line"><span class="cl">    <span class="n">max_pool1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">max_pool</span><span class="p">(</span><span class="n">relu_feature_maps1</span><span class="p">,</span><span class="n">ksize</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">strides</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">padding</span><span class="o">=</span><span class="s1">&#39;SAME&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">max_pool1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 第二卷积层</span>
+</span></span><span class="line"><span class="cl">    <span class="n">conv_filter_w2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">conv_filter_b2</span> <span class="o">=</span>  <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">5</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">conv_out2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">relu_feature_maps1</span><span class="p">,</span> <span class="n">conv_filter_w2</span><span class="p">,</span><span class="n">strides</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;SAME&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">conv_filter_b2</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># BN归一化层+激活层 </span>
+</span></span><span class="line"><span class="cl">    <span class="n">batch_mean</span><span class="p">,</span> <span class="n">batch_var</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">conv_out2</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">keep_dims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">shift</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">5</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">scale</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">5</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-3</span>
+</span></span><span class="line"><span class="cl">    <span class="n">BN_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">batch_normalization</span><span class="p">(</span><span class="n">conv_out2</span><span class="p">,</span> <span class="n">batch_mean</span><span class="p">,</span> <span class="n">batch_var</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">relu_BN_maps2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">BN_out</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 池化层</span>
+</span></span><span class="line"><span class="cl">    <span class="n">max_pool2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">max_pool</span><span class="p">(</span><span class="n">relu_BN_maps2</span><span class="p">,</span><span class="n">ksize</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">strides</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">padding</span><span class="o">=</span><span class="s1">&#39;SAME&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">max_pool2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 将特征图进行展开</span>
+</span></span><span class="line"><span class="cl">    <span class="n">max_pool2_flat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">max_pool2</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="o">*</span><span class="mi">7</span><span class="o">*</span><span class="mi">5</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 全连接层</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fc_w1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">7</span><span class="o">*</span><span class="mi">7</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span><span class="mi">50</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fc_b1</span> <span class="o">=</span>  <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">50</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fc_out1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">max_pool2_flat</span><span class="p">,</span> <span class="n">fc_w1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fc_b1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 输出层</span>
+</span></span><span class="line"><span class="cl">    <span class="n">out_w1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">out_b1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">10</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">fc_out1</span><span class="p">,</span><span class="n">out_w1</span><span class="p">)</span><span class="o">+</span><span class="n">out_b1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">pred</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">model_cnn_1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;cnn2&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#conv2 </span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#layers.conv2d parameters</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#inputs 输入，是一个张量</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#filters 卷积核个数，也就是卷积层的厚度</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#kernel_size 卷积核的尺寸</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#strides: 扫描步长</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#padding: 边边补0 valid不需要补0，same需要补0，为了保证输入输出的尺寸一致,补多少不需要知道</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#activation: 激活函数</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cn1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">x</span><span class="p">,</span><span class="n">filters</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">padding</span><span class="o">=</span><span class="s2">&#34;same&#34;</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">cn1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#tf.layers.max_pooling2d</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#inputs 输入，张量必须要有四个维度</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#pool_size: 过滤器的尺寸</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pool1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">max_pooling2d</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">cn1</span><span class="p">,</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">padding</span><span class="o">=</span><span class="s2">&#34;same&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">pool1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#conv2 </span>
+</span></span><span class="line"><span class="cl">    <span class="n">cn2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">pool1</span><span class="p">,</span><span class="n">filters</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">padding</span><span class="o">=</span><span class="s2">&#34;same&#34;</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">cn2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># bn归一化层</span>
+</span></span><span class="line"><span class="cl">    <span class="n">batch_mean</span><span class="p">,</span> <span class="n">batch_var</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">cn2</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">keep_dims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">shift</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">5</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">scale</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">5</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-3</span>
+</span></span><span class="line"><span class="cl">    <span class="n">BN_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">batch_normalization</span><span class="p">(</span><span class="n">cn2</span><span class="p">,</span> <span class="n">batch_mean</span><span class="p">,</span> <span class="n">batch_var</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">relu_BN_maps2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">BN_out</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1">#pool2 2*2</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pool2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">max_pooling2d</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">relu_BN_maps2</span><span class="p">,</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">padding</span><span class="o">=</span><span class="s2">&#34;same&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">pool2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#flat(平坦化)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">flat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">pool2</span><span class="p">,[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="o">*</span><span class="mi">7</span><span class="o">*</span><span class="mi">5</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">dense</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">flat</span><span class="p">,</span><span class="n">units</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#输出层，不用激活函数（本质就是一个全连接层）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">dense</span><span class="p">,</span><span class="n">units</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">out</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 输入层</span>
+</span></span><span class="line"><span class="cl"><span class="n">tf_X</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,[</span><span class="kc">None</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">tf_Y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,[</span><span class="kc">None</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># model的输出</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 第一种cnn模型</span>
+</span></span><span class="line"><span class="cl"><span class="n">out</span> <span class="o">=</span> <span class="n">model_cnn_0</span><span class="p">(</span><span class="n">tf_X</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 第二种cnn模型</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># out = model_cnn_1(tf_X)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># loss</span>
+</span></span><span class="line"><span class="cl"><span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf_Y</span><span class="o">*</span><span class="n">tf</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">out</span><span class="p">,</span><span class="mf">1e-11</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 优化</span>
+</span></span><span class="line"><span class="cl"><span class="n">train_step</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 计算准确率</span>
+</span></span><span class="line"><span class="cl"><span class="n">y_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">arg_max</span><span class="p">(</span><span class="n">out</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">bool_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">arg_max</span><span class="p">(</span><span class="n">tf_Y</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">y_pred</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">accuracy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">bool_pred</span><span class="p">,</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span> <span class="c1"># 准确率</span>
+</span></span><span class="line"><span class="cl"><span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">100</span> 
+</span></span><span class="line"><span class="cl"><span class="n">accs</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span> <span class="c1"># 迭代1000个周期</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">batch_xs</span><span class="p">,</span><span class="n">batch_ys</span> <span class="ow">in</span> <span class="n">generatebatch</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">,</span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">batch_size</span><span class="p">):</span> <span class="c1"># 每个周期进行MBGD算法</span>
+</span></span><span class="line"><span class="cl">            <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">train_step</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">tf_X</span><span class="p">:</span><span class="n">batch_xs</span><span class="p">,</span><span class="n">tf_Y</span><span class="p">:</span><span class="n">batch_ys</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">epoch</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">accuracy</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">tf_X</span><span class="p">:</span><span class="n">x_test</span><span class="p">,</span><span class="n">tf_Y</span><span class="p">:</span><span class="n">y_test</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">            <span class="n">accs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span><span class="n">res</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>CNN0的acc输出结果：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_0.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_0.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_0.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_0.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_0.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_0.png" /></p>
+<p>CNN1的acc输出结果：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_1.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/cnn_mnist_1.png" /></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2019-01-02</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/" data-title="tensorflow综合实例之MNIST"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/" data-title="tensorflow综合实例之MNIST"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/baidu.svg" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/python/">python</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>,&nbsp;<a href="/tags/tensorflow/">tensorflow</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E9%85%8D%E7%BD%AEhexo%E6%94%AF%E6%8C%81latex%E5%85%AC%E5%BC%8F/" class="prev" rel="prev" title="配置hexo支持latex公式"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>配置hexo支持latex公式</a>
+            <a href="/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A80/" class="next" rel="next" title="Pytorch快速入门0">Pytorch快速入门0<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Gsscsd</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.5.0/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.6867e554c019e9277423b0f08fa2f10633c0b4a2e736319d9fe99f73a35a205705d41b0fa3615656587f72e0f073de501a6fc69f66f2aa479482864f959af053.js" integrity="sha512-aGflVMAZ6Sd0I7Dwj6LxBjPAtKLnNjGdn+mfc6NaIFcF1BsPo2FWVlh/cuDwc95QGm/Gn2byqkeUgoZPlZrwUw=="></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.918bdd059e2c518e24c32fb5fd89144a49778f21f2166db93bf1e2ed311b3589660feb5777210257aee209f6d8bdde8c296883e34ff8bf4d5338f4be53132976.js" integrity="sha512-kYvdBZ4sUY4kwy+1/YkUSkl3jyHyFm25O/Hi7TEbNYlmD+tXdyECV67iCfbYvd6MKWiD40/4v01TOPS+UxMpdg=="></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/copy-tex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.8f3907fa55b08d1250417a302a5836b4095aeba0e8de276226fbabed0058c004aec93be43d27a90cb1c7b80dffd331535aae064d507b1c9f140b42edb18d7d90.js" integrity="sha512-jzkH+lWwjRJQQXowKlg2tAla66Do3idiJvur7QBYwASuyTvkPSepDLHHuA3/0zFTWq4GTVB7HJ8UC0LtsY19kA=="></script></body>
+</html>

@@ -1,0 +1,125 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Python - 分类 - Gsscsd</title>
+        <link>https://gsscsd.github.io/categories/python/</link>
+        <description>Python - 分类 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 23 Jan 2019 10:58:52 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/categories/python/" rel="self" type="application/rss+xml" /><item>
+    <title>Numpy</title>
+    <link>https://gsscsd.github.io/python_numpy/</link>
+    <pubDate>Wed, 23 Jan 2019 10:58:52 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/python_numpy/</guid>
+    <description><![CDATA[<blockquote>
+<p>Numpy 里的数据结构和Python不同</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>Python基础语法</title>
+    <link>https://gsscsd.github.io/python_%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/</link>
+    <pubDate>Mon, 21 Jan 2019 16:55:34 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/python_%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/</guid>
+    <description><![CDATA[<h3 id="python基础语法">Python基础语法</h3>
+<h4 id="boolean-and-its-opeations">Boolean and its Opeations</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Boolean and its Operations</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="kc">False</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出如下所示：</span>
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">&lt;class &#39;bool&#39;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">&lt;class &#39;bool&#39;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">&lt;class &#39;NoneType&#39;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>]]></description>
+</item>
+<item>
+    <title>python之Pandas笔记</title>
+    <link>https://gsscsd.github.io/python%E4%B9%8Bpandas%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Thu, 10 Jan 2019 16:22:47 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/python%E4%B9%8Bpandas%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[<blockquote>
+<p>Pandas 是基于 NumPy 构建的库，在数据处理方面可以把它理解为 NumPy 加强版，同时 Pandas 也是一项开源项目。它基于 Cython，因此读取与处理数据非常快，并且还能轻松处理浮点数据中的缺失数据（表示为 NaN）以及非浮点数据。</p>
+<p>pandas适合于许多不同类型的数据，包括：</p>
+<ul>
+<li>具有异构类型列的表格数据，例如SQL表格或Excel数据</li>
+<li>有序和无序（不一定是固定频率）时间序列数据。</li>
+<li>具有行列标签的任意矩阵数据（均匀类型或不同类型）</li>
+<li>任何其他形式的观测/统计数据集。</li>
+</ul>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>python之Numpy学习笔记</title>
+    <link>https://gsscsd.github.io/python%E4%B9%8Bnumpy%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Tue, 25 Dec 2018 11:02:22 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/python%E4%B9%8Bnumpy%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[<blockquote>
+<p>NumPy 是一个 Python 包。 它代表 “Numeric Python”。 它是一个由多维数组对象和用于处理数组的例程集合组成的库。
+Numeric，即 NumPy 的前身，是由 Jim Hugunin 开发的。 也开发了另一个包 Numarray ，它拥有一些额外的功能。 2005年，Travis Oliphant 通过将 Numarray 的功能集成到 Numeric 包中来创建 NumPy 包。 这个开源项目有很多贡献者。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>python 入门代码</title>
+    <link>https://gsscsd.github.io/python%E5%85%A5%E9%97%A8%E4%BB%A3%E7%A0%81/</link>
+    <pubDate>Thu, 06 Dec 2018 19:08:46 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/python%E5%85%A5%E9%97%A8%E4%BB%A3%E7%A0%81/</guid>
+    <description><![CDATA[<p><em>做一个笔记，记录一下python的入门代码</em></p>
+<blockquote>
+<p>目录内容如下：</p>
+<ol>
+<li>变量与类型</li>
+<li>运算符</li>
+<li>流程控制</li>
+<li>函数与模块</li>
+<li>容器</li>
+<li>常用的库</li>
+</ol>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>爬虫之糗事百科</title>
+    <link>https://gsscsd.github.io/%E7%88%AC%E8%99%AB%E4%B9%8B%E7%B3%97%E4%BA%8B%E7%99%BE%E7%A7%91/</link>
+    <pubDate>Thu, 26 Oct 2017 22:47:02 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E7%88%AC%E8%99%AB%E4%B9%8B%E7%B3%97%E4%BA%8B%E7%99%BE%E7%A7%91/</guid>
+    <description><![CDATA[<center >前言</center>
+<blockquote>
+<p>自己动手，丰衣足食。本来的想法是爬取糗事百科的段子，然后发送到自己的邮箱，这样可以在电脑上，定时运行爬虫，然后，在手机端看段子了。但是，qq邮箱的smtp，一直没有配置好，所以只能先把段子保存到本地，有时间在优化。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>爬虫之爬取小说</title>
+    <link>https://gsscsd.github.io/%E7%88%AC%E8%99%AB%E4%B9%8B%E7%88%AC%E5%8F%96%E5%B0%8F%E8%AF%B4/</link>
+    <pubDate>Sat, 21 Oct 2017 23:23:18 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E7%88%AC%E8%99%AB%E4%B9%8B%E7%88%AC%E5%8F%96%E5%B0%8F%E8%AF%B4/</guid>
+    <description><![CDATA[<h2 id="center-前言center"><center >前言</center></h2>
+<blockquote>
+<p>好久没写博客了，懒死了，为了培养同学对python的喜爱，顺手写了一个爬虫，也是对自己知识的巩固，其实，这个爬虫挺简单的，半小时就能写完，但是2.x的python，各种字符编码的转换，真心累，而且，转到3.x系列还很多bug，暂时就先这样吧，等有时间再优化。</p>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

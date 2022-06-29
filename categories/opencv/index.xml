@@ -1,0 +1,137 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>OpenCV - 分类 - Gsscsd</title>
+        <link>https://gsscsd.github.io/categories/opencv/</link>
+        <description>OpenCV - 分类 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 28 Mar 2019 10:20:53 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/categories/opencv/" rel="self" type="application/rss+xml" /><item>
+    <title>OpenCV计算机视觉编程攻略</title>
+    <link>https://gsscsd.github.io/opencv%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%E7%BC%96%E7%A8%8B%E6%94%BB%E7%95%A5/</link>
+    <pubDate>Thu, 28 Mar 2019 10:20:53 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/opencv%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%E7%BC%96%E7%A8%8B%E6%94%BB%E7%95%A5/</guid>
+    <description><![CDATA[<blockquote>
+<p>Chapter_01 : 基础知识</p>
+<p>Chapter_02 : 操作像素</p>
+<p>Chapter_03 : 处理图像的颜色</p>
+<p>Chapter_04 : 用直方图统计像素</p>
+<p>Chapter_05 : 用形态学运算变换图像</p>
+<p>Chapter_06  :  图像滤波</p>
+<p>Chapter_07 : 提取直线、轮廓和区域</p>
+<p>Chapter_08 : 检测兴趣点</p>
+<p>Chapter_09 : 描述和匹配兴趣点</p>
+<p>Chapter_10 : 估算图像之间的投影关系</p>
+<p>Chapter_11  :   三维重建</p>
+<p>Chapter_12 : 处理视频序列</p>
+<p>Chapter_13  :   跟踪运动物体</p>
+<p>Chapter_14  :    实用案列</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>OpenCV之Practice</title>
+    <link>https://gsscsd.github.io/opencv%E4%B9%8Bpractice/</link>
+    <pubDate>Thu, 28 Mar 2019 10:06:55 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/opencv%E4%B9%8Bpractice/</guid>
+    <description><![CDATA[<blockquote>
+<ol>
+<li>
+<p>计算两个矩阵的相似性</p>
+</li>
+<li>
+<p>画三角形、圆形检测出来</p>
+</li>
+<li>
+<p>Haar特征与Viola-Joines人脸检测</p>
+</li>
+<li>
+<p>基于OpenCV的运动物体追踪</p>
+</li>
+<li>
+<p>基于Opencv的数字图像识别</p>
+</li>
+</ol>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>OpenCV之feature2d组件</title>
+    <link>https://gsscsd.github.io/opencv%E4%B9%8Bfeature2d%E7%BB%84%E4%BB%B6/</link>
+    <pubDate>Thu, 28 Mar 2019 09:55:42 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/opencv%E4%B9%8Bfeature2d%E7%BB%84%E4%BB%B6/</guid>
+    <description><![CDATA[<blockquote>
+<p>角点检测</p>
+<p>特征检测与匹配</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>OpenCV之直方图和匹配</title>
+    <link>https://gsscsd.github.io/opencv%E4%B9%8B%E7%9B%B4%E6%96%B9%E5%9B%BE%E5%92%8C%E5%8C%B9%E9%85%8D/</link>
+    <pubDate>Thu, 28 Mar 2019 09:55:02 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/opencv%E4%B9%8B%E7%9B%B4%E6%96%B9%E5%9B%BE%E5%92%8C%E5%8C%B9%E9%85%8D/</guid>
+    <description><![CDATA[<blockquote>
+<p>模版匹配</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>OpenCV之图像轮廓与图像分割修复</title>
+    <link>https://gsscsd.github.io/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E8%BD%AE%E5%BB%93%E4%B8%8E%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2%E4%BF%AE%E5%A4%8D/</link>
+    <pubDate>Thu, 28 Mar 2019 09:51:23 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E8%BD%AE%E5%BB%93%E4%B8%8E%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2%E4%BF%AE%E5%A4%8D/</guid>
+    <description><![CDATA[<blockquote>
+<p>使用多边形将轮廓包围:  矩形、椭圆、十字型结构</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>OpenCV之图像变换</title>
+    <link>https://gsscsd.github.io/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%8F%98%E6%8D%A2/</link>
+    <pubDate>Thu, 28 Mar 2019 09:15:50 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%8F%98%E6%8D%A2/</guid>
+    <description><![CDATA[<blockquote>
+<p>边缘检测：canny算子、sobel算子、Laplace算子、Scharr滤波器</p>
+<p>霍夫变换</p>
+<p>重映射</p>
+<p>仿射变换</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>OpenCV之图像处理</title>
+    <link>https://gsscsd.github.io/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</link>
+    <pubDate>Thu, 28 Mar 2019 09:15:26 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</guid>
+    <description><![CDATA[<blockquote>
+<p>线性滤波：方框滤波、均值滤波、高斯滤波</p>
+<p>非线性滤波：中值滤波、双边滤波</p>
+<p>形态学滤波： 腐蚀、膨胀、开运算、闭运算、形态学梯度、顶帽、黑帽</p>
+<p>漫水填充</p>
+<p>图像金字塔和图像尺寸缩放</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>OpenCV之core组件进阶</title>
+    <link>https://gsscsd.github.io/opencv%E4%B9%8Bcore%E7%BB%84%E4%BB%B6/</link>
+    <pubDate>Thu, 28 Mar 2019 09:06:19 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/opencv%E4%B9%8Bcore%E7%BB%84%E4%BB%B6/</guid>
+    <description><![CDATA[<blockquote>
+<p>初级图像混合</p>
+<p>分离颜色通道、多通道图像混合</p>
+<p>改变图像对比度和亮度</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>OpenCV之HighGUI图形用户界面初步</title>
+    <link>https://gsscsd.github.io/opencv%E4%B9%8Bhighgui%E5%9B%BE%E5%BD%A2%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2/</link>
+    <pubDate>Thu, 28 Mar 2019 09:03:23 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/opencv%E4%B9%8Bhighgui%E5%9B%BE%E5%BD%A2%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2/</guid>
+    <description><![CDATA[<blockquote>
+<p>滑动条的创建使用</p>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

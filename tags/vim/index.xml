@@ -1,0 +1,18 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>vim - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/vim/</link>
+        <description>vim - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 13 Jan 2021 22:52:45 &#43;0800</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/vim/" rel="self" type="application/rss+xml" /><item>
+    <title>Neovim&#43;Coc.nvim配置 终端代码编辑环境</title>
+    <link>https://gsscsd.github.io/neovim-coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/</link>
+    <pubDate>Wed, 13 Jan 2021 22:52:45 &#43;0800</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/neovim-coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/</guid>
+    <description><![CDATA[<blockquote>
+<p>目前公司常用的环境还是linux的服务器，经常需要使用vim进行写代码，经过探索Neovim + Coc.nvim非常适合。以下全部采用源码安装（相比之下，直接用各个发行版的命令安装会更加简单）。<a href="https://www.cnblogs.com/cniwoq/p/13272746.html" target="_blank" rel="noopener noreffer ">参考博客</a></p>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

@@ -1,0 +1,64 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Keras - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/keras/</link>
+        <description>Keras - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 27 Dec 2018 10:44:21 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/keras/" rel="self" type="application/rss+xml" /><item>
+    <title>keras详细介绍</title>
+    <link>https://gsscsd.github.io/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/</link>
+    <pubDate>Thu, 27 Dec 2018 10:44:21 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/</guid>
+    <description><![CDATA[<h3 id="计算图与张量">计算图与张量</h3>
+<blockquote>
+<p>要说Pytorch/Tensorflow/Keras，就不能不提它的符号主义特性</p>
+<p>事实上，Pytorch也好，Tensorflow也好，其实是一款符号主义的计算框架，未必是专为深度学习设计的。假如你有一个与深度学习完全无关的计算任务想运行在GPU上，你完全可以通过Pytorch/Tensorflow编写和运行。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>keras基本入门</title>
+    <link>https://gsscsd.github.io/keras%E5%9F%BA%E6%9C%AC%E5%85%A5%E9%97%A8/</link>
+    <pubDate>Wed, 26 Dec 2018 19:13:18 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/keras%E5%9F%BA%E6%9C%AC%E5%85%A5%E9%97%A8/</guid>
+    <description><![CDATA[<h3 id="keras基本介绍">keras基本介绍</h3>
+<blockquote>
+<p>Keras是由纯python编写的基于不同的深度学习后端开发的深度学习框架。</p>
+<p>支持的后端有：</p>
+<ul>
+<li>谷歌的 TensorFlow 后端</li>
+<li>微软的 CNTK 后端</li>
+<li>Theano 后端</li>
+</ul>
+<p>Keras是一个高层神经网络API，支持快速实验，能够把你的idea迅速转换为结果，如果有如下需求，可以优先选择Keras：</p>
+<ul>
+<li>
+<p>简易和快速的原型设计（keras具有高度模块化，极简，和可扩充特性）</p>
+</li>
+<li>
+<p>支持CNN和RNN，或二者的结合</p>
+</li>
+<li>
+<p>无缝CPU和GPU切换</p>
+</li>
+</ul>
+<p>keras的优点：</p>
+<ul>
+<li>
+<p>用户友好：Keras是为人类而不是天顶星人设计的API。用户的使用体验始终是我们考虑的首要和中心内容。Keras遵循减少认知困难的最佳实践：Keras提供一致而简洁的API， 能够极大减少一般应用下用户的工作量，同时，Keras提供清晰和具有实践意义的bug反馈。</p>
+</li>
+<li>
+<p>模块性：模型可理解为一个层的序列或数据的运算图，完全可配置的模块可以用最少的代价自由组合在一起。具体而言，网络层、损失函数、优化器、初始化策略、激活函数、正则化方法都是独立的模块，你可以使用它们来构建自己的模型。</p>
+</li>
+<li>
+<p>易扩展性：添加新模块超级容易，只需要仿照现有的模块编写新的类或函数即可。创建新模块的便利性使得Keras更适合于先进的研究工作。</p>
+</li>
+<li>
+<p>与Python协作：Keras没有单独的模型配置文件类型（作为对比，caffe有），模型由python代码描述，使其更紧凑和更易debug，并提供了扩展的便利性。</p>
+</li>
+</ul>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

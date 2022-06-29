@@ -1,0 +1,2004 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>机器学习案例之Titanic生存预测分析 - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="机器学习案例之Titanic生存预测分析" />
+<meta property="og:description" content="Titanic是kaggle上的一道just for fun的题，没有奖金，但是数据整洁，适合用来练手，进行数据分析和机器学习。 这道题给的数据是泰坦" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-01-06T11:18:44+00:00" />
+<meta property="article:modified_time" content="2019-01-06T11:18:44+00:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="机器学习案例之Titanic生存预测分析"/>
+<meta name="twitter:description" content="Titanic是kaggle上的一道just for fun的题，没有奖金，但是数据整洁，适合用来练手，进行数据分析和机器学习。 这道题给的数据是泰坦"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90/" /><link rel="prev" href="https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A80/" /><link rel="next" href="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" /><link rel="stylesheet" href="/css/style.min.931bc4ad2d28eb74379d23c35d88889e10d86e4fb73a8e095952c2617800dcce223d542ddf6f22eb6db537ea777ccee425cbdcb03ad216de7941dc3a1574cdfc.css" integrity="sha512-kxvErS0o63Q3nSPDXYiInhDYbk+3Oo4JWVLCYXgA3M4iPVQt328i6221N+p3fM7kJcvcsDrSFt55Qdw6FXTN/A=="><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "机器学习案例之Titanic生存预测分析",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "机器学习, python","wordcount":  5618 ,
+        "url": "https:\/\/gsscsd.github.io\/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90\/","datePublished": "2019-01-06T11:18:44+00:00","dateModified": "2019-01-06T11:18:44+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">机器学习案例之Titanic生存预测分析</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Gsscsd</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>机器学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2019-01-06">2019-01-06</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 5618 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 12 分钟&nbsp;<span id="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90/" class="leancloud_visitors" data-flag-title="机器学习案例之Titanic生存预测分析">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#导入相关的库">导入相关的库</a></li>
+    <li><a href="#读入数据">读入数据</a></li>
+    <li><a href="#数据的一般信息">数据的一般信息</a>
+      <ul>
+        <li><a href="#training-data">Training Data</a></li>
+        <li><a href="#testing-data">Testing Data</a></li>
+      </ul>
+    </li>
+    <li><a href="#数据探索">数据探索</a></li>
+    <li><a href="#数据清洗">数据清洗</a>
+      <ul>
+        <li><a href="#缺失数据">缺失数据</a>
+          <ul>
+            <li><a href="#embarked-nulls">Embarked Nulls</a></li>
+            <li><a href="#fare-nulls">Fare nulls</a></li>
+            <li><a href="#age-nulls">Age nulls</a></li>
+            <li><a href="#cabin-nulls">Cabin nulls</a></li>
+          </ul>
+        </li>
+        <li><a href="#adding-features">Adding features</a></li>
+      </ul>
+    </li>
+    <li><a href="#aggregating-features">Aggregating Features</a></li>
+    <li><a href="#dropping-useless-features">Dropping Useless Features</a></li>
+    <li><a href="#convert-categorical-variables">Convert Categorical Variables</a></li>
+    <li><a href="#机器学习模型">机器学习模型</a>
+      <ul>
+        <li><a href="#seperate-data">Seperate Data</a></li>
+        <li><a href="#baseline-models">Baseline Models</a></li>
+        <li><a href="#plot-roc-curve-for-baseline-models">Plot ROC curve for baseline models</a></li>
+        <li><a href="#hyperparameter-tuning----improve-model-performance">Hyperparameter Tuning &ndash; Improve model performance</a></li>
+        <li><a href="#randomized-grid-search">Randomized Grid Search</a></li>
+        <li><a href="#plot-roc-curve-for-tuned-models">Plot ROC curve for tuned models</a></li>
+        <li><a href="#evaluating-a-new-model">Evaluating a new model</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>Titanic是kaggle上的一道just for fun的题，没有奖金，但是数据整洁，适合用来练手，进行数据分析和机器学习。</p>
+<p>这道题给的数据是泰坦尼克号上的乘客的信息，预测乘客是否幸存。这是个二元分类的机器学习问题，但是由于数据样本相对较少，还是具有一定的挑战性。</p>
+</blockquote>
+<!--more -->
+<h2 id="导入相关的库">导入相关的库</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">make_scorer</span><span class="p">,</span> <span class="n">confusion_matrix</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">learning_curve</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">AdaBoostClassifier</span><span class="p">,</span> <span class="n">GradientBoostingClassifier</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">GaussianNB</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span><span class="p">,</span> <span class="n">LinearSVC</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span>  <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interp</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s1">&#39;whitegrid&#39;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="读入数据">读入数据</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">trainDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./Tantic_Data/train.csv&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./Tantic_Data/test.csv&#39;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="数据的一般信息">数据的一般信息</h2>
+<p>首先让我们查看一下数据的分布</p>
+<h3 id="training-data">Training Data</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">trainDF</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="s1">&#39;&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">RangeIndex</span><span class="p">:</span> <span class="mi">891</span> <span class="n">entries</span><span class="p">,</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">890</span>
+</span></span><span class="line"><span class="cl"><span class="n">Data</span> <span class="n">columns</span> <span class="p">(</span><span class="n">total</span> <span class="mi">12</span> <span class="n">columns</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl"><span class="n">PassengerId</span>    <span class="mi">891</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">int64</span>
+</span></span><span class="line"><span class="cl"><span class="n">Survived</span>       <span class="mi">891</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">int64</span>
+</span></span><span class="line"><span class="cl"><span class="n">Pclass</span>         <span class="mi">891</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">int64</span>
+</span></span><span class="line"><span class="cl"><span class="n">Name</span>           <span class="mi">891</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="nb">object</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sex</span>            <span class="mi">891</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="nb">object</span>
+</span></span><span class="line"><span class="cl"><span class="n">Age</span>            <span class="mi">714</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">float64</span>
+</span></span><span class="line"><span class="cl"><span class="n">SibSp</span>          <span class="mi">891</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">int64</span>
+</span></span><span class="line"><span class="cl"><span class="n">Parch</span>          <span class="mi">891</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">int64</span>
+</span></span><span class="line"><span class="cl"><span class="n">Ticket</span>         <span class="mi">891</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="nb">object</span>
+</span></span><span class="line"><span class="cl"><span class="n">Fare</span>           <span class="mi">891</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">float64</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cabin</span>          <span class="mi">204</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="nb">object</span>
+</span></span><span class="line"><span class="cl"><span class="n">Embarked</span>       <span class="mi">889</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="nb">object</span>
+</span></span><span class="line"><span class="cl"><span class="n">dtypes</span><span class="p">:</span> <span class="n">float64</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">int64</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="nb">object</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">memory</span> <span class="n">usage</span><span class="p">:</span> <span class="mf">83.6</span><span class="o">+</span> <span class="n">KB</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="testing-data">Testing Data</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">testDF</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="s1">&#39;&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">RangeIndex</span><span class="p">:</span> <span class="mi">418</span> <span class="n">entries</span><span class="p">,</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">417</span>
+</span></span><span class="line"><span class="cl"><span class="n">Data</span> <span class="n">columns</span> <span class="p">(</span><span class="n">total</span> <span class="mi">11</span> <span class="n">columns</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl"><span class="n">PassengerId</span>    <span class="mi">418</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">int64</span>
+</span></span><span class="line"><span class="cl"><span class="n">Pclass</span>         <span class="mi">418</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">int64</span>
+</span></span><span class="line"><span class="cl"><span class="n">Name</span>           <span class="mi">418</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="nb">object</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sex</span>            <span class="mi">418</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="nb">object</span>
+</span></span><span class="line"><span class="cl"><span class="n">Age</span>            <span class="mi">332</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">float64</span>
+</span></span><span class="line"><span class="cl"><span class="n">SibSp</span>          <span class="mi">418</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">int64</span>
+</span></span><span class="line"><span class="cl"><span class="n">Parch</span>          <span class="mi">418</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">int64</span>
+</span></span><span class="line"><span class="cl"><span class="n">Ticket</span>         <span class="mi">418</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="nb">object</span>
+</span></span><span class="line"><span class="cl"><span class="n">Fare</span>           <span class="mi">417</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="n">float64</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cabin</span>          <span class="mi">91</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="nb">object</span>
+</span></span><span class="line"><span class="cl"><span class="n">Embarked</span>       <span class="mi">418</span> <span class="n">non</span><span class="o">-</span><span class="n">null</span> <span class="nb">object</span>
+</span></span><span class="line"><span class="cl"><span class="n">dtypes</span><span class="p">:</span> <span class="n">float64</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">int64</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="nb">object</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">memory</span> <span class="n">usage</span><span class="p">:</span> <span class="mf">36.0</span><span class="o">+</span> <span class="n">KB</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在上面，来自训练集的<strong>survived</strong> 列是taret / dependent / response变量。 得分为1表示乘客幸存，得分为0表示乘客死亡。</p>
+<p>还有描述每位乘客的各种features (variables)：</p>
+<ul>
+<li>PassengerID：在船上分配给旅行者的ID</li>
+<li>Pclass：乘客的等级，1,2或3</li>
+<li>Name：乘客姓名</li>
+<li>Sex：乘客的性别</li>
+<li>Age：乘客的年龄</li>
+<li>SibSp：与乘客一起旅行的兄弟姐妹/配偶的数量</li>
+<li>Parch：与乘客一起旅行的父母/子女的数量</li>
+<li>Ticket：乘客的机票号码</li>
+<li>Fare：乘客的票价</li>
+<li>Cabin：乘客的客舱号码</li>
+<li>Embarked：登船港口，S，C或Q（C = Cherbourg，Q = Queenstown，S = Southhampton）</li>
+</ul>
+<h2 id="数据探索">数据探索</h2>
+<p>首先，让我们看看幸存下来的人数.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">trainDF</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_15_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_15_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_15_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_15_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_15_1.png"
+        title="png" /></p>
+<p>大多数人都没有活下来。</p>
+<p>让我们通过观察按性别存活的人数来进一步研究这个问题。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;Sex&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">trainDF</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_17_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_17_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_17_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_17_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_17_1.png"
+        title="png" /></p>
+<p>在这里我们可以看到，男性死亡的人数多于女性，而且大多数女性幸免于难。</p>
+<p>现在让我们按Pclass看看生存计数。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span><span class="n">hue</span><span class="o">=</span><span class="s1">&#39;Pclass&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">trainDF</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_19_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_19_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_19_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_19_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_19_1.png"
+        title="png" /></p>
+<p>在这里我们可以看到，第一类的大多数幸存下来，而第三类的大多数人都死了。</p>
+<p>让我们来看看fare分配。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Fare&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">trainDF</span><span class="p">,</span><span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_21_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_21_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_21_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_21_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_21_1.png"
+        title="png" /></p>
+<p>在这里，我们可以看到大多数人支付的费用低于50，但有一些异常值就像500美元范围内的人一样。 这可以通过每个班级中人数的差异来解释。 最低级别，3，人数最多，最高级别最少。 最低级别支付最低票价，因此此类别中有更多人。</p>
+<p>最后，让我们使用热图查看缺失数据的数量。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">trainDF</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_23_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_23_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_23_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_23_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_23_1.png"
+        title="png" /></p>
+<p>让我们用test做同样的事情。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">testDF</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_27_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_27_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_27_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_27_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_27_1.png"
+        title="png" /></p>
+<h2 id="数据清洗">数据清洗</h2>
+<p>现在让我们清理数据，以便它可以与scikit-learn模型一起使用。</p>
+<h3 id="缺失数据">缺失数据</h3>
+<h4 id="embarked-nulls">Embarked Nulls</h4>
+<p>首先，让我们在数据集中处理NaN,我们首先从Embarked中的NaN开始。</p>
+<p>让我们根据登船港口来看待生存机会。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Plot the number of occurances for each embarked location</span>
+</span></span><span class="line"><span class="cl"><span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Embarked&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">trainDF</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Plot the number of people that survived by embarked location</span>
+</span></span><span class="line"><span class="cl"><span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="n">hue</span> <span class="o">=</span> <span class="s1">&#39;Embarked&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">trainDF</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Group by Embarked, and get the mean for survived passengers for each</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># embarked location</span>
+</span></span><span class="line"><span class="cl"><span class="n">embark_pct</span> <span class="o">=</span> <span class="n">trainDF</span><span class="p">[[</span><span class="s1">&#39;Embarked&#39;</span><span class="p">,</span><span class="s1">&#39;Survived&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;Embarked&#39;</span><span class="p">],</span><span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Plot the above mean</span>
+</span></span><span class="line"><span class="cl"><span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Embarked&#39;</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">embark_pct</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;Q&#39;</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_33_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_33_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_33_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_33_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_33_1.png"
+        title="png" /></p>
+<p>在这里，我们可以看到大多数人从S出发，因此大多数幸存下来的人都是S.但是，当我们查看幸存人数的平均值与登机位置登记的总人数时， S的存活率最低。</p>
+<p>这不足以确定上述人员登上哪个港口。 让我们看看其他可能表明乘客登船的变量</p>
+<p>没有其他用户共享相同的票号。 让我们寻找支付类似票价的同一班级的人。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">trainDF</span><span class="p">[(</span><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Pclass&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Fare&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">75</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Fare&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">85</span><span class="p">)]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Embarked&#39;</span><span class="p">)[</span><span class="s1">&#39;PassengerId&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Embarked
+</span></span><span class="line"><span class="cl">C    16
+</span></span><span class="line"><span class="cl">S    13
+</span></span><span class="line"><span class="cl">Name: PassengerId, dtype: int64
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在拥有相同级别并支付相同票价的人中，有16人从C出发，13人从S出发。</p>
+<p>现在，由于支付类似票价的同一班级的大多数人来自C，而从C开始的人拥有最高的生存率，我们认为这些人可能从C开始。我们现在将他们的登船价值改为 C。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Set Value</span>
+</span></span><span class="line"><span class="cl"><span class="n">trainDF</span> <span class="o">=</span> <span class="n">trainDF</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Embarked&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),</span> <span class="s1">&#39;Embarked&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">/Users/apple/Soft/miniconda3/lib/python3.5/site-packages/ipykernel_launcher.py:2: FutureWarning: set_value is deprecated and will be removed in a future release. Please use .at<span class="o">[]</span> or .iat<span class="o">[]</span> accessors instead
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="fare-nulls">Fare nulls</h4>
+<p>现在来处理Fare列.</p>
+<p>让我们想象一下从南安普敦出发的三等乘客支付的票价的直方图。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span><span class="p">[(</span><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Pclass&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Embarked&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">)][</span><span class="s1">&#39;Fare&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Fare&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Histogram of Fare for Pclass = 3, Embarked = S&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_44_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_44_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_44_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_44_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_44_1.png"
+        title="png" /></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">print</span> <span class="p">(</span><span class="s2">&#34;The top 5 most common fares:&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span><span class="p">[(</span><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Pclass&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Embarked&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">)][</span><span class="s1">&#39;Fare&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">The top 5 most common fares:
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="mf">8.0500</span>    <span class="mi">17</span>
+</span></span><span class="line"><span class="cl"><span class="mf">7.8958</span>    <span class="mi">10</span>
+</span></span><span class="line"><span class="cl"><span class="mf">7.7750</span>    <span class="mi">10</span>
+</span></span><span class="line"><span class="cl"><span class="mf">8.6625</span>     <span class="mi">8</span>
+</span></span><span class="line"><span class="cl"><span class="mf">7.8542</span>     <span class="mi">8</span>
+</span></span><span class="line"><span class="cl"><span class="n">Name</span><span class="p">:</span> <span class="n">Fare</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">int64</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用众数填充Fare列的缺失值, $8.05.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Fill value</span>
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">testDF</span><span class="o">.</span><span class="n">Fare</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),</span> <span class="s1">&#39;Fare&#39;</span><span class="p">,</span> <span class="mf">8.05</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Verify</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="age-nulls">Age nulls</h4>
+<p>现在让我们在训练和测试集中填写缺失的年龄数据。 填充的一种方法是用柱的方式填充NaN。 通过逐类查看平均年龄，我们可以使这个填充过程更加智能化。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Pclass&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">trainDF</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_50_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_50_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_50_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_50_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_50_1.png"
+        title="png" /></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">trainDF</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Pclass&#39;</span><span class="p">)[</span><span class="s1">&#39;Age&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">Pclass</span>
+</span></span><span class="line"><span class="cl"><span class="mi">1</span>    <span class="mf">38.233441</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2</span>    <span class="mf">29.877630</span>
+</span></span><span class="line"><span class="cl"><span class="mi">3</span>    <span class="mf">25.140620</span>
+</span></span><span class="line"><span class="cl"><span class="n">Name</span><span class="p">:</span> <span class="n">Age</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">float64</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们看到等级越高，平均年龄就越高。 然后我们可以使用上述方法编写一个函数来填充NaN年龄值。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">fixNaNAge</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">pclass</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">age</span> <span class="o">==</span> <span class="n">age</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">age</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">pclass</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">38</span>
+</span></span><span class="line"><span class="cl">    <span class="k">elif</span> <span class="n">pclass</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">30</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">25</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在，我们将在训练和测试数据框中填写年龄NaN，并验证它们是否正确填充。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trainDF</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">fixNaNAge</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Pclass&#39;</span><span class="p">]),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">testDF</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">fixNaNAge</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Pclass&#39;</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_58_1.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_58_1.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_58_1.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_58_1.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_58_1.png"
+        title="png" /></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">facet</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">trainDF</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">facet</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">,</span> <span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">facet</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+</span></span><span class="line"><span class="cl"><span class="n">facet</span><span class="o">.</span><span class="n">add_legend</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">age_mean</span> <span class="o">=</span> <span class="n">trainDF</span><span class="p">[[</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span><span class="s1">&#39;Survived&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;Age&#39;</span><span class="p">],</span><span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">age_mean</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_59_2.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_59_2.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_59_2.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_59_2.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_59_2.png"
+        title="png" /></p>
+<h4 id="cabin-nulls">Cabin nulls</h4>
+<p>最后，对于机舱列，我们缺少太多信息来正确填充它，因此我们可以完全放弃该特征。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">trainDF</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;Cabin&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;Cabin&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="adding-features">Adding features</h3>
+<p>这些名称的前缀在某些情况下表明了社会地位，这可能是事故幸存的重要因素。</p>
+<blockquote>
+<ul>
+<li>Braund, Mr. Owen Harris</li>
+<li>Heikkinen, Miss. Laina</li>
+<li>Oliva y Ocana, Dona. Fermina</li>
+<li>Peter, Master. Michael J</li>
+</ul>
+</blockquote>
+<p>提取乘客头衔并在名为<strong>Title</strong>的附加栏中引导他们</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">Title_Dictionary</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Capt&#34;</span><span class="p">:</span>         <span class="s2">&#34;Officer&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Col&#34;</span><span class="p">:</span>          <span class="s2">&#34;Officer&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Major&#34;</span><span class="p">:</span>        <span class="s2">&#34;Officer&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Jonkheer&#34;</span><span class="p">:</span>     <span class="s2">&#34;Nobel&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Don&#34;</span><span class="p">:</span>          <span class="s2">&#34;Nobel&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Sir&#34;</span> <span class="p">:</span>         <span class="s2">&#34;Nobel&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Dr&#34;</span><span class="p">:</span>           <span class="s2">&#34;Officer&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Rev&#34;</span><span class="p">:</span>          <span class="s2">&#34;Officer&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;the Countess&#34;</span><span class="p">:</span> <span class="s2">&#34;Nobel&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Dona&#34;</span><span class="p">:</span>         <span class="s2">&#34;Nobel&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Mme&#34;</span><span class="p">:</span>          <span class="s2">&#34;Mrs&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Mlle&#34;</span><span class="p">:</span>         <span class="s2">&#34;Miss&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Ms&#34;</span><span class="p">:</span>           <span class="s2">&#34;Mrs&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Mr&#34;</span> <span class="p">:</span>          <span class="s2">&#34;Mr&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Mrs&#34;</span> <span class="p">:</span>         <span class="s2">&#34;Mrs&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Miss&#34;</span> <span class="p">:</span>        <span class="s2">&#34;Miss&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Master&#34;</span> <span class="p">:</span>      <span class="s2">&#34;Master&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Lady&#34;</span> <span class="p">:</span>        <span class="s2">&#34;Nobel&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Title_Dictionary</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()])</span>
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Title_Dictionary</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()])</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="aggregating-features">Aggregating Features</h2>
+<p>让我们添加一个字段FamilySize，它聚合字段中的信息，表明存在合作伙伴（Parch）或亲戚（Sibsp）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;FamilySize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;SibSp&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Parch&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;FamilySize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;SibSp&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Parch&#39;</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>乘客的性别是事故幸存的重要因素。 乘客的年龄也是如此（例如，给予妇女和儿童的优惠待遇）。 让我们介绍一个新功能，以考虑到乘客的性别和年龄。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">getPerson</span><span class="p">(</span><span class="n">passenger</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">age</span><span class="p">,</span> <span class="n">sex</span> <span class="o">=</span> <span class="n">passenger</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="s1">&#39;child&#39;</span> <span class="k">if</span> <span class="n">age</span> <span class="o">&lt;</span> <span class="mi">16</span> <span class="k">else</span> <span class="n">sex</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Person&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trainDF</span><span class="p">[[</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;Sex&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">getPerson</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Person&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">testDF</span><span class="p">[[</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;Sex&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">getPerson</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="dropping-useless-features">Dropping Useless Features</h2>
+<p>现在让我们放弃那些不再感兴趣的特征，因为它们没有显示任何不可理解的特征，或者它们已经聚合到另一个特征中。</p>
+<p>我们将要删除的特征是PassengerID, Name, Sex, Ticket, SibSp, Parch.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">features_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;PassengerId&#39;</span><span class="p">,</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span><span class="s1">&#39;Sex&#39;</span><span class="p">,</span><span class="s1">&#39;Ticket&#39;</span><span class="p">,</span><span class="s1">&#39;SibSp&#39;</span><span class="p">,</span><span class="s1">&#39;Parch&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">trainDF</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">features_to_drop</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">features_to_drop</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="convert-categorical-variables">Convert Categorical Variables</h2>
+<p>分类变量需要转换为数值，因为scikit-learn仅将数值作为numpy数组中的输入。</p>
+<p>我们可以使用数字表示分类值，但是这种编码意味着类别中值之间的<strong>有序关系</strong>。 为避免这种情况，我们可以使用虚拟变量对分类值进行编码。</p>
+<p>我们拥有的四个分类特征是Pclass，Embarked，Title和Person。 在这4个中，可能没有Person，Title，Embarked的有序关系，所以我们将对这些进行热编码，同时对Pclass进行数字编码。</p>
+<p>我们通过为每个要素类别创建一个特征来进行热编码。 如果原始要素属于该类别，则类别列的值将为1。 只有一个分类要素列可以具有1.删除一列也很常见，因为剩下的列隐含了它的值。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Create dummy features for each categorical feature</span>
+</span></span><span class="line"><span class="cl"><span class="n">dummies_person_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Person&#39;</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Person&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">dummies_embarked_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Embarked&#39;</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Embarked&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">dummies_title_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Title&#39;</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Title&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Add the new features to the dataframe via concating</span>
+</span></span><span class="line"><span class="cl"><span class="n">tempDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">trainDF</span><span class="p">,</span> <span class="n">dummies_person_train</span><span class="p">,</span> <span class="n">dummies_embarked_train</span><span class="p">,</span> <span class="n">dummies_title_train</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Drop the original categorical feature columns</span>
+</span></span><span class="line"><span class="cl"><span class="n">tempDF</span> <span class="o">=</span> <span class="n">tempDF</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Person&#39;</span><span class="p">,</span><span class="s1">&#39;Embarked&#39;</span><span class="p">,</span><span class="s1">&#39;Title&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Drop one of each of the dummy variables because its value is implied</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># by the other dummy variable columns</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># E.g. if Person_male = 0, and Person_female = 0, then the person</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># is a child</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">trainDF</span> <span class="o">=</span> <span class="n">tempDF</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Person_child&#39;</span><span class="p">,</span><span class="s1">&#39;Embarked_C&#39;</span><span class="p">,</span><span class="s1">&#39;Title_Master&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Create dummy features for each categorical feature</span>
+</span></span><span class="line"><span class="cl"><span class="n">dummies_person_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Person&#39;</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Person&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">dummies_embarked_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Embarked&#39;</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Embarked&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">dummies_title_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">testDF</span><span class="p">[</span><span class="s1">&#39;Title&#39;</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Title&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Add the new features to the dataframe via concating</span>
+</span></span><span class="line"><span class="cl"><span class="n">tempDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">testDF</span><span class="p">,</span> <span class="n">dummies_person_test</span><span class="p">,</span> <span class="n">dummies_embarked_test</span><span class="p">,</span> <span class="n">dummies_title_test</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Drop the original categorical feature columns</span>
+</span></span><span class="line"><span class="cl"><span class="n">tempDF</span> <span class="o">=</span> <span class="n">tempDF</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Person&#39;</span><span class="p">,</span><span class="s1">&#39;Embarked&#39;</span><span class="p">,</span><span class="s1">&#39;Title&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Drop one of each of the dummy variables because its value is implied</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># by the other dummy variable columns</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># E.g. if Person_male = 0, and Person_female = 0, then the person</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># is a child</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">testDF</span> <span class="o">=</span> <span class="n">tempDF</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Person_child&#39;</span><span class="p">,</span><span class="s1">&#39;Embarked_C&#39;</span><span class="p">,</span><span class="s1">&#39;Title_Master&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="机器学习模型">机器学习模型</h2>
+<blockquote>
+<p>现在在本节中，我们将训练几个模型并调整它们，看看我们是否可以提高性能。</p>
+<p>调整模型的方法不止一种。 它通常是一种非常迭代的方法。 由于它是迭代的，我们通常需要单个数字评估指标来优化并在2个不同模型之间做出决策。</p>
+<p>通常会有一个您正在优化的度量标准，然后是对其他度量标准的约束。</p>
+<p>一些可能用到的评价指标:</p>
+<ul>
+<li>maximizing accuracy</li>
+<li>minimizing error</li>
+<li>maximizing roc</li>
+</ul>
+<p>可能包含的约束:</p>
+<ul>
+<li>model size &lt;= 100 MB</li>
+<li>FPR &gt;= 75%</li>
+<li>inference time &lt; 1 second</li>
+</ul>
+<p>如果一个模型满足约束条件并且在您尝试优化的度量标准中做得更好，则它比另一个模型更好。</p>
+<p>此外，为了获得模型的广义性能，通常在训练集中进行交叉验证。</p>
+<p>在这种情况下，我们只是最大限度地提高交叉验证的准确性。</p>
+</blockquote>
+<h3 id="seperate-data">Seperate Data</h3>
+<p>首先切分数据:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">X</span> <span class="o">=</span> <span class="n">trainDF</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Survived&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">y</span> <span class="o">=</span> <span class="n">trainDF</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Let&rsquo;s also create a dataframe to store our results from training:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">resultDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">,</span><span class="s1">&#39;hyperparams&#39;</span><span class="p">,</span><span class="s1">&#39;train_acc&#39;</span><span class="p">,</span><span class="s1">&#39;train_std&#39;</span><span class="p">,</span><span class="s1">&#39;test_acc&#39;</span><span class="p">,</span><span class="s1">&#39;test_std&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">df_idx</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="baseline-models">Baseline Models</h3>
+<p>为了开始这个，我们将训练一些基线模型（具有默认值的模型）以获得要击败的基线。</p>
+<p>首先，我们将创建一个模型字典，以便我们可以循环并迭代地构建和评估它们。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;knn&#39;</span><span class="p">:</span> <span class="n">KNeighborsClassifier</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;log&#39;</span><span class="p">:</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="n">DecisionTreeClassifier</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;rf&#39;</span><span class="p">:</span> <span class="n">RandomForestClassifier</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;ab&#39;</span><span class="p">:</span> <span class="n">AdaBoostClassifier</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在让我们编写一个函数来运行给定模型和数据集的交叉验证。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">crossValidate</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">hyperparams</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">df_idx</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Update model hyperparameters if given</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">hyperparams</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">model</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">hyperparams</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Initialize scaler class</span>
+</span></span><span class="line"><span class="cl">    <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Get kFolds</span>
+</span></span><span class="line"><span class="cl">    <span class="n">kfold</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">kfold</span><span class="o">.</span><span class="n">get_n_splits</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Initialize storage vectors</span>
+</span></span><span class="line"><span class="cl">    <span class="n">trainACC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">testACC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">np_idx</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Loop through folds</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span> <span class="ow">in</span> <span class="n">kfold</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Scale data</span>
+</span></span><span class="line"><span class="cl">        <span class="n">X_train</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">X_test</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Fit to training set</span>
+</span></span><span class="line"><span class="cl">        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Make predictions on testing set</span>
+</span></span><span class="line"><span class="cl">        <span class="n">y_train_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">y_test_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># Compute training and testing accuracy</span>
+</span></span><span class="line"><span class="cl">        <span class="n">trainACC</span><span class="p">[</span><span class="n">np_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_train_pred</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
+</span></span><span class="line"><span class="cl">        <span class="n">testACC</span><span class="p">[</span><span class="n">np_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_test_pred</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
+</span></span><span class="line"><span class="cl">        <span class="n">np_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># Print fold accuracy if verbose level 2</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="p">(</span><span class="s2">&#34;    Fold </span><span class="si">{}</span><span class="s2">: Accuracy: </span><span class="si">{}</span><span class="s2">%&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np_idx</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">testACC</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="mi">3</span><span class="p">)))</span>   
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Print average accuracy if verbose level 1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span> <span class="p">(</span><span class="s2">&#34;  Average Score: </span><span class="si">{}</span><span class="s2">%(</span><span class="si">{}</span><span class="s2">%)&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">testACC</span><span class="p">),</span><span class="mi">3</span><span class="p">),</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">testACC</span><span class="p">),</span><span class="mi">3</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Update dataframe</span>
+</span></span><span class="line"><span class="cl">    <span class="n">resultDF</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_idx</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">typ</span>
+</span></span><span class="line"><span class="cl">    <span class="n">resultDF</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_idx</span><span class="p">,</span> <span class="s1">&#39;hyperparams&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">resultDF</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_idx</span><span class="p">,</span> <span class="s1">&#39;train_acc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trainACC</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">resultDF</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_idx</span><span class="p">,</span> <span class="s1">&#39;train_std&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trainACC</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">resultDF</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_idx</span><span class="p">,</span> <span class="s1">&#39;test_acc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">testACC</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">resultDF</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_idx</span><span class="p">,</span> <span class="s1">&#39;test_std&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">testACC</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">df_idx</span> <span class="o">+=</span> <span class="mi">1</span>                                         
+</span></span><span class="line"><span class="cl">                                         
+</span></span><span class="line"><span class="cl">    <span class="c1"># Return average testing accuracy, and fitted model</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">testACC</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">model</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在我们可以使用上面的函数循环并交叉验证每个模型。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span> <span class="p">(</span><span class="s2">&#34;Fitting &#34;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&#34; model&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_</span><span class="p">,</span> <span class="n">models</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">crossValidate</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Fitting dt model
+</span></span><span class="line"><span class="cl">  Average Score: 79.357%(4.778%)
+</span></span><span class="line"><span class="cl">Fitting rf model
+</span></span><span class="line"><span class="cl">  Average Score: 80.923%(4.192%)
+</span></span><span class="line"><span class="cl">Fitting ab model
+</span></span><span class="line"><span class="cl">  Average Score: 80.7%(3.331%)
+</span></span><span class="line"><span class="cl">Fitting knn model
+</span></span><span class="line"><span class="cl">  Average Score: 80.7%(3.136%)
+</span></span><span class="line"><span class="cl">Fitting log model
+</span></span><span class="line"><span class="cl">  Average Score: 82.27%(3.495%)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们还可以查看我们为存储值而创建的数据框中的所有结果。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>hyperparams</th>
+<th>train_acc</th>
+<th>train_std</th>
+<th>test_acc</th>
+<th>test_std</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>model</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>log</td>
+<td>default</td>
+<td>83.002902</td>
+<td>0.355647</td>
+<td>82.269663</td>
+<td>3.495014</td>
+</tr>
+<tr>
+<td>rf</td>
+<td>default</td>
+<td>96.919733</td>
+<td>0.511827</td>
+<td>80.922597</td>
+<td>4.192015</td>
+</tr>
+<tr>
+<td>ab</td>
+<td>default</td>
+<td>84.249987</td>
+<td>0.716843</td>
+<td>80.700375</td>
+<td>3.330767</td>
+</tr>
+<tr>
+<td>knn</td>
+<td>default</td>
+<td>86.619375</td>
+<td>0.436454</td>
+<td>80.700375</td>
+<td>3.135529</td>
+</tr>
+<tr>
+<td>dt</td>
+<td>default</td>
+<td>98.428741</td>
+<td>0.138747</td>
+<td>79.357054</td>
+<td>4.777630</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plot-roc-curve-for-baseline-models">Plot ROC curve for baseline models</h3>
+<p>我们现在可以使用以下函数绘制我们构建的每个模型的roc曲线。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">plot_roc_curve</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Initialize scaler</span>
+</span></span><span class="line"><span class="cl">    <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Get kfolds</span>
+</span></span><span class="line"><span class="cl">    <span class="n">kfold</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">kfold</span><span class="o">.</span><span class="n">get_n_splits</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Initalize storage lists</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tprs</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">aucs</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mean_fpr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Loop through folds</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span> <span class="ow">in</span> <span class="n">kfold</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Split data</span>
+</span></span><span class="line"><span class="cl">        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Scale data</span>
+</span></span><span class="line"><span class="cl">        <span class="n">X_train</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">X_test</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Fit model to fold</span>
+</span></span><span class="line"><span class="cl">        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># Get probabilities for X_test</span>
+</span></span><span class="line"><span class="cl">        <span class="n">y_test_proba</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># Get FPR, TPR, and AUC vals based on probabilities</span>
+</span></span><span class="line"><span class="cl">        <span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_test_proba</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">        <span class="n">roc_auc</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># Append tpr and auc</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tprs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">interp</span><span class="p">(</span><span class="n">mean_fpr</span><span class="p">,</span> <span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tprs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span></span><span class="line"><span class="cl">        <span class="n">aucs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">roc_auc</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     
+</span></span><span class="line"><span class="cl">        <span class="c1"># Plot roc for fold</span>
+</span></span><span class="line"><span class="cl">        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ROC fold </span><span class="si">%d</span><span class="s1"> (AUC = </span><span class="si">%0.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">roc_auc</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Plot random guessing line</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Chance&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Get mean tpr and mean/std for auc</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mean_tpr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">tprs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mean_tpr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mean_auc</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">mean_fpr</span><span class="p">,</span> <span class="n">mean_tpr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std_auc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">aucs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Plot mean curve</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean_fpr</span><span class="p">,</span> <span class="n">mean_tpr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">             <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;Mean ROC (AUC = </span><span class="si">%0.2f</span><span class="s1"> $\pm$ </span><span class="si">%0.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mean_auc</span><span class="p">,</span> <span class="n">std_auc</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">             <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Fill area between plots</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std_tpr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">tprs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tprs_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">mean_tpr</span> <span class="o">+</span> <span class="n">std_tpr</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tprs_lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">mean_tpr</span> <span class="o">-</span> <span class="n">std_tpr</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">mean_fpr</span><span class="p">,</span> <span class="n">tprs_lower</span><span class="p">,</span> <span class="n">tprs_upper</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                     <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\pm$ 1 std. dev.&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># style</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;False Positive Rate&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;True Positive Rate&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; Receiver operating characteristic curve&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&#34;lower right&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">mean_fpr</span><span class="p">,</span> <span class="n">mean_tpr</span><span class="p">,</span> <span class="n">mean_auc</span><span class="p">,</span> <span class="n">std_auc</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在，对于我们创建的每个模型，我们将循环并绘制每个折叠的ROC曲线+平均ROC曲线。 我们还将在同一图上绘制所有模型的平均ROC曲线以进行比较</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">plt_id</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">plt_id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">auc_mean</span><span class="p">,</span> <span class="n">auc_std</span> <span class="o">=</span> <span class="n">plot_roc_curve</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt_id</span><span class="o">+=</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39; Mean ROC (AUC = </span><span class="si">%0.2f</span><span class="s1"> $\pm$ </span><span class="si">%0.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">auc_mean</span><span class="p">,</span> <span class="n">auc_std</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">             <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;False Positive Rate&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;True Positive Rate&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Overall Receiver operating characteristic curve&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&#34;lower right&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_91_2.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_91_2.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_91_2.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_91_2.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_91_2.png"
+        title="png" /></p>
+<h3 id="hyperparameter-tuning----improve-model-performance">Hyperparameter Tuning &ndash; Improve model performance</h3>
+<blockquote>
+<p>现在我们已经构建了基线模型，我们现在可以尝试进行超参数调整，以构建一个模型，该模型在我们选择的度量标准上的开发集上做得更好（在这种情况下，使用acc进行交叉验证）。</p>
+<p>进行超参数调整的3种常见方法是：</p>
+<ol>
+<li>Discrete Grid Search</li>
+<li>Randomized Grid Search</li>
+<li>Coarse-to-fine grid search</li>
+</ol>
+<p><strong>Discrete Grid Search</strong></p>
+<ul>
+<li>创建一个与超级参数的数量相对应的n空间网格，以便调整并尝试每种组合</li>
+<li>可以构建最佳模型</li>
+<li>可能需要很长时间才能尝试每种组合</li>
+<li>超参数的重要性不相同。</li>
+</ul>
+<p><strong>Randomized Grid Search</strong></p>
+<ul>
+<li>随机尝试一组参数</li>
+<li>有利于解决不相等的超参数</li>
+<li>证明可以非常快速地获得次优结果</li>
+</ul>
+<p><strong>Coarse-to-fine grid search</strong></p>
+<ul>
+<li>这可以与随机/离散网格搜索结合使用</li>
+<li>从粗网格开始，迭代地转到更精细的网格以缩小结果范围。</li>
+</ul>
+</blockquote>
+<h3 id="randomized-grid-search">Randomized Grid Search</h3>
+<p>下面我们将展示随机网格搜索技术的一个例子。 以下技术明确编码以供参考。 这在sklearn中打包为RandomizedGridSearchCV。</p>
+<p>首先，我们将编写一个函数来应用随机网格搜索给定模型，一组超参数和数据。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">gridSearch</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">param_grids</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">num_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Get model and param grid</span>
+</span></span><span class="line"><span class="cl">    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">current_param_grid</span> <span class="o">=</span> <span class="n">param_grids</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Create variable to store best model</span>
+</span></span><span class="line"><span class="cl">    <span class="n">best_model</span> <span class="o">=</span> <span class="n">model</span>    
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Loop through trials</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">nTrial</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_trials</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">nTrial</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;  Trial: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nTrial</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">            
+</span></span><span class="line"><span class="cl">        <span class="c1"># Get current best accuracy for model from the results dataframe</span>
+</span></span><span class="line"><span class="cl">        <span class="n">best_acc</span> <span class="o">=</span> <span class="n">resultDF</span><span class="p">[</span><span class="n">resultDF</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">][</span><span class="s1">&#39;test_acc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># Randomly select params from grid</span>
+</span></span><span class="line"><span class="cl">        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">current_param_grid</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">            <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># Cross validate model with selected hyperparams using the function we generated earlier</span>
+</span></span><span class="line"><span class="cl">        <span class="n">acc</span><span class="p">,</span><span class="n">model</span> <span class="o">=</span> <span class="n">crossValidate</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                
+</span></span><span class="line"><span class="cl">        <span class="c1"># Update best model if it satisfies our optimizing metric</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">acc</span> <span class="o">&gt;</span> <span class="n">best_acc</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;    New best &#39;</span> <span class="o">+</span>  <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; model: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">acc</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">            <span class="n">best_model</span> <span class="o">=</span> <span class="n">model</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Return best model</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">best_model</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在让我们指定一组要循环的参数。 请记住考虑基本规模。</p>
+<p>例如，对于学习率，更理想的是以对数标度（0.001,0.01,0.1等）与线性标度（0.001,0.002,0.003,0.004等）进行网格搜索。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">param_grids</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="n">param_grids</span><span class="p">[</span><span class="s1">&#39;knn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;n_neighbors&#34;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">1</span><span class="p">)}</span>
+</span></span><span class="line"><span class="cl"><span class="n">param_grids</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                      <span class="s1">&#39;solver&#39;</span><span class="p">:[</span><span class="s1">&#39;newton-cg&#39;</span><span class="p">,</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span><span class="s1">&#39;liblinear&#39;</span><span class="p">,</span><span class="s1">&#39;sag&#39;</span><span class="p">]}</span>
+</span></span><span class="line"><span class="cl"><span class="n">param_grids</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;criterion&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;gini&#39;</span><span class="p">,</span><span class="s1">&#39;entropy&#39;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                     <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                     <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                     <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                     <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">param_grids</span><span class="p">[</span><span class="s1">&#39;rf&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">10</span><span class="p">)],</span>
+</span></span><span class="line"><span class="cl">                      <span class="s1">&#39;max_features&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span><span class="s1">&#39;sqrt&#39;</span><span class="p">,</span><span class="s1">&#39;log2&#39;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                      <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                      <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                      <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                      <span class="s1">&#39;bootstrap&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">                      <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">param_grids</span><span class="p">[</span><span class="s1">&#39;ab&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">10</span><span class="p">)],</span>
+</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在使用以上的参数来对模型进行调优</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">models</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">gridSearch</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">param_grids</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">dt
+</span></span><span class="line"><span class="cl">    New best dt model: 82.4918851436
+</span></span><span class="line"><span class="cl">    New best dt model: 82.7153558052
+</span></span><span class="line"><span class="cl">    New best dt model: 82.7166042447
+</span></span><span class="line"><span class="cl">    New best dt model: 82.8302122347
+</span></span><span class="line"><span class="cl">rf
+</span></span><span class="line"><span class="cl">    New best rf model: 82.4906367041
+</span></span><span class="line"><span class="cl">    New best rf model: 83.2784019975
+</span></span><span class="line"><span class="cl">    New best rf model: 83.5043695381
+</span></span><span class="line"><span class="cl">    New best rf model: 84.1797752809
+</span></span><span class="line"><span class="cl">ab
+</span></span><span class="line"><span class="cl">    New best ab model: 81.0349563046
+</span></span><span class="line"><span class="cl">    New best ab model: 82.3807740325
+</span></span><span class="line"><span class="cl">    New best ab model: 82.9413233458
+</span></span><span class="line"><span class="cl">knn
+</span></span><span class="line"><span class="cl">    New best knn model: 82.0486891386
+</span></span><span class="line"><span class="cl">    New best knn model: 82.1610486891
+</span></span><span class="line"><span class="cl">log
+</span></span><span class="line"><span class="cl">    New best log model: 82.8289637953
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们还可以在结果数据框中查看当前最佳结果。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>hyperparams</th>
+<th>train_acc</th>
+<th>train_std</th>
+<th>test_acc</th>
+<th>test_std</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>model</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>rf</td>
+<td>{&rsquo;n_estimators&rsquo;: 90, &lsquo;min_samples_leaf&rsquo;: 2, '</td>
+<td>88.0534</td>
+<td>0.3362</td>
+<td>84.1797</td>
+<td>4.2544</td>
+</tr>
+<tr>
+<td>ab</td>
+<td>{&rsquo;n_estimators&rsquo;: 30, &rsquo;learning_rate&rsquo;: 0.10.</td>
+<td>83.0777</td>
+<td>0.4232</td>
+<td>82.9413</td>
+<td>4.2242</td>
+</tr>
+<tr>
+<td>dt</td>
+<td>{&lsquo;max_features&rsquo;: 5, &lsquo;criterion&rsquo;: &rsquo;entropy&rsquo;,</td>
+<td>84.3373</td>
+<td>0.4706</td>
+<td>82.8302</td>
+<td>2.2328</td>
+</tr>
+<tr>
+<td>log</td>
+<td>{&lsquo;solver&rsquo;: &lsquo;sag&rsquo;, &lsquo;C&rsquo;: 0.10000000000000001}</td>
+<td>83.0153</td>
+<td>0.3921</td>
+<td>82.8289</td>
+<td>3.9226</td>
+</tr>
+<tr>
+<td>knn</td>
+<td>{&rsquo;n_neighbors&rsquo;: 8}</td>
+<td>85.0729</td>
+<td>0.5309</td>
+<td>82.1610</td>
+<td>4.3016</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plot-roc-curve-for-tuned-models">Plot ROC curve for tuned models</h3>
+<p>我们现在可以使用上面的函数绘制我们调整的每个模型的roc曲线。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">plt_id</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">plt_id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">auc_mean</span><span class="p">,</span> <span class="n">auc_std</span> <span class="o">=</span> <span class="n">plot_roc_curve</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt_id</span><span class="o">+=</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39; Mean ROC (AUC = </span><span class="si">%0.2f</span><span class="s1"> $\pm$ </span><span class="si">%0.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">auc_mean</span><span class="p">,</span> <span class="n">auc_std</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">             <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;False Positive Rate&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;True Positive Rate&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Overall Receiver operating characteristic curve&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&#34;lower right&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_101_2.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_101_2.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_101_2.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_101_2.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_101_2.png"
+        title="png" /></p>
+<h3 id="evaluating-a-new-model">Evaluating a new model</h3>
+<p>使用上述函数，我们可以轻松地在我们的数据集上评估另一个模型。</p>
+<p>例如，让我们在我们的数据集上评估一个神经网络。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># build baseline model</span>
+</span></span><span class="line"><span class="cl"><span class="n">models</span><span class="p">[</span><span class="s1">&#39;nn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">((</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="n">early_stopping</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">_</span><span class="p">,</span> <span class="n">models</span><span class="p">[</span><span class="s1">&#39;nn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">crossValidate</span><span class="p">(</span><span class="s1">&#39;nn&#39;</span><span class="p">,</span> <span class="n">models</span><span class="p">[</span><span class="s1">&#39;nn&#39;</span><span class="p">],</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">  Average Score: 82.045%(3.242%)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># randomized grid search to tune</span>
+</span></span><span class="line"><span class="cl"><span class="n">param_grids</span><span class="p">[</span><span class="s1">&#39;nn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-4</span><span class="p">,</span><span class="mf">1e-3</span><span class="p">,</span><span class="mf">1e-2</span><span class="p">,</span><span class="mf">1e-1</span><span class="p">],</span> 
+</span></span><span class="line"><span class="cl">                     <span class="s1">&#39;hidden_layer_sizes&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),(</span><span class="mi">80</span><span class="p">,</span><span class="mi">10</span><span class="p">),(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                                            <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">),(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                                            <span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">16</span><span class="p">),(</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">)]}</span>
+</span></span><span class="line"><span class="cl"><span class="n">models</span><span class="p">[</span><span class="s1">&#39;nn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gridSearch</span><span class="p">(</span><span class="s1">&#39;nn&#39;</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">param_grids</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">    New best nn model: 82.1585518102
+</span></span><span class="line"><span class="cl">    New best nn model: 82.4918851436
+</span></span><span class="line"><span class="cl">    New best nn model: 82.4981273408
+</span></span><span class="line"><span class="cl">    New best nn model: 82.6092384519
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>经过调节超参数的结果后：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>hyperparams</th>
+<th>train_acc</th>
+<th>train_std</th>
+<th>test_acc</th>
+<th>test_std</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>model</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>rf</td>
+<td>{&rsquo;n_estimators&rsquo;: 90, &lsquo;min_samples_leaf&rsquo;: 2, .</td>
+<td>88.0534</td>
+<td>0.3362</td>
+<td>84.1797</td>
+<td>4.2544</td>
+</tr>
+<tr>
+<td>ab</td>
+<td>{&rsquo;n_estimators&rsquo;: 30, &rsquo;learning_rate&rsquo;: 0.10..</td>
+<td>83.0777</td>
+<td>0.4232</td>
+<td>82.9413</td>
+<td>4.2242</td>
+</tr>
+<tr>
+<td>dt</td>
+<td>{&lsquo;max_features&rsquo;: 5, &lsquo;criterion&rsquo;: &rsquo;entropy&rsquo;, .</td>
+<td>84.3373</td>
+<td>0.4706</td>
+<td>82.8302</td>
+<td>2.2328</td>
+</tr>
+<tr>
+<td>log</td>
+<td>{&lsquo;solver&rsquo;: &lsquo;sag&rsquo;, &lsquo;C&rsquo;: 0.10000000000000001}</td>
+<td>83.0153</td>
+<td>0.3921</td>
+<td>82.8289</td>
+<td>3.9226</td>
+</tr>
+<tr>
+<td>nn</td>
+<td>{&lsquo;hidden_layer_sizes&rsquo;: (80, 10), &lsquo;alpha&rsquo;: &hellip;</td>
+<td>83.0029</td>
+<td>0.7526</td>
+<td>82.6092</td>
+<td>3.7357</td>
+</tr>
+<tr>
+<td>knn</td>
+<td>{&rsquo;n_neighbors&rsquo;: 8}</td>
+<td>85.0729</td>
+<td>0.5309</td>
+<td>82.1610</td>
+<td>4.3016</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># View updated roc curves</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt_id</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">plt_id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">auc_mean</span><span class="p">,</span> <span class="n">auc_std</span> <span class="o">=</span> <span class="n">plot_roc_curve</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt_id</span><span class="o">+=</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39; Mean ROC (AUC = </span><span class="si">%0.2f</span><span class="s1"> $\pm$ </span><span class="si">%0.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">auc_mean</span><span class="p">,</span> <span class="n">auc_std</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">             <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;False Positive Rate&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;True Positive Rate&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Overall Receiver operating characteristic curve&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&#34;lower right&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_106_2.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_106_2.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_106_2.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_106_2.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/ml_project/titanic/output_106_2.png"
+        title="png" /></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2019-01-06</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90/" data-title="机器学习案例之Titanic生存预测分析"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90/" data-title="机器学习案例之Titanic生存预测分析"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/baidu.svg" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>,&nbsp;<a href="/tags/python/">python</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A80/" class="prev" rel="prev" title="Pytorch快速入门0"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Pytorch快速入门0</a>
+            <a href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Bnlp%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" class="next" rel="next" title="机器学习案例之NLP文本分类">机器学习案例之NLP文本分类<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Gsscsd</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.5.0/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.6867e554c019e9277423b0f08fa2f10633c0b4a2e736319d9fe99f73a35a205705d41b0fa3615656587f72e0f073de501a6fc69f66f2aa479482864f959af053.js" integrity="sha512-aGflVMAZ6Sd0I7Dwj6LxBjPAtKLnNjGdn+mfc6NaIFcF1BsPo2FWVlh/cuDwc95QGm/Gn2byqkeUgoZPlZrwUw=="></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.918bdd059e2c518e24c32fb5fd89144a49778f21f2166db93bf1e2ed311b3589660feb5777210257aee209f6d8bdde8c296883e34ff8bf4d5338f4be53132976.js" integrity="sha512-kYvdBZ4sUY4kwy+1/YkUSkl3jyHyFm25O/Hi7TEbNYlmD+tXdyECV67iCfbYvd6MKWiD40/4v01TOPS+UxMpdg=="></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/copy-tex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.8f3907fa55b08d1250417a302a5836b4095aeba0e8de276226fbabed0058c004aec93be43d27a90cb1c7b80dffd331535aae064d507b1c9f140b42edb18d7d90.js" integrity="sha512-jzkH+lWwjRJQQXowKlg2tAla66Do3idiJvur7QBYwASuyTvkPSepDLHHuA3/0zFTWq4GTVB7HJ8UC0LtsY19kA=="></script></body>
+</html>

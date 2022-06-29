@@ -1,0 +1,118 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>tree - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/tree/</link>
+        <description>tree - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 15 Apr 2019 14:41:23 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/tree/" rel="self" type="application/rss+xml" /><item>
+    <title>剑指Offer之序列化二叉树</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%BA%8F%E5%88%97%E5%8C%96%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+    <pubDate>Mon, 15 Apr 2019 14:41:23 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%BA%8F%E5%88%97%E5%8C%96%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>请实现两个函数，分别用来序列化和反序列化二叉树</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之重建二叉树</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+    <pubDate>Fri, 12 Apr 2019 10:59:12 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述:</h3>
+<blockquote>
+<p>输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之树的子结构</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/</link>
+    <pubDate>Fri, 12 Apr 2019 09:08:10 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之按之字形顺序打印二叉树</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%8C%89%E4%B9%8B%E5%AD%97%E5%BD%A2%E9%A1%BA%E5%BA%8F%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+    <pubDate>Thu, 11 Apr 2019 15:27:17 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%8C%89%E4%B9%8B%E5%AD%97%E5%BD%A2%E9%A1%BA%E5%BA%8F%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>请实现一个函数按照之字形打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右至左的顺序打印，第三行按照从左到右的顺序打印，其他行以此类推。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之二叉搜索树的后序遍历序列</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97/</link>
+    <pubDate>Thu, 11 Apr 2019 14:55:31 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述:</h3>
+<blockquote>
+<p>输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之二叉搜索树的第k个结点</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9/</link>
+    <pubDate>Thu, 11 Apr 2019 10:39:12 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>给定一棵二叉搜索树，请找出其中的第k小的结点。例如, （5，3，7，2，4，6，8）    中，按结点数值大小顺序第三小结点的值为4。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之二叉树中和为某一值的路径</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E5%92%8C%E4%B8%BA%E6%9F%90%E4%B8%80%E5%80%BC%E7%9A%84%E8%B7%AF%E5%BE%84/</link>
+    <pubDate>Tue, 09 Apr 2019 20:59:23 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E5%92%8C%E4%B8%BA%E6%9F%90%E4%B8%80%E5%80%BC%E7%9A%84%E8%B7%AF%E5%BE%84/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>输入一颗二叉树的跟节点和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。(注意: 在返回值的list中，数组长度大的数组靠前)</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之从上往下打印二叉树</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BB%8E%E4%B8%8A%E5%BE%80%E4%B8%8B%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+    <pubDate>Tue, 09 Apr 2019 09:40:39 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BB%8E%E4%B8%8A%E5%BE%80%E4%B8%8B%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>从上往下打印出二叉树的每个节点，同层节点从左至右打印。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之二叉搜索树与双向链表</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/</link>
+    <pubDate>Mon, 08 Apr 2019 19:20:16 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。</p>
+</blockquote>]]></description>
+</item>
+<item>
+    <title>剑指Offer之二叉树的下一个结点</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E7%BB%93%E7%82%B9/</link>
+    <pubDate>Wed, 03 Apr 2019 16:12:10 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E7%BB%93%E7%82%B9/</guid>
+    <description><![CDATA[<h3 id="题目描述">题目描述：</h3>
+<blockquote>
+<p>给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。</p>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>

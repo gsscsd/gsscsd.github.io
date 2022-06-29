@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>tensorflow之Tensor、Variable - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="tensorflow之Tensor、Variable" />
+<meta property="og:description" content="为什么选择tensorflow
+
+TensorFlow 无可厚非地能被认定为 神经网络中最好用的库之一。它擅长的任务就是训练深度神经网络.通过使用TensorFlow我们就可以快速的入门神经网络，大大降低了深度学习（也就是深度神经网络）的开发成本和开发难度.。TensorFlow 的开源性，让所有人都能使用并且维护， 巩固它. 使它能迅速更新, 提升。
+现在新版本的tensorflow除了支持Graph Execution之外，还提供了Eager Execution。
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2018-12-27T21:19:49+00:00" />
+<meta property="article:modified_time" content="2018-12-27T21:19:49+00:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="tensorflow之Tensor、Variable"/>
+<meta name="twitter:description" content="为什么选择tensorflow
+
+TensorFlow 无可厚非地能被认定为 神经网络中最好用的库之一。它擅长的任务就是训练深度神经网络.通过使用TensorFlow我们就可以快速的入门神经网络，大大降低了深度学习（也就是深度神经网络）的开发成本和开发难度.。TensorFlow 的开源性，让所有人都能使用并且维护， 巩固它. 使它能迅速更新, 提升。
+现在新版本的tensorflow除了支持Graph Execution之外，还提供了Eager Execution。
+"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/" /><link rel="prev" href="https://gsscsd.github.io/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/" /><link rel="next" href="https://gsscsd.github.io/tensorflow%E4%B9%8Bgraphsession/" /><link rel="stylesheet" href="/css/style.min.931bc4ad2d28eb74379d23c35d88889e10d86e4fb73a8e095952c2617800dcce223d542ddf6f22eb6db537ea777ccee425cbdcb03ad216de7941dc3a1574cdfc.css" integrity="sha512-kxvErS0o63Q3nSPDXYiInhDYbk+3Oo4JWVLCYXgA3M4iPVQt328i6221N+p3fM7kJcvcsDrSFt55Qdw6FXTN/A=="><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "tensorflow之Tensor、Variable",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/tensorflow%E4%B9%8Btensorvariable\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "python, 深度学习, tensorflow","wordcount":  6578 ,
+        "url": "https:\/\/gsscsd.github.io\/tensorflow%E4%B9%8Btensorvariable\/","datePublished": "2018-12-27T21:19:49+00:00","dateModified": "2018-12-27T21:19:49+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">tensorflow之Tensor、Variable</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Gsscsd</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>深度学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2018-12-27">2018-12-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6578 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 14 分钟&nbsp;<span id="/tensorflow%E4%B9%8Btensorvariable/" class="leancloud_visitors" data-flag-title="tensorflow之Tensor、Variable">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#为什么选择tensorflow">为什么选择tensorflow</a></li>
+        <li><a href="#tensorflow编程思想">tensorflow编程思想</a></li>
+        <li><a href="#tensorflow的安装">tensorflow的安装</a>
+          <ul>
+            <li><a href="#pip的安装">pip的安装</a></li>
+            <li><a href="#conda的安装">conda的安装</a></li>
+            <li><a href="#测试tensorflow">测试tensorflow</a></li>
+          </ul>
+        </li>
+        <li><a href="#tensorflow的基础知识">tensorflow的基础知识</a>
+          <ul>
+            <li><a href="#tensorflow的处理结构">tensorflow的处理结构</a></li>
+            <li><a href="#tensorflow基础概念之tensortftensor">tensorflow基础概念之<strong>Tensor(tf.Tensor)</strong></a></li>
+            <li><a href="#tensorflow基础概念之variabletfvariable">tensorflow基础概念之<strong>Variable（tf.Variable）</strong></a></li>
+            <li><a href="#tensorflow基本函数讲解">tensorflow基本函数讲解</a></li>
+            <li><a href="#tensorflow基础实例">tensorflow基础实例</a>
+              <ul>
+                <li><a href="#常量与图">常量与图</a></li>
+                <li><a href="#tensor和变量">tensor和变量</a></li>
+                <li><a href="#fetches和feeds">fetches和feeds</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#参考资料">参考资料</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h3 id="为什么选择tensorflow">为什么选择tensorflow</h3>
+<blockquote>
+<p>TensorFlow 无可厚非地能被认定为 神经网络中最好用的库之一。它擅长的任务就是训练深度神经网络.通过使用TensorFlow我们就可以快速的入门神经网络，大大降低了深度学习（也就是深度神经网络）的开发成本和开发难度.。TensorFlow 的开源性，让所有人都能使用并且维护， 巩固它. 使它能迅速更新, 提升。</p>
+<p>现在新版本的tensorflow除了支持Graph Execution之外，还提供了Eager Execution。</p>
+</blockquote>
+<h3 id="tensorflow编程思想">tensorflow编程思想</h3>
+<blockquote>
+<p>TensorFlow 使用<strong>图</strong>来表示计算任务. 图中的节点被称之为 op (operation 的缩写). 一个 op获得 0 个或多个 Tensor , 执行计算, 产生 0 个或多个 Tensor . 每个 Tensor 是一个类型化的多维数组.tensor也是tensorflow中的核心数据类型。</p>
+<p>一个 TensorFlow 图（graph）描述了计算的过程. 为了进行计算, 图必须在会话（session）里被启动. 会话将图的op分发到诸如 CPU 或 GPU 之类的 设备 上, 同时提供执行 op 的方法. 这些方法执行后, 将产生的 tensor 返回.</p>
+<p>TensorFlow 程序通常被组织成一个<strong>构建阶段</strong>和一个<strong>执行阶段</strong>.</p>
+<blockquote>
+<p>在构建阶段, op 的执行步骤被描述成一个图.
+在执行阶段, 使用会话执行执行图中的op.例如,通常在构建阶段创建一个图来表示和训练神经网络,然后在执行阶段反复执行图中的训练 op.</p>
+</blockquote>
+</blockquote>
+<h3 id="tensorflow的安装">tensorflow的安装</h3>
+<blockquote>
+<p>Tensorflow 的安装方式很多. 比如官网提供的:</p>
+<ul>
+<li><a href="https://www.tensorflow.org/versions/master/get_started/os_setup.html#pip-installation" target="_blank" rel="noopener noreffer ">Pip 安装</a></li>
+<li><a href="https://www.tensorflow.org/versions/master/get_started/os_setup.html#virtualenv-installation" target="_blank" rel="noopener noreffer ">Virtualenv 安装</a></li>
+<li><a href="https://www.tensorflow.org/versions/master/get_started/os_setup.html#anaconda-installation" target="_blank" rel="noopener noreffer ">Anaconda 安装</a></li>
+<li><a href="https://www.tensorflow.org/versions/master/get_started/os_setup.html#docker-installation" target="_blank" rel="noopener noreffer ">Docker 安装</a></li>
+<li><a href="https://www.tensorflow.org/versions/master/get_started/os_setup.html#installing-from-sources" target="_blank" rel="noopener noreffer ">从安装源 安装</a></li>
+</ul>
+</blockquote>
+<h4 id="pip的安装">pip的安装</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">pip</span> <span class="n">install</span> <span class="n">tensorflow</span>  <span class="c1">#python2</span>
+</span></span><span class="line"><span class="cl"><span class="n">pip3</span> <span class="n">install</span> <span class="n">tensorflow</span> <span class="c1">#python3</span>
+</span></span><span class="line"><span class="cl"><span class="n">pip3</span> <span class="n">install</span> <span class="n">tensorflow</span><span class="o">==</span><span class="n">x</span><span class="o">.</span><span class="n">x</span>  <span class="c1"># 安装的同时指定版本号</span>
+</span></span><span class="line"><span class="cl"><span class="n">pip3</span> <span class="n">install</span> <span class="n">tensorflow</span><span class="o">-</span><span class="n">gpu</span> <span class="c1">#安装tenforflow-gpu版本，注意需要首先配置cuda和cudnn</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="conda的安装">conda的安装</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">conda</span> <span class="n">install</span> <span class="n">tensorflow</span> <span class="c1"># 安装cpu版本</span>
+</span></span><span class="line"><span class="cl"><span class="n">conda</span> <span class="n">install</span> <span class="n">tensorflow</span><span class="o">-</span><span class="n">gpu</span> <span class="c1"># 安装gpu版本，这种方法conda会自动配置cuda和cudnn</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="测试tensorflow">测试tensorflow</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="tensorflow的基础知识">tensorflow的基础知识</h3>
+<blockquote>
+<ul>
+<li>**图（Graph）：**用来表示计算任务，也就我们要做的一些操作。</li>
+<li>**会话（Session）：**建立会话，此时会生成一张空图；在会话中添加节点和边，形成一张图，一个会话可以有多个图，通过执行这些图得到结果。如果把每个图看做一个车床，那会话就是一个车间，里面有若干个车床，用来把数据生产成结果。</li>
+<li>**Tensor：**用来表示数据，是我们的原料。</li>
+<li>**变量（Variable）：**用来记录一些数据和状态，是我们的容器。</li>
+<li>**注入机制(feed):**通过占位符向模式中传入数据。</li>
+<li><strong>取回机制(fetch)</strong>：从模式中取得结果。</li>
+</ul>
+<p>形象的比喻是：把会话看做车间，图看做车床，里面用Tensor做原料，变量做容器，feed和fetch做铲子，把数据加工成我们的结果。</p>
+</blockquote>
+<p>Tensorflow是基于graph的并行计算模型。举个例子，计算<code>a=(b+c)∗(c+2)</code>，我们可以将算式拆分成一下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">d</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
+</span></span><span class="line"><span class="cl"><span class="n">e</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">e</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>那么将算式转换成graph后：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/Simple-graph-example.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/Simple-graph-example.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/Simple-graph-example.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/Simple-graph-example.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/Simple-graph-example.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/Simple-graph-example.png" /></p>
+<blockquote>
+<p>将一个简单的算式搞成这样确实大材小用，但是我们可以通过这个例子发现：<code>d=b+c</code>和<code>e=c+2</code>是不相关的，也就是可以<strong>并行计算</strong>。对于更复杂的CNN和RNN，graph的并行计算的能力将得到更好的展现。</p>
+</blockquote>
+<h4 id="tensorflow的处理结构">tensorflow的处理结构</h4>
+<blockquote>
+<p>Tensorflow 首先要定义神经网络的结构，然后再把数据放入结构当中去运算和 training。</p>
+<p>因为TensorFlow是采用数据流图（data　flow　graphs）来计算, 所以首先我们得创建一个数据流流图，然后再将我们的数据（数据以张量(tensor)的形式存在）放在数据流图中计算，节点（Nodes）在下图中表示数学操作，图中的线（edges）则表示在节点间相互联系的多维数据数组，即张量（tensor)。训练模型时tensor会不断的从数据流图中的一个节点flow到另一节点, 这就是TensorFlow名字的由来。</p>
+</blockquote>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/TensorFlow-data-flow-graph.gif"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/TensorFlow-data-flow-graph.gif, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/TensorFlow-data-flow-graph.gif 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/TensorFlow-data-flow-graph.gif 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/TensorFlow-data-flow-graph.gif"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/TensorFlow-data-flow-graph.gif" /></p>
+<blockquote>
+<p>如果输入tensor的维度是5000×645000×64，表示有5000个训练样本，每个样本有64个特征，则输入层必须有64个node来接受这些特征。</p>
+<p>上图表示的三层网络包括：输入层(图中的input)、隐藏层(这里取名为ReLU layer表示它的激活函数是ReLU）、输出层(图中的Logit Layer)。</p>
+<p>可以看到，每一层中都有相关tensor流入Gradient节点计算梯度，然后这些梯度tensor进入SGD Trainer节点进行网络优化（也就是update网络参数）。</p>
+<p>Tensorflow正是通过graph表示神经网络，实现网络的并行计算，提高效率。下面我们将通过一个简单的例子来介绍TensorFlow的基础语法。</p>
+</blockquote>
+<h4 id="tensorflow基础概念之tensortftensor">tensorflow基础概念之<strong>Tensor(tf.Tensor)</strong></h4>
+<p><strong>Tensor</strong>类是最基本最核心的数据结构了，它表示的是一个操作的输出，但是他并不接收操作输出的值，而是提供了在TensorFlow的Session中计算这些值的方法。
+Tensor类主要有两个目的：</p>
+<blockquote>
+<ol>
+<li>一个Tensor能够作为一个输入来传递给其他的操作（Operation），由此构造了一个连接不同操作的数据流，使得TensorFLow能够执行一个表示很大，多步骤计算的图。</li>
+<li>在图被“投放”进一个Session中后，Tensor的值能够通过把Tensor传到<code>Seesion.run（）</code>这个函数里面去得到结果。相同的，也可以用<code>t.eval（）</code>这个函数，其中的t就是你的tensor啦，这个函数可以算是<code>tf.get_default_session().run(t)</code>的简便写法。</li>
+</ol>
+</blockquote>
+<p>举例说明：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#build a graph</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;build a graph&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">a</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;a:&#34;</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;b:&#34;</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;type of a:&#34;</span><span class="p">,</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">c</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="c1"># 矩阵乘法==np.dot(a,b)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;c:&#34;</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#construct a &#39;Session&#39; to excute the graph</span>
+</span></span><span class="line"><span class="cl"><span class="n">sess</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Execute the graph and store the value that `c` represents in `result`.</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;excuted in Session&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">result_a</span><span class="o">=</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">result_a2</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">sess</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;result_a:</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span><span class="n">result_a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;result_a2:</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span><span class="n">result_a2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">result_b</span><span class="o">=</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;result_b:</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span><span class="n">result_b</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">result_c</span><span class="o">=</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;result_c:</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span><span class="n">result_c</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_tensor.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_tensor.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_tensor.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_tensor.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_tensor.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_tensor.png" /></p>
+<blockquote>
+<p>整个程序分为3个过程，首先是构建计算图，一开始就用<code>constant（）</code>函数生成了两个tensor分别是<code>a</code>和<code>b</code>（下面有对于constant函数的介绍），然后我们试图直接输出<code>a</code>和<code>b</code>，但是输出并不是两个矩阵，而是各自度对应的tensor类型。然后我们通过<code>print(&quot;type of a:&quot;,type(a))</code> 这句话来输出a的类型，果然是tensor类型（tensor类）。然后我们把<code>a</code>和<code>b</code>这两个tensor传递给<code>tf.matmul（）</code>函数，这个函数是用来计算矩阵乘法的函数。返回的依然是tensor用<code>c</code>来接受。到这里为止，我们可以知道，tensor里面并不负责储存值，想要得到值，得去Session中run。我们可以把这部分看做是创建了一个图但是没有运行这个图。</p>
+<p>然后我们构造了一个Session的对象用来执行图，<code>sess=tf.Session()</code> 。
+最后就是在session里面执行之前的东西了，可以把一个tensor传递到<code>session.run()</code>里面去，得到其值。等价的也可以用<code>result_a2=a.eval(session=sess)</code> 来得到。则返回的结果是numpy.ndarray。</p>
+</blockquote>
+<p><strong>Tensor类的属性</strong></p>
+<blockquote>
+<ul>
+<li>**device:**表示tensor将被产生的设备名称</li>
+<li><strong>dtype</strong>：tensor元素类型</li>
+<li><strong>graph</strong>：这个tensor被哪个图所有</li>
+<li><strong>name</strong>:这个tensor的名称</li>
+<li><strong>op</strong>：产生这个tensor作为输出的操作（Operation）</li>
+<li><strong>shape</strong>：tensor的形状（返回的是<code>tf.TensorShape</code>这个表示tensor形状的类）</li>
+<li><strong>value_index</strong>:表示这个tensor在其操作结果中的索引</li>
+</ul>
+</blockquote>
+<p><strong>函数：</strong></p>
+<blockquote>
+<ul>
+<li><strong>tf.Tensor.consumers()</strong>：返回消耗这个tensor的操作列表</li>
+<li><strong>tf.Tensor.eval(feed_dict=None, session=None)</strong>：在一个Seesion里面“评估”tensor的值（其实就是计算),在激发tensor.eval()这个函数之前，tensor的图必须已经投入到session里面，或者一个默认的session是有效的，或者显式指定session。</li>
+<li><strong>tf.Tensor.get_shape()</strong>:返回tensor的形状，类型是TensorShape。</li>
+<li><strong>tf.Tensor.set_shape(shape)</strong>:设置更新这个tensor的形状。</li>
+</ul>
+</blockquote>
+<h4 id="tensorflow基础概念之variabletfvariable">tensorflow基础概念之<strong>Variable（tf.Variable）</strong></h4>
+<blockquote>
+<p>通过构造一个<strong>Variable类</strong>的实例在图中添加一个<strong>变量（variable）</strong></p>
+<p><strong>Variable()<strong>这个构造函数</strong>需要初始值</strong>，这个初始值可以是一个任何类型任何形状的Tensor，<strong>初始值的形状和类型</strong>决定了这个变量的<strong>形状和类型</strong>。构造之后，这个变量的形状和类型就固定了，他的值可以通过assign()函数（或者assign类似的函数）来改变。如果你想要在之后改变变量的形状，你就需要assign()函数同时变量的<code>validate_shape=False</code>和任何的Tensor一样，通过**Variable()**创造的变量能够作为图中其他操作的输入使用。你也能够在图中添加节点，通过对变量进行算术操作。</p>
+</blockquote>
+<p>举例说明：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Variable</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 定义变量</span>
+</span></span><span class="line"><span class="cl"><span class="n">w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">initial_value</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]],</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">initial_value</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> <span class="c1"># 矩阵乘法==np.dot(w,x)</span>
+</span></span><span class="line"><span class="cl"><span class="n">z</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 初始化所有的变量</span>
+</span></span><span class="line"><span class="cl"><span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">z</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_variable.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_variable.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_variable.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_variable.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_variable.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_variable.png" /></p>
+<p><strong>属性：</strong></p>
+<blockquote>
+<ul>
+<li>**device:**这个变量的device</li>
+<li>**dtype:**变量的元素类型</li>
+<li>**graph:**存放变量的图</li>
+<li>**initial_value:**这个变量的初始值</li>
+<li>**initializer :**这个变量的初始化器</li>
+<li>**name:**这个变脸的名字</li>
+<li><strong>op</strong>：产生这个tensor作为输出的操作（Operation）</li>
+</ul>
+</blockquote>
+<p><strong>函数:</strong></p>
+<blockquote>
+<ul>
+<li><strong><strong>init</strong>(initial_value=None, trainable=True, collections=None, validate_shape=True, caching_device=None, name=None, variable_def=None, dtype=None, expected_shape=None, import_scope=None)</strong>：创建一个新的变量，初始值为initial_value（这个构造函数会创建两个操作（Op），一个变量OP和一个assignOp来设置变量为其初始化值）</li>
+<li><strong>assign(value, use_locking=False)</strong>：为变量指定一个新的值</li>
+<li><strong>assign_add(delta, use_locking=False)</strong>：为这个变量加上一个值</li>
+<li><strong>assign_sub(delta, use_locking=False)</strong>：为这个变量减去一个值</li>
+<li><strong>eval(session=None)</strong>：在一个session里面，计算并且返回这个变量的值。这个不算是构造图的方法，它并不会添加一个操作到图里面。这个便捷方法需要一个包含这个变量的图投放到了一个session里面。要是没有sesssion，那么默认的就会使用默认的session。</li>
+<li><strong>get_shape()</strong>：返回变量的形状</li>
+<li><strong>initialized_value()</strong>：返回已经初始化变量的值.你应该使用这个函数来代替使用变量自己来初始化依赖这个变量的值的其他变量。</li>
+<li><strong>load(value, session=None)</strong>：把新的值载入到变量里面</li>
+<li><strong>read_value()</strong>：返回这个变量的值，在当前的上下文中读取。返回的是一个含有这个值的Tensor</li>
+<li><strong>set_shape(shape)</strong>：改变变量形状</li>
+</ul>
+</blockquote>
+<h4 id="tensorflow基本函数讲解">tensorflow基本函数讲解</h4>
+<p><strong>tf.constant(value,dtype=None,shape=None,name=’Const’,verify_shape=False)</strong></p>
+<blockquote>
+<p><code>constant（）</code>函数应该是出镜率很高的函数之一了，所以这里放在基本函数讲解的第一个。这并不是类，而是一个函数，很多初学者容易误解。</p>
+<p>作用：创建一个常量tensor</p>
+<p>参数：
+<strong>value</strong>: 一个dtype类型（如果指定了）的常量值（列表）。要注意的是，要是value是一个列表的话，那么列表的长度不能够超过形状参数指定的大小（如果指定了）。要是列表长度小于指定的，那么多余的由列表的最后一个元素来填充。
+<strong>dtype</strong>: 返回tensor的类型
+<strong>shape</strong>: 返回的tensor形状。
+<strong>name</strong>: tensor的名字
+<strong>verify_shape</strong>: Boolean that enables verification of a shape of values.</p>
+</blockquote>
+<p><strong>tf.global_variables()</strong></p>
+<blockquote>
+<p>作用：返回全局变量（global variables）。（全局变量是在分布式环境的机器中共享的变量。）<code>Variable（）</code>构造函数或者<code>get_variable（）</code>自动地把新的变量添加到 graph collection <code>GraphKeys.GLOBAL_VARIABLES</code> 中。这个函数返回这个collection中的内容。</p>
+</blockquote>
+<p><strong>tf.local_variables()</strong></p>
+<blockquote>
+<p>作用：返回局部变量（local variables）。（局部变量是不做存储用的，仅仅是用来临时记录某些信息的变量。 比如用来记录某些epoch数量等等。） local_variable() 函数会自动的添加新的变量到构造函数或者get_variable（）自动地把新的变量添加到 graph collection <code>GraphKeys.LOCAL_VARIABLES</code> 中。这个函数返回这个collection中的内容。</p>
+</blockquote>
+<p><strong>tf.variables_initializer(var_list, name=’init’)</strong></p>
+<blockquote>
+<p>作用： 返回一个初始化一列变量的操作（Op）。要是你把图“投放进一个”session中后，你就能够通过run 这个操作来初始化变量列表<code>var_list</code>中的变量
+参数：
+<strong>var_list</strong>: 带初始化变量列表
+<strong>name</strong>: 可选，操作的名称。</p>
+</blockquote>
+<p><strong>tf.global_variables_initializer()</strong></p>
+<blockquote>
+<p>替代以前老的<code>tf.initialize_all_variables()</code> 的新方法。</p>
+<p>作用： 返回一个初始化所有全局变量的操作（Op）。要是你把图“投放进一个”session中后，你就能够通过run 这个操作来初始化所有的全局变量，本质相当于<code>variable_initializers(global_variables())</code></p>
+</blockquote>
+<p><strong>tf.local_variables_initializer()</strong></p>
+<blockquote>
+<p>作用： 返回一个初始化所有局部变量的操作（Op）。要是你把图“投放进一个”session中后，你就能够通过run 这个操作来初始化所有的局部变量，本质相当于<code>variable_initializers(local_variables())</code></p>
+</blockquote>
+<p><strong>tf.placeholder(dtype, shape=None, name=None)</strong></p>
+<blockquote>
+<p><strong>作用：</strong>
+<strong>placeholder</strong>的作用可以理解为<strong>占个位置</strong>，我并不知道这里将会是什么值，但是知道类型和形状等等一些信息，先把这些信息填进去占个位置，然后以后用<strong>feed的方式</strong>来把这些数据“填”进去。返回的就是一个用来用来处理feeding一个值的tensor。
+那么feed的时候一般就会在你之后session的run（）方法中用到<strong>feed_dict</strong>这个参数了。这个参数的内容就是你要“喂”给那个placeholder的内容。</p>
+<p><strong>参数：</strong>
+<strong>dtype:</strong> 将要被fed的元素类型
+<strong>shape:</strong>（可选） 将要被fed的tensor的形状，要是不指定的话，你能够fed进任何形状的tensor。
+<strong>name:</strong>（可选）这个操作的名字</p>
+</blockquote>
+<h4 id="tensorflow基础实例">tensorflow基础实例</h4>
+<h5 id="常量与图">常量与图</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#building the graph</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">创建一个常量操作（op）产生 1x2 矩阵，这个操作（op）作为一个节点添加到默认的图中，但是这里这个矩阵并不是一个值，而是一个tensor。
+</span></span></span><span class="line"><span class="cl"><span class="s1">创建另外一个常量操作产生一个1x2 矩阵（解释如上）
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">mat1</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span><span class="mf">3.</span><span class="p">],</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;mat1&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mat2</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span><span class="mf">4.</span><span class="p">],</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;mat2&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#matrix sum.</span>
+</span></span><span class="line"><span class="cl"><span class="n">s</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mat1</span><span class="p">,</span><span class="n">mat2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">这个默认的图（grapg）现在已经有3个节点了：两个constan（）操作和一个add（）操作。为了真正的得到这个和的值，你需要把这个图投放到一个session里面执行。
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">为了得到和的值，我们要运行add 操作（op），因此我们在session里面调用“run（）”函数，把代表add op的输出结果s传到函数里面去。表明我们想从add（）操作得到输出。
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span><span class="o">=</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;result:&#34;</span><span class="p">,</span><span class="n">result</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">result: [7.,7.]
+</span></span></span><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="tensor和变量">tensor和变量</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#Create a Variable, that will be initialized to the scalar value 0.</span>
+</span></span><span class="line"><span class="cl"><span class="n">state</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;state&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;the name of this variable:&#34;</span><span class="p">,</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Create an Op to add 1 to `state`.</span>
+</span></span><span class="line"><span class="cl"><span class="n">one</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">new_value</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">one</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># assign（）的这个函数可以看前面的assign函数的解释，更新变量</span>
+</span></span><span class="line"><span class="cl"><span class="n">update</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Variables must be initialized by running an `init` Op after having</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># launched the graph.  We first have to add the `init` Op to the graph.</span>
+</span></span><span class="line"><span class="cl"><span class="n">init_op</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Launch the graph and run the ops.</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># Run the &#39;init&#39; op</span>
+</span></span><span class="line"><span class="cl">  <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init_op</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># Print the initial value of &#39;state&#39;</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">print</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># Run the op that updates &#39;state&#39; and print &#39;state&#39;.</span>
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;value of state:&#34;</span><span class="p">,</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"> <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2"> the name of this variable: state:0
+</span></span></span><span class="line"><span class="cl"><span class="s2"> value of state: 1
+</span></span></span><span class="line"><span class="cl"><span class="s2"> value of state: 2
+</span></span></span><span class="line"><span class="cl"><span class="s2"> value of state: 3
+</span></span></span><span class="line"><span class="cl"><span class="s2"> &#34;&#34;&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="fetches和feeds">fetches和feeds</h5>
+<blockquote>
+<p><strong>Fetches</strong>表示一种取的动作，我们有时候需要在操作里面取一些输出，其实就是在执行图的过程中在run（）函数里面传入一个tensor就行，然后就会输出tesnor的结果，比如上面的session.run(state)就可以当做一个fetch的动作啦。当然不仅仅限于fetch一个，你也可以fetch多个tensor。</p>
+<p><strong>feed</strong>我们知道是喂养的意思，这个又怎么理解呢？feed的动作一般和placeholder（）函数一起用，前面说过，placeholder（）起到占位的作用（参考前面的placeholder（）函数），怎么理解呢？假如我有一个（堆）数据，但是我也许只知道他的类型，不知道他的值，我就可以先传进去一个类型，先把这个位置占着。等到以后再把数据“喂”给这个变量。</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#fetch example</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;#fetch example&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">a</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">],</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;a&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span><span class="mf">5.</span><span class="p">,</span><span class="mf">6.</span><span class="p">],</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;b&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">c</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">4.</span><span class="p">,</span><span class="mf">2.</span><span class="p">],</span><span class="n">name</span><span class="o">=</span><span class="s2">&#34;c&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">add</span><span class="o">=</span><span class="n">a</span><span class="o">+</span><span class="n">b</span>
+</span></span><span class="line"><span class="cl"><span class="n">mul</span><span class="o">=</span><span class="n">add</span><span class="o">*</span><span class="n">c</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span><span class="o">=</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">add</span><span class="p">,</span><span class="n">mul</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;after run:</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span><span class="n">result</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n\n</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#feed example</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;feed example&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">input1</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">input2</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">output</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">input1</span><span class="p">,</span><span class="n">input2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result_feed</span><span class="o">=</span><span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">input1</span><span class="p">:[</span><span class="mf">2.</span><span class="p">],</span><span class="n">input2</span><span class="p">:[</span><span class="mf">3.</span><span class="p">]})</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;result:&#34;</span><span class="p">,</span><span class="n">result_feed</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_fetch_feed.png"
+        data-srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_fetch_feed.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_fetch_feed.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_fetch_feed.png 2x"
+        data-sizes="auto"
+        alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_fetch_feed.png"
+        title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/tensorflow/tf_fetch_feed.png" /></p>
+<h3 id="参考资料">参考资料</h3>
+<blockquote>
+<p><a href="https://morvanzhou.github.io/tutorials/machine-learning/tensorflow/" target="_blank" rel="noopener noreffer ">莫烦tensorflow教程</a></p>
+</blockquote></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-12-27</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/" data-title="tensorflow之Tensor、Variable"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/" data-title="tensorflow之Tensor、Variable"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/baidu.svg" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/python/">python</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>,&nbsp;<a href="/tags/tensorflow/">tensorflow</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/" class="prev" rel="prev" title="keras详细介绍"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>keras详细介绍</a>
+            <a href="/tensorflow%E4%B9%8Bgraphsession/" class="next" rel="next" title="tensorflow之Graph、Session">tensorflow之Graph、Session<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Gsscsd</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.5.0/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.6867e554c019e9277423b0f08fa2f10633c0b4a2e736319d9fe99f73a35a205705d41b0fa3615656587f72e0f073de501a6fc69f66f2aa479482864f959af053.js" integrity="sha512-aGflVMAZ6Sd0I7Dwj6LxBjPAtKLnNjGdn+mfc6NaIFcF1BsPo2FWVlh/cuDwc95QGm/Gn2byqkeUgoZPlZrwUw=="></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.918bdd059e2c518e24c32fb5fd89144a49778f21f2166db93bf1e2ed311b3589660feb5777210257aee209f6d8bdde8c296883e34ff8bf4d5338f4be53132976.js" integrity="sha512-kYvdBZ4sUY4kwy+1/YkUSkl3jyHyFm25O/Hi7TEbNYlmD+tXdyECV67iCfbYvd6MKWiD40/4v01TOPS+UxMpdg=="></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/copy-tex.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.8f3907fa55b08d1250417a302a5836b4095aeba0e8de276226fbabed0058c004aec93be43d27a90cb1c7b80dffd331535aae064d507b1c9f140b42edb18d7d90.js" integrity="sha512-jzkH+lWwjRJQQXowKlg2tAla66Do3idiJvur7QBYwASuyTvkPSepDLHHuA3/0zFTWq4GTVB7HJ8UC0LtsY19kA=="></script></body>
+</html>

@@ -1,0 +1,19 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Numpy - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/numpy/</link>
+        <description>Numpy - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 25 Dec 2018 11:02:22 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/numpy/" rel="self" type="application/rss+xml" /><item>
+    <title>python之Numpy学习笔记</title>
+    <link>https://gsscsd.github.io/python%E4%B9%8Bnumpy%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Tue, 25 Dec 2018 11:02:22 &#43;0000</pubDate>
+    <author>Gsscsd</author>
+    <guid>https://gsscsd.github.io/python%E4%B9%8Bnumpy%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[<blockquote>
+<p>NumPy 是一个 Python 包。 它代表 “Numeric Python”。 它是一个由多维数组对象和用于处理数组的例程集合组成的库。
+Numeric，即 NumPy 的前身，是由 Jim Hugunin 开发的。 也开发了另一个包 Numarray ，它拥有一些额外的功能。 2005年，Travis Oliphant 通过将 Numarray 的功能集成到 Numeric 包中来创建 NumPy 包。 这个开源项目有很多贡献者。</p>
+</blockquote>]]></description>
+</item>
+</channel>
+</rss>
