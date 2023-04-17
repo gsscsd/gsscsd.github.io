@@ -1,0 +1,567 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>keras详细介绍 - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="keras详细介绍" />
+<meta property="og:description" content="
+    计算图与张量
+要说Pytorch/Tensorflow/Keras，就不能不提它的符号主义特性
+事实上，Pytorch也好，Tensorflow也好，其实是一款符号主义的计算框架，未必是专为深度学习设计的。假如你有一个与深度学习完全无关的计算任务想运行在GPU上，你完全可以通过Pytorch/Tensorflow编写和运行。
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2018-12-27T10:44:21+00:00" />
+<meta property="article:modified_time" content="2018-12-27T10:44:21+00:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="keras详细介绍"/>
+<meta name="twitter:description" content="
+    计算图与张量
+要说Pytorch/Tensorflow/Keras，就不能不提它的符号主义特性
+事实上，Pytorch也好，Tensorflow也好，其实是一款符号主义的计算框架，未必是专为深度学习设计的。假如你有一个与深度学习完全无关的计算任务想运行在GPU上，你完全可以通过Pytorch/Tensorflow编写和运行。
+"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://gsscsd.github.io/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/" /><link rel="prev" href="https://gsscsd.github.io/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" /><link rel="next" href="https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/color.346090a8e4618da38ff45853421bbd1d5ffa3c25e678a3f0131c9f7d5300e15669f91c74f1ed5fab76e7424a2a6a5619a9dc45f99e04f246e37d8af51295b6ae.css" integrity="sha512-NGCQqORhjaOP9FhTQhu9HV/6PCXmeKPwExyffVMA4VZp&#43;Rx08e1fq3bnQkoqalYZqdxF&#43;Z4E8kbjfYr1EpW2rg=="><link rel="stylesheet" href="/css/style.min.4f2deec9ba839d309c76dabead5bd259854c6fea2f78f1b9e47e833e7e3cf0c5e44f9a4a044f2bad8ca08dddc52c872601c501966bb44b2b73968730a68fd556.css" integrity="sha512-Ty3uybqDnTCcdtq&#43;rVvSWYVMb&#43;ovePG55H6DPn488MXkT5pKBE8rrYygjd3FLIcmAcUBlmu0Sytzlocwpo/VVg=="><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "keras详细介绍",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "python, 深度学习, Keras","wordcount":  7564 ,
+        "url": "https:\/\/gsscsd.github.io\/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D\/","datePublished": "2018-12-27T10:44:21+00:00","dateModified": "2018-12-27T10:44:21+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script><script src="//instant.page/5.1.1" defer type="module" integrity="sha384-MWfCL6g1OTGsbSwfuMHc8+8J2u71/LA8dzlIN3ycajckxuZZmF+DNjdm7O6H3PSq"></script>
+</head>
+
+<body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner">
+                <a class="menu-item"
+                    href="/posts/" > 文章 
+                </a><a class="menu-item"
+                    href="/tags/" > 标签 
+                </a><a class="menu-item"
+                    href="/categories/" > 分类 
+                </a><a class="menu-item"
+                    href="/about/" > 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" 
+                        class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+                <a class="menu-item"
+                    href="https://github.com/gsscsd"  title="GitHub" 
+                    rel="noopener noreffer" target="_blank" ><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-desktop">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-desktop">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </span><a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                <div class="search mobile" id="search-mobile">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-mobile">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-mobile">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </div>
+                <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                    取消
+                </a>
+            </div><a class="menu-item" href="/posts/"> 文章 
+                </a><a class="menu-item" href="/tags/"> 标签 
+                </a><a class="menu-item" href="/categories/"> 分类 
+                </a><a class="menu-item" href="/about/"> 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+            <a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a>
+            
+            
+            
+            
+            
+            
+            <a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+
+
+<main class="main">
+            <div class="container"><div class="toc" id="toc-auto">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-auto"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#计算图与张量">计算图与张量</a></li>
+        <li><a href="#keras框架结构">Keras框架结构</a></li>
+        <li><a href="#api-详细介绍">api 详细介绍</a>
+          <ul>
+            <li><a href="#backend">backend</a></li>
+            <li><a href="#modelslayers">models/layers</a></li>
+            <li><a href="#优化器目标函数初始化策略">优化器，目标函数，初始化策略</a></li>
+          </ul>
+        </li>
+        <li><a href="#keras的一些特性">keras的一些特性</a>
+          <ul>
+            <li><a href="#全部layer都要callable">全部Layer都要callable</a></li>
+            <li><a href="#shape与shape自动推断">Shape与Shape自动推断</a></li>
+            <li><a href="#th与tf的相爱相杀">TH与TF的相爱相杀</a></li>
+            <li><a href="#keras读取模型某一层的输出">keras读取模型某一层的输出</a></li>
+            <li><a href="#keras不易发现的坑">keras不易发现的坑</a></li>
+            <li><a href="#keras中的masking层到底是干什么的">keras中的masking层到底是干什么的</a></li>
+          </ul>
+        </li>
+        <li><a href="#参考链接">参考链接</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">keras详细介绍</h1><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><i class="author fas fa-user-circle fa-fw"></i><a href="/" title="Author" rel=" author" class="author">Gsscsd</a>
+                </span>&nbsp;<span class="post-category">收录于 </span>&nbsp;<span class="post-category">类别 <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>深度学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-12-27">2018-12-27</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2018-12-27">2018-12-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 7564 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 16 分钟&nbsp;<span id="/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/" class="leancloud_visitors" data-flag-title="keras详细介绍">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class="leancloud-visitors-count"></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#计算图与张量">计算图与张量</a></li>
+        <li><a href="#keras框架结构">Keras框架结构</a></li>
+        <li><a href="#api-详细介绍">api 详细介绍</a>
+          <ul>
+            <li><a href="#backend">backend</a></li>
+            <li><a href="#modelslayers">models/layers</a></li>
+            <li><a href="#优化器目标函数初始化策略">优化器，目标函数，初始化策略</a></li>
+          </ul>
+        </li>
+        <li><a href="#keras的一些特性">keras的一些特性</a>
+          <ul>
+            <li><a href="#全部layer都要callable">全部Layer都要callable</a></li>
+            <li><a href="#shape与shape自动推断">Shape与Shape自动推断</a></li>
+            <li><a href="#th与tf的相爱相杀">TH与TF的相爱相杀</a></li>
+            <li><a href="#keras读取模型某一层的输出">keras读取模型某一层的输出</a></li>
+            <li><a href="#keras不易发现的坑">keras不易发现的坑</a></li>
+            <li><a href="#keras中的masking层到底是干什么的">keras中的masking层到底是干什么的</a></li>
+          </ul>
+        </li>
+        <li><a href="#参考链接">参考链接</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h3 id="计算图与张量" class="headerLink">
+    <a href="#%e8%ae%a1%e7%ae%97%e5%9b%be%e4%b8%8e%e5%bc%a0%e9%87%8f" class="header-mark"></a>计算图与张量</h3><blockquote>
+<p>要说Pytorch/Tensorflow/Keras，就不能不提它的符号主义特性</p>
+<p>事实上，Pytorch也好，Tensorflow也好，其实是一款符号主义的计算框架，未必是专为深度学习设计的。假如你有一个与深度学习完全无关的计算任务想运行在GPU上，你完全可以通过Pytorch/Tensorflow编写和运行。</p>
+</blockquote>
+<p>假如我们要求两个数a和b的和，通常只要把值赋值给a和b，然后计算a+b就可以了，正常人类都是这么写的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">a</span><span class="o">=</span><span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">=</span><span class="mi">5</span>
+</span></span><span class="line"><span class="cl"><span class="n">z</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>运行到第一行，a是3，运行到第2行，b是5，然后运行第三行，电脑把a和b的值加起来赋给z了。</p>
+<p>计算图的方式：</p>
+<blockquote>
+<p>a+b这个计算任务，可以分为三步。</p>
+<ul>
+<li>声明两个变量a，b。建立输出变量z</li>
+<li>确立a，b和z的计算关系，z=a+b</li>
+<li>将两个数值a和b赋值到变量中，计算结果z</li>
+</ul>
+<p>这种“先确定符号以及符号之间的计算关系，然后才放数据进去计算”的办法，就是符号式编程。当你声明a和b时，它们里面是空的。当你确立z=a+b的计算关系时，a，b和z仍然是空的，只有当你真的把数据放入a和b了，程序才开始做计算。</p>
+<p>符号之间的运算关系，就称为运算图。</p>
+<p>符号式计算的一大优点是，当确立了输入和输出的计算关系后，在进行运算前我们可以对这种运算关系进行自动化简，从而减少计算量，提高计算速度。另一个优势是，运算图一旦确定，整个计算过程就都清楚了，可以用内存复用的方式减少程序占用的内存。</p>
+</blockquote>
+<p>在Keras，Pytorch和Tensorflow中，参与符号运算的那些变量统一称作张量。张量是矩阵的进一步推广。</p>
+<blockquote>
+<p>规模最小的张量是0阶张量，即标量，也就是一个数。</p>
+<p>当我们把一些数有序的排列起来，就形成了1阶张量，也就是一个向量</p>
+<p>如果我们继续把一组向量有序的排列起来，就形成了2阶张量，也就是一个矩阵</p>
+<p>把矩阵摞起来，就是3阶张量，我们可以称为一个立方体，具有3个颜色通道的彩色图片就是一个这样的立方体</p>
+<p>把矩阵摞起来，好吧这次我们真的没有给它起别名了，就叫4阶张量了，不要去试图想像4阶张量是什么样子，它就是个数学上的概念。</p>
+</blockquote>
+<h3 id="keras框架结构" class="headerLink">
+    <a href="#keras%e6%a1%86%e6%9e%b6%e7%bb%93%e6%9e%84" class="header-mark"></a>Keras框架结构</h3><p><figure><a class="lightgallery" href="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras.png" title="img" data-thumbnail="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras.png">
+        <img
+            
+            loading="lazy"
+            src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras.png"
+            srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras.png, https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras.png 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras.png 2x"
+            sizes="auto"
+            alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras.png">
+    </a></figure></p>
+<blockquote>
+<ul>
+<li>backend：后端，对Tensorflow和Theano进行封装，完成低层的张量运算、计算图编译等</li>
+<li>models：模型，模型是层的有序组合，也是层的“容器”，是“神经网络”的整体表示</li>
+<li>layers：层，神经网络的层本质上规定了一种从输入张量到输出张量的计算规则，显然，整个神经网络的模型也是这样一种张量到张量的计算规则，因此keras的model是layer的子类。</li>
+</ul>
+</blockquote>
+<p>上面的三个模块是Keras最为要紧和核心的三块内容，搭建一个神经网络，就只用上面的内容即可。注意的是，backend虽然很重要，但其内容多而杂，大部分内容都是被其他keras模块调用，而不是被用户直接使用。所以它不是新手马上就应该学的，初学Keras不妨先将backend放一旁，从model和layers学起。</p>
+<blockquote>
+<p>为了训练神经网络，必须定义一个神经网络优化的目标和一套参数更新的方式，这部分就是目标函数和优化器：</p>
+<ul>
+<li>objectives：目标函数，规定了神经网络的优化方向</li>
+<li>optimizers：优化器，规定了神经网络的参数如何更新</li>
+</ul>
+<p>此外，Keras提供了一组模块用来对神经网络进行配置：</p>
+<ul>
+<li>initialization：初始化策略，规定了网络参数的初始化方法</li>
+<li>regularizers：正则项，提供了一些用于参数正则的方法，以对抗过拟合</li>
+<li>constraints：约束项，提供了对网络参数进行约束的方法</li>
+</ul>
+<p>为了方便调试、分析和使用网络，处理数据，Keras提供了下面的模块：</p>
+<ul>
+<li>callbacks：回调函数，在网络训练的过程中返回一些预定义/自定义的信息</li>
+<li>visualization：可视化，用于将网络结构绘制出来，以直观观察</li>
+<li>preprocessing：提供了一组用于对文本、图像、序列信号进行预处理的函数</li>
+<li>utils：常用函数库，比较重要的是utils.np_utils中的to_categorical，用于将1D标签转为one-hot的2D标签和convert_kernel函数，用于将卷积核在theano模式和Tensorflow模式之间转换。</li>
+</ul>
+</blockquote>
+<h3 id="api-详细介绍" class="headerLink">
+    <a href="#api-%e8%af%a6%e7%bb%86%e4%bb%8b%e7%bb%8d" class="header-mark"></a>api 详细介绍</h3><h4 id="backend" class="headerLink">
+    <a href="#backend" class="header-mark"></a>backend</h4><p>backend这个模块的主要作用，是对tensorflow和theano的底层张量运算进行了包装。用户不用关心具体执行张量运算的是theano还是tensorflow，就可以编写出能在两个框架下可以无缝对接的程序。backend中的函数要比文档里给出的多得多，完全就是一家百货商店。但一般情况下，文档里给出的那些就已经足够你完成大部分工作了，事实上就连文档里给出的函数大部分情况也不会用，这里提几个比较有用的函数：</p>
+<blockquote>
+<ul>
+<li>function：毫无疑问这估计是最有用的一个函数了，function用于将一个计算图（计算关系）编译为具体的函数。典型的使用场景是输出网络的中间层结果。</li>
+<li>image_ordering和set_image_ordering：这组函数用于返回/设置图片的维度顺序，由于Theano和Tensorflow的图片维度顺序不一样，所以有时候需要获取/指定。典型应用是当希望网络自适应的根据使用的后端调整图片维度顺序时。</li>
+<li>learning_phase：这个函数的主要作用是返回网络的运行状态，0代表测试，1代表训练。当你需要便携一个在训练和测试是行为不同的层（如Dropout）时，它会很有用。</li>
+<li>int_shape：这是我最常用的一个函数，用于以整数tuple的形式返回张量的shape。要知道从前网络输出张量的shape是看都看不到的，int_shape可以在debug时起到很大作用。</li>
+<li>gradients： 求损失函数关于变量的导数，也就是网络的反向计算过程。这个函数在不训练网络而只想用梯度做一点奇怪的事情的时候会很有用，如图像风格转移。</li>
+</ul>
+</blockquote>
+<p>backend的其他大部分函数的函数名是望而知义的，什么max，min，equal，eval，zeros，ones，conv2d等等。函数的命名方式跟numpy差不多，下次想用时不妨先‘.’一下，说不定就有。</p>
+<h4 id="modelslayers" class="headerLink">
+    <a href="#modelslayers" class="header-mark"></a>models/layers</h4><p>使用Keras最常见的目的，当然还是训练一个网络。之前说了网络就是张量到张量的映射，所以Keras的网络，其实是一个由多个子计算图构成的大计算图。当这些子计算图是顺序连接时，称为Sequential，否则就是一般的model，我们称为函数式模型。</p>
+<p>模型有两套训练和测试的函数，一套是fit，evaluate等，另一套是fit_generator，evaluate_generator，前者适用于普通情况，后者适用于数据是以迭代器动态生成的情况。迭代器可以在内存/显存不足，实时动态数据提升进行网络训练，所以使用Keras的话，Python的迭代器这一部分是一定要掌握的内容。对模型而言，最核心的函数有两个：</p>
+<blockquote>
+<ul>
+<li>compile()：编译，模型在训练前必须编译，这个函数用于完成添加正则项啊，确定目标函数啊，确定优化器啊等等一系列模型配置功能。这个函数必须指定的参数是优化器和目标函数，经常还需要指定一个metrics来评价模型。</li>
+<li>fit()/fit_generator()：用来训练模型，参数较多，是需要重点掌握的函数，对于keras使用者而言，这个函数的每一个参数都需要掌握。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>另外，模型还有几个常用的属性和函数：</p>
+<ul>
+<li>layers：该属性是模型全部层对象的列表，是的就是一个普通的python list</li>
+<li>get_layer()：这个函数通过名字来返回模型中某个层对象</li>
+<li>pop()：这个函数文档里没有，但是可以用。作用是弹出模型的最后一层，从前进行finetune时没有pop，大家一般用model.layers.pop()来完成同样的功能。</li>
+</ul>
+<p>因为Model是Layer的子类，Layer的所有属性和方法也自动被Model所有</p>
+</blockquote>
+<p>Keras的层对象是构筑模型的基石，除了卷积层，递归神经网络层，全连接层，激活层这种烂大街的Layer对象外，keras还有自己的一套东西：</p>
+<blockquote>
+<ul>
+<li>Advanced Activation：高级激活层，主要收录了包括leakyReLU，pReLU，ELU，SReLU等一系列高级激活函数，这些激活函数不是简单的element-wise计算，所以单独拿出来实现一下</li>
+<li>Merge层：这个层用于将多个层对象的输出组合起来，支持级联、乘法、余弦等多种计算方式，它还有个小兄弟叫merge，这个函数完成与Merge相同的作用，但输入的对象是张量而不是层对象。</li>
+<li>Lambda层：这是一个神奇的层，看名字就知道它用来把一个函数作用在输入张量上。这个层可以大大减少你的工作量，当你需要定义的新层的计算不是那么复杂的时候，可以通过lambda层来实现，而不用自己完全重写。</li>
+<li>Highway/Maxout/AtrousConvolution2D层：这个就不多说了，懂的人自然懂，keras还是在一直跟着潮流走的</li>
+<li>Wrapper层：Wrapper层用于将一个普通的层对象进行包装升级，赋予其更多功能。目前，Wrapper层里有一个TimeDistributed层，用于将普通的层包装为对时间序列输入处理的层，而Bidirectional可以将输入的递归神经网络层包装为双向的（如把LSTM做成BLSTM）</li>
+<li>Input：补一个特殊的层，Input，这个东西实际上是一个Keras tensor的占位符，主要用于在搭建Model模型时作为输入tensor使用，这个Input可以通过keras.layers来import。</li>
+<li>stateful与unroll：Keras的递归神经网络层，如SimpleRNN，LSTM等，支持两种特殊的操作。一种是stateful，设置stateful为True意味着训练时每个batch的状态都会被重用于初始化下一个batch的初始状态。另一种是unroll，unroll可以将递归神经网络展开，以空间换取运行时间。</li>
+</ul>
+</blockquote>
+<p>Keras的layers对象还有一些有用的属性和方法:</p>
+<blockquote>
+<ul>
+<li>name：别小看这个，从茫茫层海中搜索一个特定的层，如果你对数数没什么信心，最好是name配合get_layer()来用。</li>
+<li>trainable：这个参数确定了层是可训练的还是不可训练的，在迁移学习中我们经常需要把某些层冻结起来而finetune别的层，冻结这个动作就是通过设置trainable来实现的。</li>
+<li>input/output：这两个属性是层的输入和输出张量，是Keras tensor的对象，这两个属性在你需要获取中间层输入输出时非常有用</li>
+<li>get_weights/set_weights：这是两个方法用于手动取出和载入层的参数，set_weights传入的权重必须与get_weights返回的权重具有同样的shape，一般可以用get_weights来看权重shape，用set_weights来载入权重</li>
+</ul>
+</blockquote>
+<p>在Keras中经常有的一个需求是需要自己编写一个新的层，如果你的计算比较简单，那可以尝试通过Lambda层来解决，如果你不得不编写一个自己的层，那也不是什么大不了的事儿。要在Keras中编写一个自己的层，需要开一个从Layer（或其他层）继承的类，除了__init__以为你需要覆盖三个函数：</p>
+<blockquote>
+<ul>
+<li>build，这个函数用来确立这个层都有哪些参数，哪些参数是可训练的哪些参数是不可训练的。</li>
+<li>call，这个函数在调用层对象时自动使用，里面就是该层的计算逻辑，或计算图了。显然，这个层的核心应该是一段符号式的输入张量到输出张量的计算过程。</li>
+<li>get_output_shape_for：如果你的层计算后，输入张量和输出张量的shape不一致，那么你需要把这个函数也重新写一下，返回输出张量的shape，以保证Keras可以进行shape的自动推断</li>
+</ul>
+<p>由于keras是python编写的，因此，我们可以随时查看keras其他层的源码，参考如何编写</p>
+</blockquote>
+<h4 id="优化器目标函数初始化策略" class="headerLink">
+    <a href="#%e4%bc%98%e5%8c%96%e5%99%a8%e7%9b%ae%e6%a0%87%e5%87%bd%e6%95%b0%e5%88%9d%e5%a7%8b%e5%8c%96%e7%ad%96%e7%95%a5" class="header-mark"></a>优化器，目标函数，初始化策略</h4><blockquote>
+<ul>
+<li>objectives是优化目标， 它本质上是一个从张量到数值的函数，当然，是用符号式编程表达的。具体的优化目标有mse，mae，交叉熵等等等等，根据具体任务取用即可，当然，也支持自己编写。需要特别说明的一点是，如果选用categorical_crossentropy作为目标函数，需要将标签转换为one-hot编码的形式，这个动作通过utils.np_utils.to_categorical来完成</li>
+<li>optimizers是优化器，模型是可以传入优化器对象的，你可以自己配置一个SGD，然后将它传入模型中，参数clipnorm和clipvalue，用来对梯度进行裁剪。</li>
+<li>activation是激活函数，这部分的内容一般不直接使用，而是通过激活层Activation来调用，此处的激活函数是普通的element-wise激活函数</li>
+<li>callback是回调函数，这其实是一个比较重要的模块，回调函数不是一个函数而是一个类，用于在训练过程中收集信息或进行某种动作。比如我们经常想画一下每个epoch的训练误差和测试误差，那这些信息就需要在回调函数中收集。预定义的回调函数中<strong>CheckModelpoint，History和EarlyStopping</strong>都是比较重要和常用的。其中CheckPoint用于保存模型，History记录了训练和测试的信息，EarlyStopping用于在已经收敛时提前结束训练。</li>
+</ul>
+<p>PS:<strong>History是模型训练函数fit的返回值</strong></p>
+</blockquote>
+<h3 id="keras的一些特性" class="headerLink">
+    <a href="#keras%e7%9a%84%e4%b8%80%e4%ba%9b%e7%89%b9%e6%80%a7" class="header-mark"></a>keras的一些特性</h3><h4 id="全部layer都要callable" class="headerLink">
+    <a href="#%e5%85%a8%e9%83%a8layer%e9%83%bd%e8%a6%81callable" class="header-mark"></a>全部Layer都要callable</h4><blockquote>
+<p>Keras的一大性质是<strong>所有的layer对象都是callable的</strong>。所谓callable，就是能当作函数一样来使用，层的这个性质不需要依赖任何模型就能成立。</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># 假设我们想要计算x的sigmoid值是多少，我们不去构建model</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 而是构建几个单独的层就可以了</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">keras.backend</span> <span class="k">as</span> <span class="nn">K</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Activation</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">x</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
+</span></span><span class="line"><span class="cl"><span class="n">y</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">f</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">function</span><span class="p">([</span><span class="n">x</span><span class="p">],[</span><span class="n">y</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">out</span> <span class="o">=</span> <span class="n">f</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])])</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>把层和模型当作张量的函数来使用，是需要认真贯彻落实的一个东西。</p>
+<p>代码中第1行先定义了一个“占位符”，它的shape是一个长为3的向量。所谓占位符就是“先占个位置 “的符号，翻译成中文就是”此处应有一个长为3的向量“。</p>
+<p>注意第2行，这行我们使用了一个激活层，激活层的激活函数形式是sigmoid，在激活层的后面 又有一个括号，括号内是我们的输入张量x，可以看到，层对象‘Activation(&lsquo;sigmoid&rsquo;)’是被当做一个函数来使用的。层是张量到张量的运算，那么其输出y自然也是一个张量。</p>
+<p>第3行通过调用function函数对计算图进行编译，这个计算图很简单，就是输入张量经过sigmoid作用变成输出向量，计算图的各种优化通过这一步得以完成，现在，f就是一个真正的函数了，就可以按照一般的方法使用了。</p>
+<p><strong>模型也是张量到张量的映射，所以Layer是Model的父类</strong>，因此，一个模型本身也可以像上面一样使用。总而言之，在Keras中，层对象是callable的。</p>
+</blockquote>
+<h4 id="shape与shape自动推断" class="headerLink">
+    <a href="#shape%e4%b8%8eshape%e8%87%aa%e5%8a%a8%e6%8e%a8%e6%96%ad" class="header-mark"></a>Shape与Shape自动推断</h4><blockquote>
+<p>使用过Keras的都知道，Keras的所有的层有一个“input_shape”的参数，用来指定输入张量的shape。然而这个input_shape，或者有时候是input_dim，只需要在模型的首层加以指定。一旦模型的首层的input_shape指定了，后面的各层就不用再指定，而会根据计算图自动推断。这个功能称为shape的自动推断。</p>
+<p>Keras的自动推断依赖于Layer中的get_output_shape_for函数来实现。在所有的Keras中都有这样一个函数，因此后面的层可以通过查看这个函数的返回值获取前层的输入shape，并通过自己的get_output_shape_for将这个信息传递下去。</p>
+<p>然而，有时候，这个自动推断会出错。这种情况发生在一个RNN层后面接Flatten然后又接Dense的时候，这个时候Dense的output_shape无法自动推断出。这时需要指定RNN的输入序列长度input_length，或者在网络的第一层通过input_shape就指定。这种情况极少见，大致有个印象即可，遇到的话知道大概是哪里出了问题就好。</p>
+<p>一般而言，神经网络的数据是以batch为单位的，但在指明input_shape时不需要说明一个batch的样本数。假如你的输入是一个224<em>224</em>3的彩色图片，在内部运行时数据的shape是(None，224，224，3)。</p>
+</blockquote>
+<h4 id="th与tf的相爱相杀" class="headerLink">
+    <a href="#th%e4%b8%8etf%e7%9a%84%e7%9b%b8%e7%88%b1%e7%9b%b8%e6%9d%80" class="header-mark"></a>TH与TF的相爱相杀</h4><p>现在由于theano已经停止更新，所以keras的默认后端是tensorflow。</p>
+<blockquote>
+<p>dim_ordering，也就是维度顺序:tf的维度顺序是(224，224，3)，只需要记住这个顺序就行。</p>
+</blockquote>
+<h4 id="keras读取模型某一层的输出" class="headerLink">
+    <a href="#keras%e8%af%bb%e5%8f%96%e6%a8%a1%e5%9e%8b%e6%9f%90%e4%b8%80%e5%b1%82%e7%9a%84%e8%be%93%e5%87%ba" class="header-mark"></a>keras读取模型某一层的输出</h4><p><figure><a class="lightgallery" href="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras_media.jpg" title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras_media.jpg" data-thumbnail="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras_media.jpg">
+        <img
+            
+            loading="lazy"
+            src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras_media.jpg"
+            srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras_media.jpg, https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras_media.jpg 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras_media.jpg 2x"
+            sizes="auto"
+            alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/keras_media.jpg">
+    </a></figure></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># model.layer返回的是一个list，其中每一个元素是model中的层</span>
+</span></span><span class="line"><span class="cl"><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">output</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看在layer中的index和名字</span>
+</span></span><span class="line"><span class="cl"><span class="n">layers</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">layers</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">i</span> <span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">layers</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="keras不易发现的坑" class="headerLink">
+    <a href="#keras%e4%b8%8d%e6%98%93%e5%8f%91%e7%8e%b0%e7%9a%84%e5%9d%91" class="header-mark"></a>keras不易发现的坑</h4><blockquote>
+<p>当我们做分类任务时：</p>
+<ul>
+<li>
+<p>output layer的activation=&ldquo;sigmoid&rdquo;，对应的loss=&ldquo;binary_crossentropy&rdquo;</p>
+</li>
+<li>
+<p>output layer的activation=&ldquo;softmax&rdquo;，对应的loss=&ldquo;categorical_crossentropy&rdquo;</p>
+</li>
+</ul>
+<p>对于2来说，得到的是<strong>join distribution and a multinomial likelihood</strong>，相当于一个概率分布，和为1；</p>
+<p>对于1来说，得到的是<strong>marginal distribution and a Bernoulli likelihood</strong>, p(y0/x) , p(y1/x) etc。</p>
+<p>如果是multi-label classification，就是一个样本属于多类的情况下，需要用1。否则，如果各个类别之间有相互关系（比如简单的情感分类，如果是正向情感就一定意味着负向情感的概率低），可以使用softmax；如果各个类别之间偏向于独立，可以使用sigmoid。</p>
+<p>对于任务1和2，metric=[&lsquo;acc&rsquo;]的&rsquo;acc&rsquo;并不是完全同一个评价方法。我们可以直接令metrics=[&lsquo;binary_accuracy&rsquo;,&lsquo;categorical_accuracy&rsquo;]，在训练过程中会两个结果都输出，这样方便自己的判断。</p>
+</blockquote>
+<h4 id="keras中的masking层到底是干什么的" class="headerLink">
+    <a href="#keras%e4%b8%ad%e7%9a%84masking%e5%b1%82%e5%88%b0%e5%ba%95%e6%98%af%e5%b9%b2%e4%bb%80%e4%b9%88%e7%9a%84" class="header-mark"></a>keras中的masking层到底是干什么的</h4><p><figure><a class="lightgallery" href="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/mask_keras.jpg" title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/mask_keras.jpg" data-thumbnail="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/mask_keras.jpg">
+        <img
+            
+            loading="lazy"
+            src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/mask_keras.jpg"
+            srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/mask_keras.jpg, https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/mask_keras.jpg 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/mask_keras.jpg 2x"
+            sizes="auto"
+            alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/mask_keras.jpg">
+    </a></figure></p>
+<p>直接看下面的lstm的例子</p>
+<p><figure><a class="lightgallery" href="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/lstm_keras.jpg" title="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/lstm_keras.jpg" data-thumbnail="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/lstm_keras.jpg">
+        <img
+            
+            loading="lazy"
+            src="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/lstm_keras.jpg"
+            srcset="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/lstm_keras.jpg, https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/lstm_keras.jpg 1.5x, https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/lstm_keras.jpg 2x"
+            sizes="auto"
+            alt="https://blog-1253453438.cos.ap-beijing.myqcloud.com/keras/lstm_keras.jpg">
+    </a></figure></p>
+<h3 id="参考链接" class="headerLink">
+    <a href="#%e5%8f%82%e8%80%83%e9%93%be%e6%8e%a5" class="header-mark"></a>参考链接</h3><blockquote>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/34771270" target="_blank" rel="noopener noreferrer">Keras使用过程中的tricks和errors(持续更新)</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/22129946" target="_blank" rel="noopener noreferrer">一个不负责任的Keras介绍（上）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/22129301" target="_blank" rel="noopener noreferrer">一个不负责任的Keras介绍（中）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/22135796" target="_blank" rel="noopener noreferrer">一个不负责任的Keras介绍（下）</a></li>
+</ul>
+</blockquote></div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-12-27</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="#" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/" data-title="keras详细介绍"><i class="fab fa-weibo fa-fw"></i></a><a href="#" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/" data-title="keras详细介绍"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@v5.21.1/icons/baidu.svg"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/python/">python</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>,&nbsp;<a href="/tags/keras/">Keras</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="prev" rel="prev" title="算法与数据结构"><i class="fas fa-angle-left fa-fw"></i>算法与数据结构</a>
+            <a href="/tensorflow%E4%B9%8Btensorvariable/" class="next" rel="next" title="tensorflow之Tensor、Variable">tensorflow之Tensor、Variable<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">
+                    由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.100.1">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/HEIGE-PCloud/DoIt" target="_blank" rel="noopener noreferrer" title="DoIt 0.3.0"><i class="far fa-edit fa-fw"></i> DoIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">Gsscsd</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
+
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="回到顶部">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div class="assets"><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css"></noscript><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-cn","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"没有找到结果","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null},"sharerjs":true};</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js" defer></script><script type="text/javascript" src="/js/valine.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.2/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/auto-render.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
+</html>

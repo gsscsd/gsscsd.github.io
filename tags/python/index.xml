@@ -1,0 +1,127 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>python - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/python/</link>
+        <description>python - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 23 Jan 2019 10:58:52 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/python/" rel="self" type="application/rss+xml" /><item>
+    <title>Numpy</title>
+    <link>https://gsscsd.github.io/python_numpy/</link>
+    <pubDate>Wed, 23 Jan 2019 10:58:52 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/python_numpy/</guid>
+    <description><![CDATA[<blockquote>
+<p>Numpy 里的数据结构和Python不同</p>
+</blockquote>]]></description>
+</item><item>
+    <title>Python基础语法</title>
+    <link>https://gsscsd.github.io/python_%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/</link>
+    <pubDate>Mon, 21 Jan 2019 16:55:34 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/python_%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/</guid>
+    <description><![CDATA[<h3 id="python基础语法" class="headerLink">
+    <a href="#python%e5%9f%ba%e7%a1%80%e8%af%ad%e6%b3%95" class="header-mark"></a>Python基础语法</h3><h4 id="boolean-and-its-opeations" class="headerLink">
+    <a href="#boolean-and-its-opeations" class="header-mark"></a>Boolean and its Opeations</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Boolean and its Operations</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="kc">False</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出如下所示：</span>
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">&lt;class &#39;bool&#39;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">&lt;class &#39;bool&#39;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">&lt;class &#39;NoneType&#39;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>]]></description>
+</item><item>
+    <title>PyTorch快速入门1</title>
+    <link>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A81/</link>
+    <pubDate>Tue, 15 Jan 2019 18:26:49 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A81/</guid>
+    <description><![CDATA[<p>在学习了<code>PyTorch</code>的<code>Tensor、Variable和autograd</code>之后，已经可以实现简单的深度学习模型，然而使用<code>autograd</code>实现的深度学习模型，其抽象程度比较较低，如果用其来实现深度学习模型，则需要编写的代码量极大。在这种情况下，<code>torch.nn</code>应运而生，其是专门为深度学习而设计的模块。<code>torch.nn</code>的核心数据结构是<code>Module</code>，它是一个抽象概念，既可以表示神经网络中的某个层（layer），也可以表示一个包含很多层的神经网络。在实际使用中，最常见的做法是继承<code>nn.Module</code>，撰写自己的网络层。</p>]]></description>
+</item><item>
+    <title>python之Pandas笔记</title>
+    <link>https://gsscsd.github.io/python%E4%B9%8Bpandas%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Thu, 10 Jan 2019 16:22:47 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/python%E4%B9%8Bpandas%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[<blockquote>
+<p>Pandas 是基于 NumPy 构建的库，在数据处理方面可以把它理解为 NumPy 加强版，同时 Pandas 也是一项开源项目。它基于 Cython，因此读取与处理数据非常快，并且还能轻松处理浮点数据中的缺失数据（表示为 NaN）以及非浮点数据。</p>
+<p>pandas适合于许多不同类型的数据，包括：</p>
+<ul>
+<li>具有异构类型列的表格数据，例如SQL表格或Excel数据</li>
+<li>有序和无序（不一定是固定频率）时间序列数据。</li>
+<li>具有行列标签的任意矩阵数据（均匀类型或不同类型）</li>
+<li>任何其他形式的观测/统计数据集。</li>
+</ul>
+</blockquote>]]></description>
+</item><item>
+    <title>机器学习案例之Titanic生存预测分析</title>
+    <link>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90/</link>
+    <pubDate>Sun, 06 Jan 2019 11:18:44 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B%E4%B9%8Btitanic%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90/</guid>
+    <description><![CDATA[Titanic是kaggle上的一道just for fun的题，没有奖金，但是数据整洁，适合用来练手，进行数据分析和机器学习。 这道题给的数据是泰坦]]></description>
+</item><item>
+    <title>Pytorch快速入门0</title>
+    <link>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A80/</link>
+    <pubDate>Sat, 05 Jan 2019 17:52:39 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/pytorch%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A80/</guid>
+    <description><![CDATA[为什么选择PyTorch 简洁：PyTorch的设计追求最少的封装，尽量避免重复造轮子。不像TensorFlow中充斥着session、gra]]></description>
+</item><item>
+    <title>tensorflow综合实例之MNIST</title>
+    <link>https://gsscsd.github.io/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/</link>
+    <pubDate>Wed, 02 Jan 2019 18:54:44 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/tensorflow%E7%BB%BC%E5%90%88%E5%AE%9E%E4%BE%8B%E4%B9%8Bmnist/</guid>
+    <description><![CDATA[在本篇文章中，使用两种方法来做MNIST分类，一个是全连接层，一个是CNN。 MNIST 数据集来自美国国家标准与技术研究所， National Institute of Standards and Technology (NIST)。]]></description>
+</item><item>
+    <title>tensorflow实例与线性回归</title>
+    <link>https://gsscsd.github.io/tensorflow%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</link>
+    <pubDate>Sat, 29 Dec 2018 15:16:08 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/tensorflow%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</guid>
+    <description><![CDATA[<blockquote>
+<p>在本篇文章中，我们使用四种方法来实现线性回归模型，然后在使用tensoflow实现一个二次函数拟合模型。</p>
+</blockquote>]]></description>
+</item><item>
+    <title>tensorflow之Graph、Session</title>
+    <link>https://gsscsd.github.io/tensorflow%E4%B9%8Bgraphsession/</link>
+    <pubDate>Fri, 28 Dec 2018 16:54:20 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/tensorflow%E4%B9%8Bgraphsession/</guid>
+    <description><![CDATA[<blockquote>
+<p>学习完tensorflow变量常量等基本量的操作，意味着最基本的东西都有了，使用这些基本的操作，我们就做一些数学运算，至于接下来如何操作基本量和组成更大的计算图，那就需要学习Graph和Session了。</p>
+</blockquote>]]></description>
+</item><item>
+    <title>tensorflow之Tensor、Variable</title>
+    <link>https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/</link>
+    <pubDate>Thu, 27 Dec 2018 21:19:49 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/</guid>
+    <description><![CDATA[<h3 id="为什么选择tensorflow" class="headerLink">
+    <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%80%89%e6%8b%a9tensorflow" class="header-mark"></a>为什么选择tensorflow</h3><blockquote>
+<p>TensorFlow 无可厚非地能被认定为 神经网络中最好用的库之一。它擅长的任务就是训练深度神经网络.通过使用TensorFlow我们就可以快速的入门神经网络，大大降低了深度学习（也就是深度神经网络）的开发成本和开发难度.。TensorFlow 的开源性，让所有人都能使用并且维护， 巩固它. 使它能迅速更新, 提升。</p>
+<p>现在新版本的tensorflow除了支持Graph Execution之外，还提供了Eager Execution。</p>
+</blockquote>]]></description>
+</item></channel>
+</rss>

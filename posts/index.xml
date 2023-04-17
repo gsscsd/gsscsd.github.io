@@ -1,0 +1,143 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>所有文章 - Gsscsd</title>
+        <link>https://gsscsd.github.io/posts/</link>
+        <description>所有文章 | Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 14 Mar 2021 20:24:47 &#43;0800</lastBuildDate><atom:link href="https://gsscsd.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Softmax与sigmoid的区别与联系</title>
+    <link>https://gsscsd.github.io/softmax%E4%B8%8Esigmoid%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E8%81%94%E7%B3%BB/</link>
+    <pubDate>Sun, 14 Mar 2021 20:24:47 &#43;0800</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/softmax%E4%B8%8Esigmoid%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E8%81%94%E7%B3%BB/</guid>
+    <description><![CDATA[<h2 id="前言" class="headerLink">
+    <a href="#%e5%89%8d%e8%a8%80" class="header-mark"></a>前言：</h2><p>后续记录一下softmax函数与sigmoid函数的区别</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://www.jianshu.com/p/36beb5ff76db" target="_blank" rel="noopener noreferrer">https://www.jianshu.com/p/36beb5ff76db</a></li>
+</ul>]]></description>
+</item><item>
+    <title>从word2vec到negative sampling</title>
+    <link>https://gsscsd.github.io/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/</link>
+    <pubDate>Sat, 13 Mar 2021 20:29:58 &#43;0800</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/</guid>
+    <description><![CDATA[<blockquote>
+<p>到目前为止，word2vec算法不单单是nlp的基础，也成为推荐和搜索的基础，本文记录一下word2vec算法中的negative sampling方案，并基于此记录了其他的sampling方法。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/76568362/" target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/76568362/</a></li>
+<li><a href="https://blog.csdn.net/yimingsilence/article/details/105920987" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/yimingsilence/article/details/105920987</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/129824834" target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/129824834</a></li>
+<li><a href="https://narcissuscyn.github.io/2018/07/03/CandidateSampling/" target="_blank" rel="noopener noreferrer">https://narcissuscyn.github.io/2018/07/03/CandidateSampling/</a></li>
+<li><a href="https://www.zhihu.com/question/50043438" target="_blank" rel="noopener noreferrer">https://www.zhihu.com/question/50043438</a></li>
+<li><a href="https://blog.csdn.net/wangpeng138375/article/details/75151064" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/wangpeng138375/article/details/75151064</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/45368976" target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/45368976</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/45014864" target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/45014864</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/27234078" target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/27234078</a></li>
+<li><a href="https://www.cnblogs.com/pinard/p/7249903.html" target="_blank" rel="noopener noreferrer">https://www.cnblogs.com/pinard/p/7249903.html</a></li>
+<li><a href="https://www.cnblogs.com/peghoty/p/3857839.html" target="_blank" rel="noopener noreferrer">https://www.cnblogs.com/peghoty/p/3857839.html</a></li>
+<li><a href="https://www.zhihu.com/question/386144477" target="_blank" rel="noopener noreferrer">https://www.zhihu.com/question/386144477</a></li>
+<li><a href="https://blog.csdn.net/weixin_40901056/article/details/88568344" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/weixin_40901056/article/details/88568344</a></li>
+<li><a href="https://blog.csdn.net/u010223750/article/details/69948463" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/u010223750/article/details/69948463</a></li>
+</ul>
+</blockquote>]]></description>
+</item><item>
+    <title>终端工具Tmux</title>
+    <link>https://gsscsd.github.io/%E7%BB%88%E7%AB%AF%E5%B7%A5%E5%85%B7tmux/</link>
+    <pubDate>Sat, 20 Feb 2021 22:14:03 &#43;0800</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E7%BB%88%E7%AB%AF%E5%B7%A5%E5%85%B7tmux/</guid>
+    <description><![CDATA[<blockquote>
+<p>Tmux 的全称是 Terminal MUtipleXer，及终端复用软件。顾名思义，它的主要功能就是在你关闭终端窗口之后保持进程的运行，此外 Tmux 的另一个重大功能就是分屏</p>
+</blockquote>]]></description>
+</item><item>
+    <title>Eclipse Theia教程</title>
+    <link>https://gsscsd.github.io/eclipse-theia%E6%95%99%E7%A8%8B/</link>
+    <pubDate>Sat, 23 Jan 2021 22:02:42 &#43;0800</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/eclipse-theia%E6%95%99%E7%A8%8B/</guid>
+    <description><![CDATA[<blockquote>
+<p>Theia 是 Eclipse 推出的云端和桌面 IDE 平台，完全开源。Theia 是基于 VS Code 开发的，它的模块化特性非常适合二次开发，比如华为云 CloudIDE、阿里云 Function Compute IDE 便是基于 Theia 开发。</p>
+<p>参考链接：</p>
+<ul>
+<li>
+<p><a href="https://blog.hvnobug.com/post/remote-ide" target="_blank" rel="noopener noreferrer">打造你的 Could IDE</a></p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/144866584" target="_blank" rel="noopener noreferrer">随时随地敲代码，基于Theia快速部署自己的云开发环境</a></p>
+</li>
+<li>
+<p><a href="https://theia-ide.org/docs/composing_applications" target="_blank" rel="noopener noreferrer">Theia官方文档</a></p>
+</li>
+</ul>
+</blockquote>]]></description>
+</item><item>
+    <title>Docker学习笔记</title>
+    <link>https://gsscsd.github.io/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Sat, 23 Jan 2021 09:57:14 &#43;0800</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[<blockquote>
+<p>近期用到docker做实验，因此记录一下学习docker的笔记.</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/22382728" target="_blank" rel="noopener noreferrer">一篇不一样的docker原理解析</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/22403015" target="_blank" rel="noopener noreferrer">一篇不一样的docker原理解析 提高篇</a></li>
+<li><a href="http://dockone.io/article/2941" target="_blank" rel="noopener noreferrer">Docker 核心技术与实现原理</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/269485082?utm_source=wechat_session" target="_blank" rel="noopener noreferrer">终于有人把 Docker 讲清楚了，万字详解！</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/108409686?utm_source=wechat_session" target="_blank" rel="noopener noreferrer">docker 镜像基本原理和核心概念</a></li>
+</ul>
+</blockquote>]]></description>
+</item><item>
+    <title>Neovim&#43;Coc.nvim配置 终端代码编辑环境</title>
+    <link>https://gsscsd.github.io/neovim-coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/</link>
+    <pubDate>Wed, 13 Jan 2021 22:52:45 &#43;0800</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/neovim-coc_nvim%E9%85%8D%E7%BD%AE-%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83/</guid>
+    <description><![CDATA[<blockquote>
+<p>目前公司常用的环境还是linux的服务器，经常需要使用vim进行写代码，经过探索Neovim + Coc.nvim非常适合。以下全部采用源码安装（相比之下，直接用各个发行版的命令安装会更加简单）。<a href="https://www.cnblogs.com/cniwoq/p/13272746.html" target="_blank" rel="noopener noreferrer">参考博客</a></p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之正则表达式匹配</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%B9%E9%85%8D/</link>
+    <pubDate>Thu, 18 Apr 2019 15:19:27 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%B9%E9%85%8D/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述：</h3><blockquote>
+<p>请实现一个函数用来匹配包括&rsquo;.&lsquo;和&rsquo;<em>&lsquo;的正则表达式。模式中的字符&rsquo;.&lsquo;表示任意一个字符，而&rsquo;</em>&lsquo;表示它前面的字符可以出现任意次（包含0次）。 在本题中，匹配是指字符串的所有字符匹配整个模式。例如，字符串&quot;aaa&quot;与模式&quot;a.a&quot;和&quot;ab<em>ac</em>a&quot;匹配，但是与&quot;aa.a&quot;和&quot;ab*a&quot;均不匹配</p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之顺时针打印矩阵</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%A1%BA%E6%97%B6%E9%92%88%E6%89%93%E5%8D%B0%E7%9F%A9%E9%98%B5/</link>
+    <pubDate>Thu, 18 Apr 2019 15:07:31 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%A1%BA%E6%97%B6%E9%92%88%E6%89%93%E5%8D%B0%E7%9F%A9%E9%98%B5/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述:</h3><blockquote>
+<p>输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字，例如，如果输入如下4 X 4矩阵： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 则依次打印出数字1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10.</p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之翻转单词顺序列</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E7%BF%BB%E8%BD%AC%E5%8D%95%E8%AF%8D%E9%A1%BA%E5%BA%8F%E5%88%97/</link>
+    <pubDate>Wed, 17 Apr 2019 21:27:58 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E7%BF%BB%E8%BD%AC%E5%8D%95%E8%AF%8D%E9%A1%BA%E5%BA%8F%E5%88%97/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述：</h3><blockquote>
+<p>牛客最近来了一个新员工Fish，每天早晨总是会拿着一本英文杂志，写些句子在本子上。同事Cat对Fish写的内容颇感兴趣，有一天他向Fish借来翻看，但却读不懂它的意思。例如，“student. a am I”。后来才意识到，这家伙原来把句子单词的顺序翻转了，正确的句子应该是“I am a student.”。Cat对一一的翻转这些单词顺序可不在行，你能帮助他么？</p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之数组中的逆序对</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%8E%92%E5%88%97/</link>
+    <pubDate>Tue, 16 Apr 2019 20:35:22 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%8E%92%E5%88%97/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述:</h3><blockquote>
+<p>输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。</p>
+<p>输入一个字符串,长度不超过9(可能有字符重复),字符只包括大小写字母。</p>
+</blockquote>]]></description>
+</item></channel>
+</rss>

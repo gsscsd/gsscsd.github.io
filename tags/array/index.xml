@@ -1,0 +1,128 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>array - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/array/</link>
+        <description>array - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 18 Apr 2019 15:07:31 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/array/" rel="self" type="application/rss+xml" /><item>
+    <title>剑指Offer之顺时针打印矩阵</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%A1%BA%E6%97%B6%E9%92%88%E6%89%93%E5%8D%B0%E7%9F%A9%E9%98%B5/</link>
+    <pubDate>Thu, 18 Apr 2019 15:07:31 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E9%A1%BA%E6%97%B6%E9%92%88%E6%89%93%E5%8D%B0%E7%9F%A9%E9%98%B5/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述:</h3><blockquote>
+<p>输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字，例如，如果输入如下4 X 4矩阵： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 则依次打印出数字1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10.</p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之数组中的逆序对</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%80%86%E5%BA%8F%E5%AF%B9/</link>
+    <pubDate>Tue, 16 Apr 2019 14:02:54 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%80%86%E5%BA%8F%E5%AF%B9/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述：</h3><p>在数组中的两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。输入一个数组,求出这个数组中的逆序对的总数P。并将P对1000000007取模的结果输出。 即输出P%1000000007</p>
+<h4 id="输入描述" class="headerLink">
+    <a href="#%e8%be%93%e5%85%a5%e6%8f%8f%e8%bf%b0" class="header-mark"></a>输入描述:</h4><p>题目保证输入的数组中没有的相同的数字数据范围：	对于%50的数据,size&lt;=10^4对于%75的数据,size&lt;=10^5	对于%100的数据,size&lt;=2*10^5</p>
+<p>示例1</p>
+<h4 id="输入" class="headerLink">
+    <a href="#%e8%be%93%e5%85%a5" class="header-mark"></a>输入</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="输出" class="headerLink">
+    <a href="#%e8%be%93%e5%87%ba" class="header-mark"></a>输出</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"> <span class="mi">7</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>]]></description>
+</item><item>
+    <title>剑指Offer之丑数</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%B8%91%E6%95%B0/</link>
+    <pubDate>Mon, 15 Apr 2019 15:04:05 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E4%B8%91%E6%95%B0/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述：</h3><blockquote>
+<p>把只包含质因子2、3和5的数称作丑数（Ugly Number）。例如6、8都是丑数，但14不是，因为它包含质因子7。 习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数。</p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之调整数组顺序使奇数位于偶数前面</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E8%B0%83%E6%95%B4%E6%95%B0%E7%BB%84%E9%A1%BA%E5%BA%8F%E4%BD%BF%E5%A5%87%E6%95%B0%E4%BD%8D%E4%BA%8E%E5%81%B6%E6%95%B0%E5%89%8D%E9%9D%A2/</link>
+    <pubDate>Wed, 10 Apr 2019 19:55:31 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E8%B0%83%E6%95%B4%E6%95%B0%E7%BB%84%E9%A1%BA%E5%BA%8F%E4%BD%BF%E5%A5%87%E6%95%B0%E4%BD%8D%E4%BA%8E%E5%81%B6%E6%95%B0%E5%89%8D%E9%9D%A2/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述：</h3><blockquote>
+<p>输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。</p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之把数组排成最小的数</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%8A%8A%E6%95%B0%E7%BB%84%E6%8E%92%E6%88%90%E6%9C%80%E5%B0%8F%E7%9A%84%E6%95%B0/</link>
+    <pubDate>Mon, 08 Apr 2019 21:39:24 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%8A%8A%E6%95%B0%E7%BB%84%E6%8E%92%E6%88%90%E6%9C%80%E5%B0%8F%E7%9A%84%E6%95%B0/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述：</h3><blockquote>
+<p>输入一个正整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。例如输入数组{3，32，321}，则打印出这三个数字能排成的最小数字为321323。</p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之数组中出现次数超过一半的数字</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E7%BB%84%E4%B8%AD%E5%87%BA%E7%8E%B0%E6%AC%A1%E6%95%B0%E8%B6%85%E8%BF%87%E4%B8%80%E5%8D%8A%E7%9A%84%E6%95%B0%E5%AD%97/</link>
+    <pubDate>Mon, 08 Apr 2019 21:10:43 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E7%BB%84%E4%B8%AD%E5%87%BA%E7%8E%B0%E6%AC%A1%E6%95%B0%E8%B6%85%E8%BF%87%E4%B8%80%E5%8D%8A%E7%9A%84%E6%95%B0%E5%AD%97/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述：</h3><blockquote>
+<p>数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0。</p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之数组中重复的数字</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E7%BB%84%E4%B8%AD%E9%87%8D%E5%A4%8D%E7%9A%84%E6%95%B0%E5%AD%97/</link>
+    <pubDate>Fri, 05 Apr 2019 21:18:17 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E7%BB%84%E4%B8%AD%E9%87%8D%E5%A4%8D%E7%9A%84%E6%95%B0%E5%AD%97/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述:</h3><blockquote>
+<p>在一个长度为n的数组里的所有数字都在0到n-1的范围内。 数组中某些数字是重复的，但不知道有几个数字是重复的。也不知道每个数字重复几次。请找出数组中任意一个重复的数字。 例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是第一个重复的数字2。</p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之数组中只出现一次的数字</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E7%BB%84%E4%B8%AD%E5%8F%AA%E5%87%BA%E7%8E%B0%E4%B8%80%E6%AC%A1%E7%9A%84%E6%95%B0%E5%AD%97/</link>
+    <pubDate>Wed, 03 Apr 2019 16:22:24 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E7%BB%84%E4%B8%AD%E5%8F%AA%E5%87%BA%E7%8E%B0%E4%B8%80%E6%AC%A1%E7%9A%84%E6%95%B0%E5%AD%97/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述：</h3><blockquote>
+<p>一个整型数组里除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个只出现一次的数字。</p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之数字在排序数组中出现的次数</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E5%AD%97%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E5%87%BA%E7%8E%B0%E7%9A%84%E6%AC%A1%E6%95%B0/</link>
+    <pubDate>Tue, 02 Apr 2019 16:30:08 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%95%B0%E5%AD%97%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E5%87%BA%E7%8E%B0%E7%9A%84%E6%AC%A1%E6%95%B0/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述：</h3><blockquote>
+<p>统计一个数字在排序数组中出现的次数。</p>
+</blockquote>]]></description>
+</item><item>
+    <title>剑指Offer之旋转数组的最小数字</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%B0%8F%E6%95%B0%E5%AD%97/</link>
+    <pubDate>Thu, 28 Mar 2019 20:29:28 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%B0%8F%E6%95%B0%E5%AD%97/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述：</h3><blockquote>
+<p>把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。 输入一个非减排序的数组的一个旋转，输出旋转数组的最小元素。 例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。 NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。</p>
+</blockquote>]]></description>
+</item></channel>
+</rss>

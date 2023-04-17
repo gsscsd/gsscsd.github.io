@@ -1,0 +1,26 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>queue - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/queue/</link>
+        <description>queue - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 29 Mar 2019 21:53:23 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/queue/" rel="self" type="application/rss+xml" /><item>
+    <title>剑指Offer之字符流中第一个不重复的字符</title>
+    <link>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%AD%97%E7%AC%A6%E6%B5%81%E4%B8%AD%E7%AC%AC%E4%B8%80%E4%B8%AA%E4%B8%8D%E9%87%8D%E5%A4%8D%E7%9A%84%E5%AD%97%E7%AC%A6/</link>
+    <pubDate>Fri, 29 Mar 2019 21:53:23 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%89%91%E6%8C%87offer%E4%B9%8B%E5%AD%97%E7%AC%A6%E6%B5%81%E4%B8%AD%E7%AC%AC%E4%B8%80%E4%B8%AA%E4%B8%8D%E9%87%8D%E5%A4%8D%E7%9A%84%E5%AD%97%E7%AC%A6/</guid>
+    <description><![CDATA[<h3 id="题目描述" class="headerLink">
+    <a href="#%e9%a2%98%e7%9b%ae%e6%8f%8f%e8%bf%b0" class="header-mark"></a>题目描述：</h3><p>请实现一个函数用来找出字符流中第一个只出现一次的字符。例如，当从字符流中只读出前两个字符&quot;go&quot;时，第一个只出现一次的字符是&quot;g&quot;。当从该字符流中读出前六个字符“google&quot;时，第一个只出现一次的字符是&quot;l&quot;。</p>
+<p>输出描述：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"> <span class="err">如果当前字符流没有存在出现一次的字符，返回#字符。</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>]]></description>
+</item></channel>
+</rss>

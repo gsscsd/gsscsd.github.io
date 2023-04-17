@@ -1,0 +1,18 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>图像处理 - 分类 - Gsscsd</title>
+        <link>https://gsscsd.github.io/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</link>
+        <description>图像处理 - 分类 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 04 Dec 2017 08:53:48 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" rel="self" type="application/rss+xml" /><item>
+    <title>opencv-python安装</title>
+    <link>https://gsscsd.github.io/opencv-python%E5%AE%89%E8%A3%85/</link>
+    <pubDate>Mon, 04 Dec 2017 08:53:48 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/opencv-python%E5%AE%89%E8%A3%85/</guid>
+    <description><![CDATA[<center>前言</center>
+<blockquote>
+<p>在图像处理和计算机视觉领域，opencv是个好工具，这学期刚学完图像处理，正好，用opencv把常用的算法调用一下，学习一下图像处理。</p>
+</blockquote>]]></description>
+</item></channel>
+</rss>

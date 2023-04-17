@@ -1,0 +1,528 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>算法与数据结构 - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="算法与数据结构" />
+<meta property="og:description" content="
+    定义
+算法:   算法中的指令描述的是一个计算，当其运行时能从一个初始状态和（可能为空的）初始输入开始，经过一系列有限而清晰定义的状态，最终产生输出并停止于一个终态。一个状态到另一个状态的转移不一定是确定的。随机化算法在内的一些算法，包含了一些随机输入.
+数据结构:  数据结构是计算机存储、组织数据的方式。数据结构是指相互之间存在一种或多种特定关系的数据元素的集合。通常情况下，精心选择的数据结构可以带来更高的运行或者存储效率.
+
+
+先说数据结构,毕竟算法也得有东西算,才又算法,所谓先有鸡后有蛋
+数据结构:既然是结构，里面肯定是有不同的数据的，与其叫数据结构，不如叫数据流,数据流中包含了各种数据，数据结构构成流，流亦是数据结构，面向对象就是，万物皆数据，以流的形式呈现.
+
+
+算法就是解决问题的方法,以函数或者是类的形式出现，它决定传入的参数，对数据流进行修改，留下需要的，抛弃不需要的，将数据和其他数据组成在一起，形成数据流，将数据流和数据流组成在一起，形成新的数据流，将数据流拆分成数据，再聚合，这就是算法的作用。
+算法就是数据流的灵魂,没有算法的数据其实没有灵魂的
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2018-12-27T09:10:17+00:00" />
+<meta property="article:modified_time" content="2018-12-27T09:10:17+00:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="算法与数据结构"/>
+<meta name="twitter:description" content="
+    定义
+算法:   算法中的指令描述的是一个计算，当其运行时能从一个初始状态和（可能为空的）初始输入开始，经过一系列有限而清晰定义的状态，最终产生输出并停止于一个终态。一个状态到另一个状态的转移不一定是确定的。随机化算法在内的一些算法，包含了一些随机输入.
+数据结构:  数据结构是计算机存储、组织数据的方式。数据结构是指相互之间存在一种或多种特定关系的数据元素的集合。通常情况下，精心选择的数据结构可以带来更高的运行或者存储效率.
+
+
+先说数据结构,毕竟算法也得有东西算,才又算法,所谓先有鸡后有蛋
+数据结构:既然是结构，里面肯定是有不同的数据的，与其叫数据结构，不如叫数据流,数据流中包含了各种数据，数据结构构成流，流亦是数据结构，面向对象就是，万物皆数据，以流的形式呈现.
+
+
+算法就是解决问题的方法,以函数或者是类的形式出现，它决定传入的参数，对数据流进行修改，留下需要的，抛弃不需要的，将数据和其他数据组成在一起，形成数据流，将数据流和数据流组成在一起，形成新的数据流，将数据流拆分成数据，再聚合，这就是算法的作用。
+算法就是数据流的灵魂,没有算法的数据其实没有灵魂的
+"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://gsscsd.github.io/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" /><link rel="prev" href="https://gsscsd.github.io/keras%E5%9F%BA%E6%9C%AC%E5%85%A5%E9%97%A8/" /><link rel="next" href="https://gsscsd.github.io/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/color.346090a8e4618da38ff45853421bbd1d5ffa3c25e678a3f0131c9f7d5300e15669f91c74f1ed5fab76e7424a2a6a5619a9dc45f99e04f246e37d8af51295b6ae.css" integrity="sha512-NGCQqORhjaOP9FhTQhu9HV/6PCXmeKPwExyffVMA4VZp&#43;Rx08e1fq3bnQkoqalYZqdxF&#43;Z4E8kbjfYr1EpW2rg=="><link rel="stylesheet" href="/css/style.min.4f2deec9ba839d309c76dabead5bd259854c6fea2f78f1b9e47e833e7e3cf0c5e44f9a4a044f2bad8ca08dddc52c872601c501966bb44b2b73968730a68fd556.css" integrity="sha512-Ty3uybqDnTCcdtq&#43;rVvSWYVMb&#43;ovePG55H6DPn488MXkT5pKBE8rrYygjd3FLIcmAcUBlmu0Sytzlocwpo/VVg=="><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "算法与数据结构",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "算法, 数据结构","wordcount":  2549 ,
+        "url": "https:\/\/gsscsd.github.io\/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84\/","datePublished": "2018-12-27T09:10:17+00:00","dateModified": "2018-12-27T09:10:17+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script><script src="//instant.page/5.1.1" defer type="module" integrity="sha384-MWfCL6g1OTGsbSwfuMHc8+8J2u71/LA8dzlIN3ycajckxuZZmF+DNjdm7O6H3PSq"></script>
+</head>
+
+<body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner">
+                <a class="menu-item"
+                    href="/posts/" > 文章 
+                </a><a class="menu-item"
+                    href="/tags/" > 标签 
+                </a><a class="menu-item"
+                    href="/categories/" > 分类 
+                </a><a class="menu-item"
+                    href="/about/" > 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" 
+                        class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+                <a class="menu-item"
+                    href="https://github.com/gsscsd"  title="GitHub" 
+                    rel="noopener noreffer" target="_blank" ><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-desktop">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-desktop">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </span><a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                <div class="search mobile" id="search-mobile">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-mobile">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-mobile">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </div>
+                <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                    取消
+                </a>
+            </div><a class="menu-item" href="/posts/"> 文章 
+                </a><a class="menu-item" href="/tags/"> 标签 
+                </a><a class="menu-item" href="/categories/"> 分类 
+                </a><a class="menu-item" href="/about/"> 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+            <a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a>
+            
+            
+            
+            
+            
+            
+            <a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+
+
+<main class="main">
+            <div class="container"><div class="toc" id="toc-auto">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-auto"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li>
+              <ul>
+                <li><a href="#定义">定义</a></li>
+                <li><a href="#数据结构">数据结构</a></li>
+                <li><a href="#算法">算法</a></li>
+                <li><a href="#其他的未提到的算法">其他的未提到的算法</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">算法与数据结构</h1><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><i class="author fas fa-user-circle fa-fw"></i><a href="/" title="Author" rel=" author" class="author">Gsscsd</a>
+                </span>&nbsp;<span class="post-category">收录于 </span>&nbsp;<span class="post-category">类别 <a href="/categories/%E7%AE%97%E6%B3%95/"><i class="far fa-folder fa-fw"></i>算法</a>&nbsp;<a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="far fa-folder fa-fw"></i>数据结构</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-12-27">2018-12-27</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2018-12-27">2018-12-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2549 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;<span id="/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="leancloud_visitors" data-flag-title="算法与数据结构">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class="leancloud-visitors-count"></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li>
+              <ul>
+                <li><a href="#定义">定义</a></li>
+                <li><a href="#数据结构">数据结构</a></li>
+                <li><a href="#算法">算法</a></li>
+                <li><a href="#其他的未提到的算法">其他的未提到的算法</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h5 id="定义" class="headerLink">
+    <a href="#%e5%ae%9a%e4%b9%89" class="header-mark"></a>定义</h5><blockquote>
+<p><strong>算法</strong>:   算法中的指令描述的是一个计算，当其运行时能从一个初始状态和（可能为空的）初始输入开始，经过一系列<strong>有限</strong>而清晰定义的状态，最终产生<strong>输出</strong>并<strong>停止</strong>于一个终态。一个状态到另一个状态的转移不一定是确定的。随机化算法在内的一些算法，包含了一些随机输入.</p>
+<p><strong>数据结构</strong>:  数据结构是计算机存储、组织数据的方式。数据结构是指相互之间存在一种或多种特定关系的数据元素的集合。通常情况下，精心选择的数据结构可以带来更高的运行或者存储效率.</p>
+</blockquote>
+<blockquote>
+<p>先说数据结构,毕竟算法也得有东西算,才又算法,所谓先有鸡后有蛋</p>
+<p><strong>数据结构</strong>:既然是结构，里面肯定是有不同的数据的，与其叫数据结构，不如叫数据流,数据流中包含了各种数据，数据结构构成流，流亦是数据结构，面向对象就是，万物皆数据，以流的形式呈现.</p>
+</blockquote>
+<blockquote>
+<p><strong>算法就是解决问题的方法</strong>,以函数或者是类的形式出现，它决定传入的参数，对数据流进行修改，留下需要的，抛弃不需要的，将数据和其他数据组成在一起，形成数据流，将数据流和数据流组成在一起，形成新的数据流，将数据流拆分成数据，再聚合，这就是算法的作用。</p>
+<p><strong>算法就是数据流的灵魂,没有算法的数据其实没有灵魂的</strong></p>
+</blockquote>
+<h5 id="数据结构" class="headerLink">
+    <a href="#%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" class="header-mark"></a>数据结构</h5><ol>
+<li>
+<p>数据结构的分类：</p>
+<blockquote>
+<p>线性结构：静态数组，动态数组，链表，队列，栈，字符串</p>
+<p>树形结构：二叉树，B/B+/B-树，红黑树，哈夫曼树</p>
+<p>图形结构：图</p>
+<p>其他：跳跃表，map，set</p>
+</blockquote>
+</li>
+<li>
+<p>基于数据结构的基本算法：</p>
+<blockquote>
+<p>数组的算法：插入，删除，新建，查找</p>
+<p>链表的算法：插入，删除，合并，查找</p>
+<p>栈的算法：新建，进栈，出栈</p>
+<p>队列的算法：新建，入队，出队，优先队列</p>
+<p>字符串的算法：查找，字串匹配</p>
+<p>二叉树的算法：前中序遍历，查找，深度，平衡二叉树的插入删除等等</p>
+<p>图的算法：DFS/BFS，图的结构，Prim算法，Dijkstra算法，kruskal算法，拓扑排序</p>
+<p>排序算法：各种排序算法</p>
+</blockquote>
+<p>以上是的这些算法都是比较基本的，在学习其数据结构时，就依附存在的算法</p>
+</li>
+</ol>
+<h5 id="算法" class="headerLink">
+    <a href="#%e7%ae%97%e6%b3%95" class="header-mark"></a>算法</h5><blockquote>
+<p>算法是一种解题思想，解决问题的方法</p>
+</blockquote>
+<ol>
+<li>
+<p>算法的分类</p>
+<blockquote>
+<p>算法的复杂度分析</p>
+<p>递归与分治算法</p>
+<p>动态规划</p>
+<p>贪心算法</p>
+<p>回溯算法</p>
+<p>分支限界算法</p>
+<p>概率算法</p>
+</blockquote>
+</li>
+<li>
+<p>具体概念讲解</p>
+<ul>
+<li>
+<p>算法的复杂度</p>
+<blockquote>
+<p>时间复杂度和空间复杂度的分析：应该会对自己写的代码进行复杂度分析，比如空间和时间复杂度是多少。</p>
+<p>PS：排序的时间复杂度：最优的情况是O(nlogn)，最坏的情况是O(n^2),有一个特殊情况是O(n)&ndash;位排序和计数排序</p>
+</blockquote>
+</li>
+<li>
+<p>递归和分治算法</p>
+<blockquote>
+<p>**递归：直接或间接调用自身的算法成为递归算法。**PS：树结构非常适合递归算法</p>
+<p>递归的一个例子：斐波那契数列（入门必学的一个错误的递归算法），可以用递归来做，但是实际上效率比较低。</p>
+<p><strong>分治算法：将一个大问题分解为k个规模比较小的子问题，并且这些子问题互相独立，但是又与原问题相同。</strong></p>
+<p>PS：分治思想是一个基本的思想，递归和其后的dp(动态规划)以及贪心算法很多时候都是基于分治来做。</p>
+<p>从分治出发设计出来的算法，一般是<strong>递归算法。</strong></p>
+<p>常见的分治算法：<strong>排序算法中的归并排序，快速排序，二分搜索</strong></p>
+</blockquote>
+</li>
+<li>
+<p>动态规划算法</p>
+<blockquote>
+<p><strong>动态规划算法：与分治算法思想类似，两者不同点在于，dp的子问题并不是互相独立的，在分治算法中，有些子问题会被重复计算，效率很低，因此，动态规划，对分治有了优化，记录子问题，去掉重复性。</strong></p>
+<p><strong>PS：动态规划是对分治算法的优化</strong></p>
+<p>动态规划适用于最优化算法</p>
+<p>使用动态规划特征：</p>
+<ol>
+<li>求一个问题的最优解</li>
+<li>大问题可以分解为子问题，子问题还有<strong>重叠的更小的子问题</strong></li>
+<li>整体问题最优解取决于子问题的最优解（<strong>状态转移方程</strong>）</li>
+<li>从上往下分析问题，从下往上解决问题</li>
+<li>讨论底层的<strong>边界问题</strong></li>
+</ol>
+<p>注意上面的三点：<strong>子问题重叠，状态转移方程，边界问题</strong></p>
+<p>PS：尝试使用动态规划去解斐波那契数列</p>
+<p>常见的动态规划题目：<strong>最长公共子串，最长公共子序列，最长回文串，矩阵乘法，背包问题</strong></p>
+</blockquote>
+</li>
+<li>
+<p>贪心算法</p>
+<blockquote>
+<p><strong>贪心算法：类似于动态规划，两者不同点在于，贪心算法考虑局部最优，动态规划考虑全局最优，如果一个问题，全局最优是通过局部最优逼近的，那么此时可以考虑贪心算法</strong></p>
+<p><strong>PS：贪心算法不能对所有的问题都能得到整体最优解，但对某些问题可以。</strong></p>
+<p><strong>贪心算法是对某些动态规划问题的一个简化</strong></p>
+<p>常见的贪心算法：<strong>图的单源最短路径，最小生成树的问题。</strong></p>
+<p>PS：如何区别贪心算法和动态规划呢？</p>
+</blockquote>
+</li>
+<li>
+<p>回溯算法</p>
+<blockquote>
+<p><strong>回溯算法：回溯算法具有&quot;通用解题法&quot;之称， 回溯法是一种选优搜索法，按选优条件向前搜索，以达到目标。但当探索到某一步时，发现原先选择并不优或达不到目标，就退回一步重新选择，这种走不通就退回再走的技术为回溯法，而满足回溯条件的某个状态的点称为“回溯点”。</strong></p>
+<p><strong>PS：它是用于求解组合数较大的问题。</strong></p>
+<p>回溯法的解题步骤：</p>
+<ol>
+<li>针对所给问题，确定问题的<strong>解空间</strong>： 首先应明确定义问题的解空间，问题的解空间应至少包含问题的一个（最优）解。</li>
+<li>确定结点的<strong>扩展搜索规则</strong>。</li>
+<li>以深度优先方式搜索解空间，并在搜索过程中用<strong>剪枝函数</strong>避免无效搜索。</li>
+</ol>
+<p>常见的回溯算法：<strong>皇后问题，输出不重复数字的全排列，求一个集合的所有子集</strong></p>
+</blockquote>
+</li>
+<li>
+<p>分支限界算法</p>
+<blockquote>
+<p><strong>分支限界算法：分支限界算法类似于回溯算法，两者不同点在于，回溯算法是找出解空间中的所有解，分支限界算法是找出某一个解(这个解或者是最优的)，其次，回溯算法是用深度优先方式搜索解空间，分支限界算法以广度优先的方式搜索解空间。</strong></p>
+<p><strong>PS：某种意义上来说，分支限界算法也是寻找最优解。</strong></p>
+<p>常见的分支限界算法：<strong>TSP（旅行商问题），单源最短路径</strong></p>
+</blockquote>
+</li>
+<li>
+<p>概率算法</p>
+<blockquote>
+<p>概率算法分类：</p>
+<ol>
+<li><strong>数值概率算法</strong>：用于求解没有精确解的数值问题</li>
+<li><strong>蒙特卡罗算法</strong>：求解问题的准确解</li>
+<li><strong>拉斯维加斯算法</strong>：不会得到不正确的解，眼下之意，要么不存在，要么正确</li>
+<li><strong>舍伍德算法</strong>：总能求问题的某一个解，且必然正确</li>
+</ol>
+<p>常见的概率算法：</p>
+<ol>
+<li><strong>数值概率：设计伪随机数</strong></li>
+<li><strong>舍伍德算法：跳跃表</strong></li>
+<li><strong>拉斯维加斯算法：皇后问题</strong></li>
+<li><strong>蒙特卡罗算法：素数测试</strong></li>
+</ol>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<h5 id="其他的未提到的算法" class="headerLink">
+    <a href="#%e5%85%b6%e4%bb%96%e7%9a%84%e6%9c%aa%e6%8f%90%e5%88%b0%e7%9a%84%e7%ae%97%e6%b3%95" class="header-mark"></a>其他的未提到的算法</h5><ol>
+<li>
+<p>字符串的算法：</p>
+<blockquote>
+<ul>
+<li>KMP算法</li>
+<li>Manacher算法</li>
+<li>最长回文串，公共子串，公共子序列</li>
+<li>全排列</li>
+<li>字符串替换</li>
+<li>正则表达式</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>数组</p>
+<blockquote>
+<ul>
+<li>丑数</li>
+<li>水仙花</li>
+<li>剩余定理</li>
+<li>乘积数组</li>
+<li>矩阵中路径</li>
+<li>逆序对</li>
+<li>连续数组最大和</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>链表</p>
+<blockquote>
+<ul>
+<li>链表的合并</li>
+<li>重复节点删除</li>
+<li>反转链表</li>
+<li>链表环的入口</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>查找</p>
+<blockquote>
+<ul>
+<li>二叉搜索</li>
+<li>约瑟夫环</li>
+<li>二进制1的个数</li>
+<li>二维数组的查找</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>排序</p>
+<blockquote>
+<ul>
+<li>大约9个排序算法，分析时间空间复杂度，分析稳定性</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>二叉树</p>
+<blockquote>
+<ul>
+<li>对称二叉树</li>
+<li>层次遍历</li>
+<li>序列话二叉树</li>
+<li>非递归的前中后序遍历</li>
+<li>二叉搜索树的第k个节点</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>map,set,array在java、C++的用法</p>
+</li>
+<li>
+<p>剩余定理</p>
+</li>
+<li>
+<p>快速幂取模</p>
+</li>
+<li>
+<p>欧几里德算法</p>
+</li>
+</ol></div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-12-27</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="#" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" data-title="算法与数据结构"><i class="fab fa-weibo fa-fw"></i></a><a href="#" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" data-title="算法与数据结构"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@v5.21.1/icons/baidu.svg"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>,&nbsp;<a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/keras%E5%9F%BA%E6%9C%AC%E5%85%A5%E9%97%A8/" class="prev" rel="prev" title="keras基本入门"><i class="fas fa-angle-left fa-fw"></i>keras基本入门</a>
+            <a href="/keras%E8%AF%A6%E7%BB%86%E4%BB%8B%E7%BB%8D/" class="next" rel="next" title="keras详细介绍">keras详细介绍<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">
+                    由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.100.1">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/HEIGE-PCloud/DoIt" target="_blank" rel="noopener noreferrer" title="DoIt 0.3.0"><i class="far fa-edit fa-fw"></i> DoIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">Gsscsd</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
+
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="回到顶部">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div class="assets"><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css"></noscript><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-cn","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"没有找到结果","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null},"sharerjs":true};</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js" defer></script><script type="text/javascript" src="/js/valine.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.2/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/auto-render.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
+</html>

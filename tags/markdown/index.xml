@@ -1,0 +1,26 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>markdown - 标签 - Gsscsd</title>
+        <link>https://gsscsd.github.io/tags/markdown/</link>
+        <description>markdown - 标签 - Gsscsd</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>gsscsd@outlook.com (Gsscsd)</managingEditor>
+            <webMaster>gsscsd@outlook.com (Gsscsd)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 27 Nov 2017 12:27:36 &#43;0000</lastBuildDate><atom:link href="https://gsscsd.github.io/tags/markdown/" rel="self" type="application/rss+xml" /><item>
+    <title>如何为markdown添加视频</title>
+    <link>https://gsscsd.github.io/%E5%A6%82%E4%BD%95%E4%B8%BAmarkdown%E6%B7%BB%E5%8A%A0%E8%A7%86%E9%A2%91/</link>
+    <pubDate>Mon, 27 Nov 2017 12:27:36 &#43;0000</pubDate><author>
+        <name>Gsscsd</name>
+    </author><guid>https://gsscsd.github.io/%E5%A6%82%E4%BD%95%E4%B8%BAmarkdown%E6%B7%BB%E5%8A%A0%E8%A7%86%E9%A2%91/</guid>
+    <description><![CDATA[<h4 id="第一种方法" class="headerLink">
+    <a href="#%e7%ac%ac%e4%b8%80%e7%a7%8d%e6%96%b9%e6%b3%95" class="header-mark"></a>第一种方法</h4><p>参考自<a href="http://www.muzixing.com/pages/2014/03/21/markdowntian-jia-shi-pin-jiao-cheng-idina-menzehe-caleb-hylesji-qing-dui-chang-let-it-go.html" target="_blank" rel="noopener noreferrer">这篇文章</a></p>
+<p>以下是通用的代码框架：前提是网站必须支持iframe</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&lt;iframe height=498 width=510 src=&#34;这里嵌入视频的来源，优酷，爱奇艺等&#34; frameborder=0 allowfullscreen&gt;&lt;/iframe&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div>]]></description>
+</item></channel>
+</rss>

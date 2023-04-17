@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>从word2vec到negative sampling - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="从word2vec到negative sampling" />
+<meta property="og:description" content="
+到目前为止，word2vec算法不单单是nlp的基础，也成为推荐和搜索的基础，本文记录一下word2vec算法中的negative sampling方案，并基于此记录了其他的sampling方法。
+参考链接：
+
+https://zhuanlan.zhihu.com/p/76568362/
+https://blog.csdn.net/yimingsilence/article/details/105920987
+https://zhuanlan.zhihu.com/p/129824834
+https://narcissuscyn.github.io/2018/07/03/CandidateSampling/
+https://www.zhihu.com/question/50043438
+https://blog.csdn.net/wangpeng138375/article/details/75151064
+https://zhuanlan.zhihu.com/p/45368976
+https://zhuanlan.zhihu.com/p/45014864
+https://zhuanlan.zhihu.com/p/27234078
+https://www.cnblogs.com/pinard/p/7249903.html
+https://www.cnblogs.com/peghoty/p/3857839.html
+https://www.zhihu.com/question/386144477
+https://blog.csdn.net/weixin_40901056/article/details/88568344
+https://blog.csdn.net/u010223750/article/details/69948463
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-03-13T20:29:58+08:00" />
+<meta property="article:modified_time" content="2021-03-13T20:29:58+08:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="从word2vec到negative sampling"/>
+<meta name="twitter:description" content="
+到目前为止，word2vec算法不单单是nlp的基础，也成为推荐和搜索的基础，本文记录一下word2vec算法中的negative sampling方案，并基于此记录了其他的sampling方法。
+参考链接：
+
+https://zhuanlan.zhihu.com/p/76568362/
+https://blog.csdn.net/yimingsilence/article/details/105920987
+https://zhuanlan.zhihu.com/p/129824834
+https://narcissuscyn.github.io/2018/07/03/CandidateSampling/
+https://www.zhihu.com/question/50043438
+https://blog.csdn.net/wangpeng138375/article/details/75151064
+https://zhuanlan.zhihu.com/p/45368976
+https://zhuanlan.zhihu.com/p/45014864
+https://zhuanlan.zhihu.com/p/27234078
+https://www.cnblogs.com/pinard/p/7249903.html
+https://www.cnblogs.com/peghoty/p/3857839.html
+https://www.zhihu.com/question/386144477
+https://blog.csdn.net/weixin_40901056/article/details/88568344
+https://blog.csdn.net/u010223750/article/details/69948463
+
+"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://gsscsd.github.io/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/" /><link rel="prev" href="https://gsscsd.github.io/%E7%BB%88%E7%AB%AF%E5%B7%A5%E5%85%B7tmux/" /><link rel="next" href="https://gsscsd.github.io/softmax%E4%B8%8Esigmoid%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E8%81%94%E7%B3%BB/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/color.346090a8e4618da38ff45853421bbd1d5ffa3c25e678a3f0131c9f7d5300e15669f91c74f1ed5fab76e7424a2a6a5619a9dc45f99e04f246e37d8af51295b6ae.css" integrity="sha512-NGCQqORhjaOP9FhTQhu9HV/6PCXmeKPwExyffVMA4VZp&#43;Rx08e1fq3bnQkoqalYZqdxF&#43;Z4E8kbjfYr1EpW2rg=="><link rel="stylesheet" href="/css/style.min.4f2deec9ba839d309c76dabead5bd259854c6fea2f78f1b9e47e833e7e3cf0c5e44f9a4a044f2bad8ca08dddc52c872601c501966bb44b2b73968730a68fd556.css" integrity="sha512-Ty3uybqDnTCcdtq&#43;rVvSWYVMb&#43;ovePG55H6DPn488MXkT5pKBE8rrYygjd3FLIcmAcUBlmu0Sytzlocwpo/VVg=="><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "从word2vec到negative sampling",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/%E4%BB%8Eword2vec%E5%88%B0negative_sampling\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "深度学习","wordcount":  6356 ,
+        "url": "https:\/\/gsscsd.github.io\/%E4%BB%8Eword2vec%E5%88%B0negative_sampling\/","datePublished": "2021-03-13T20:29:58+08:00","dateModified": "2021-03-13T20:29:58+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script><script src="//instant.page/5.1.1" defer type="module" integrity="sha384-MWfCL6g1OTGsbSwfuMHc8+8J2u71/LA8dzlIN3ycajckxuZZmF+DNjdm7O6H3PSq"></script>
+</head>
+
+<body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner">
+                <a class="menu-item"
+                    href="/posts/" > 文章 
+                </a><a class="menu-item"
+                    href="/tags/" > 标签 
+                </a><a class="menu-item"
+                    href="/categories/" > 分类 
+                </a><a class="menu-item"
+                    href="/about/" > 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" 
+                        class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+                <a class="menu-item"
+                    href="https://github.com/gsscsd"  title="GitHub" 
+                    rel="noopener noreffer" target="_blank" ><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-desktop">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-desktop">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </span><a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                <div class="search mobile" id="search-mobile">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-mobile">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-mobile">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </div>
+                <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                    取消
+                </a>
+            </div><a class="menu-item" href="/posts/"> 文章 
+                </a><a class="menu-item" href="/tags/"> 标签 
+                </a><a class="menu-item" href="/categories/"> 分类 
+                </a><a class="menu-item" href="/about/"> 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+            <a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a>
+            
+            
+            
+            
+            
+            
+            <a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+
+
+<main class="main">
+            <div class="container"><div class="toc" id="toc-auto">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-auto"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#skip-gram方法的word2vec">Skip-gram方法的word2vec</a></li>
+    <li><a href="#noise-contrastive-estimation算法">Noise Contrastive Estimation算法</a></li>
+    <li><a href="#negative-sampling算法">negative sampling算法</a></li>
+    <li><a href="#sampling-softmax算法sampled_softmax_loss">sampling softmax算法(sampled_softmax_loss)</a></li>
+    <li><a href="#tensorflow的采样方法candidate-sampling">Tensorflow的采样方法：candidate sampling</a></li>
+    <li><a href="#tensorflow-源码解析">tensorflow 源码解析：</a></li>
+  </ul>
+</nav></div>
+    </div><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">从word2vec到negative sampling</h1><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><i class="author fas fa-user-circle fa-fw"></i><a href="/" title="Author" rel=" author" class="author">Gsscsd</a>
+                </span>&nbsp;<span class="post-category">收录于 </span>&nbsp;<span class="post-category">类别 <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>深度学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-13">2021-03-13</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2021-03-13">2021-03-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 6356 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 13 分钟&nbsp;<span id="/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/" class="leancloud_visitors" data-flag-title="从word2vec到negative sampling">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class="leancloud-visitors-count"></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#skip-gram方法的word2vec">Skip-gram方法的word2vec</a></li>
+    <li><a href="#noise-contrastive-estimation算法">Noise Contrastive Estimation算法</a></li>
+    <li><a href="#negative-sampling算法">negative sampling算法</a></li>
+    <li><a href="#sampling-softmax算法sampled_softmax_loss">sampling softmax算法(sampled_softmax_loss)</a></li>
+    <li><a href="#tensorflow的采样方法candidate-sampling">Tensorflow的采样方法：candidate sampling</a></li>
+    <li><a href="#tensorflow-源码解析">tensorflow 源码解析：</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>到目前为止，word2vec算法不单单是nlp的基础，也成为推荐和搜索的基础，本文记录一下word2vec算法中的negative sampling方案，并基于此记录了其他的sampling方法。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/76568362/" target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/76568362/</a></li>
+<li><a href="https://blog.csdn.net/yimingsilence/article/details/105920987" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/yimingsilence/article/details/105920987</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/129824834" target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/129824834</a></li>
+<li><a href="https://narcissuscyn.github.io/2018/07/03/CandidateSampling/" target="_blank" rel="noopener noreferrer">https://narcissuscyn.github.io/2018/07/03/CandidateSampling/</a></li>
+<li><a href="https://www.zhihu.com/question/50043438" target="_blank" rel="noopener noreferrer">https://www.zhihu.com/question/50043438</a></li>
+<li><a href="https://blog.csdn.net/wangpeng138375/article/details/75151064" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/wangpeng138375/article/details/75151064</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/45368976" target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/45368976</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/45014864" target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/45014864</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/27234078" target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/27234078</a></li>
+<li><a href="https://www.cnblogs.com/pinard/p/7249903.html" target="_blank" rel="noopener noreferrer">https://www.cnblogs.com/pinard/p/7249903.html</a></li>
+<li><a href="https://www.cnblogs.com/peghoty/p/3857839.html" target="_blank" rel="noopener noreferrer">https://www.cnblogs.com/peghoty/p/3857839.html</a></li>
+<li><a href="https://www.zhihu.com/question/386144477" target="_blank" rel="noopener noreferrer">https://www.zhihu.com/question/386144477</a></li>
+<li><a href="https://blog.csdn.net/weixin_40901056/article/details/88568344" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/weixin_40901056/article/details/88568344</a></li>
+<li><a href="https://blog.csdn.net/u010223750/article/details/69948463" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/u010223750/article/details/69948463</a></li>
+</ul>
+</blockquote>
+<h2 id="skip-gram方法的word2vec" class="headerLink">
+    <a href="#skip-gram%e6%96%b9%e6%b3%95%e7%9a%84word2vec" class="header-mark"></a>Skip-gram方法的word2vec</h2><blockquote>
+<p>在word2vec出现之前，已经有用神经网络DNN来用训练词向量进而处理词与词之间的关系了。采用的方法一般是一个三层的神经网络结构（当然也可以多层），分为输入层，隐藏层和输出层(softmax层)。</p>
+<p>这个模型是如何定义数据的输入和输出呢？一般分为CBOW(Continuous Bag-of-Words 与Skip-Gram两种模型。</p>
+<p>CBOW模型的训练输入是某一个特征词的上下文相关的词对应的词向量，而输出就是这特定的一个词的词向量。</p>
+<p>Skip-Gram模型和CBOW的思路是反着来的，即输入是特定的一个词的词向量，而输出是特定词对应的上下文词向量。</p>
+<p><strong>PS：skip-gram 出来的准确率比cbow 高，cbow比sg训练快，sg比cbow更好地处理生僻字（出现频率低的字）。</strong></p>
+</blockquote>
+<p>在词向量训练任务中，softmax函数有如下：</p>
+<p>$$p(w|c) = \frac{\exp(h^\top v_w)}{\sum_{w_i \in V} \exp(h^\top v_{w_i})}=\frac{\exp(h^\top v_w)}{Z(h)}$$</p>
+<p>其中，$h$是隐藏层的输出， $v_{w_i}$是w对应的输出词向量（即softmax的权重矩阵）,$V$是词典，$c$是上下文。</p>
+<p><strong>在神经网络语言模型中，一般会把$C$压缩为$h$。</strong>
+从上面的公式可以看出，softmax函数的分母是对所有词典进行遍历求和，当$V$的size比较小的时候，softmax的求导以及梯度下降速度较快，但是当$V$的size比较大的时候，softmax的分母需要遍历所有的样本进行求和，因此速度较慢，对于此问题，业界提出了多种方法来解决该问题，常见的方法有Noise Contrastive Estimation(NCE)，negative sampling，sampling softmx算法等，接下来分别讲解一下两种算法。</p>
+<h2 id="noise-contrastive-estimation算法" class="headerLink">
+    <a href="#noise-contrastive-estimation%e7%ae%97%e6%b3%95" class="header-mark"></a>Noise Contrastive Estimation算法</h2><blockquote>
+<p>对于每一个训练样本（x, T)，我们训练binary classification，而不是multiclass classification。具体一点，我们对于每个样本，拆分成一个真实的（x,y) pair,另外我们随机产生k个Noise的（x,y）pair,这样我们就可以用来训练处这样的binary classifier。</p>
+<p>用概率来表示，这个问题由之前的P(y|x) 通过x预测所有y，换成了P(x,y)，计算x,y同时存在的概率，换言之，从基于特征x求y的最大后验概率，变成基于特征X和y，共同出现的最大后验概率。</p>
+</blockquote>
+<p>假设共有m个样$(l_i,c_i)$, 建模:
+\begin{equation}
+P\left(l_{i} \mid c_{i}\right)=\frac{u_{\theta}\left(l_{i}, c_{i}\right)}{\sum_{i}^{n} u_{\theta}\left(l_{j}, c_{i}\right)}=\frac{u_{\theta}\left(l_{i}, c_{i}\right)}{Z_{i}}
+\end{equation}
+假设负例label从某个分布$Q(l_i)$中抽取, 且抽取$k$次. 正例从上面的分布抽取, 则有:
+$(l_i,c_i)$真实样本的概率：
+\begin{equation}
+P\left(\text { True } \mid l_{i}, c_{i}\right)=\frac{P\left(l_{i} \mid c_{i}\right)}{k Q\left(l_{i}\right)+P\left(l_{i} \mid c_{i}\right)}=P\left(T \mid l_{i}, c_{i}\right)
+\end{equation}
+$(l_i,c_i)$负样本的概率：
+\begin{equation}
+P\left(\text { False } \mid l_{i}, c_{i}\right)=\frac{k Q\left(c_{i}\right)}{k Q\left(l_{i}\right)+P\left(l_{i} \mid c_{i}\right)}=P\left(F \mid l_{i}, c_{i}\right)
+\end{equation}
+最终最大化log似然估计, 损失函数:
+\begin{equation}
+J(\theta) = \prod_{(w,c) \in T} P(T|w,c;\theta) \prod_{(w,c) \in Neg} P(F|w,c;\theta)
+\end{equation}
+\begin{equation}
+L=\sum_{i}^{n}\left(\log P\left(T \mid l_{i}, c_{i}\right)+k \sum_{i=0, L_{x} \sim Q\left(l_{i}\right)}^{k} \log P\left(F \mid L_{x}, c_{i}\right)\right)
+\end{equation}</p>
+<h2 id="negative-sampling算法" class="headerLink">
+    <a href="#negative-sampling%e7%ae%97%e6%b3%95" class="header-mark"></a>negative sampling算法</h2><p>负采样Negative Sampling是NCE的一个变种，概率的定义有所区别。</p>
+<p>建模, 作为二分类softmax损失.
+\begin{equation}
+P\left(T \mid l_{i}, c_{i}\right)=\frac{u_{\theta}\left(l_{i}, c_{i}\right)}{1+u_{\theta}\left(l_{i}, c_{i}\right)}=\sigma\left(u_{\theta}\left(l_{i}, c_{i}\right)\right)
+\end{equation}
+\begin{equation}
+P\left(F \mid l_{i}, c_{i}\right)=1-P\left(T \mid l_{i}, c_{i}\right)=\frac{1}{1+u_{\theta}\left(l_{i}, c_{i}\right)}=1-\sigma\left(u_{\theta}\left(l_{i}, c_{i}\right)\right)
+\end{equation}</p>
+<p>最终最大化log似然估计略(和NCE相同), 负例的采样时, 为全体样本的所有$l$不消重的均匀采样,或者每个$l$采到的概率为:
+\begin{equation}
+P\left(l_{x}\right)=\frac{\operatorname{cnt}\left(l_{x}\right)^{0.75}}{\sum_{y \in L} \operatorname{cnt}\left(l_{y}\right)^{0.75}}
+\end{equation}</p>
+<p>注意，构造样本时，要注意正负样本的比例，如果考虑所有的负样本，会导致正负比例失衡，模型权重会被负样本带偏。</p>
+<h2 id="sampling-softmax算法sampled_softmax_loss" class="headerLink">
+    <a href="#sampling-softmax%e7%ae%97%e6%b3%95sampled_softmax_loss" class="header-mark"></a>sampling softmax算法(sampled_softmax_loss)</h2><blockquote>
+<p>Sampled softmax方法不同于nce方法，nce是把多分类问题转化成二分类，而sampled softmax方法则是只抽取一部分样本计算softmax。训练的时候不需要特别精准的softmax归一化概率，只需要一个粗略值做back propoagation就好了。<strong>这么粗糙的算法，可能会导致分布不一致问题？？？</strong></p>
+</blockquote>
+<p>如果损失函数采用交叉熵损失函数:
+\begin{equation}
+H(q,p) = - \sum_x q(x) \log p(x)
+\end{equation}</p>
+<p>这里q是真实期望分布,例如 $q=[0,…1,…,0]$，p是模型输出分布，对应最上面的softmax公式。</p>
+<p>对于一个样本，可得交叉熵损失函数(这里把模型的参数统称为$\theta$):
+\begin{equation}
+J_\theta = - \text{log} \dfrac{\text{exp}({h^\top v_{w}})}{\sum_{w_i \in V} \text{exp}({h^\top v_{w_i}})}
+\end{equation}
+假设：$\mathcal{E}(w)=-h^\top v_{w}$, 则：
+\begin{equation}
+J_\theta =  \mathcal{E}(w) + \text{log} \sum_{w_i \in V} \text{exp}( - \mathcal{E}(w_i))
+\end{equation}
+对$\theta$求梯度得：
+\begin{equation}
+\nabla_\theta J_\theta = \nabla_\theta \mathcal{E}(w) + \sum_{w_i \in V} \dfrac{\text{exp}(- \mathcal{E}(w_i))}{\sum_{w_i \in V} \text{exp}(- \mathcal{E}(w_i))} \nabla_\theta (- \mathcal{E}(w_i))
+\end{equation}
+已知：$p(w_i) = \dfrac{\text{exp}(- \mathcal{E}(w_i))}{\sum_{w_i \in V} \text{exp}- \mathcal{E}(w_i))}$,
+\begin{equation}
+\nabla_\theta J_\theta =  \nabla_\theta \mathcal{E}(w) - \sum_{w_i \in V} P(w_i) \nabla_\theta (\mathcal{E}(w_i))
+\end{equation}</p>
+<p>对于梯度公式的第二部分，可以认为是$\nabla_\theta (\mathcal{E}(w_i))$对于softmax输出$P(w_i)$的期望，即：
+\begin{equation}
+\sum_{w_i \in V} P(w_i) \nabla_\theta \mathcal{E}(w_i) =  \mathbb{E}<em>{w_i \sim P}[\nabla</em>\theta \mathcal{E}(w_i)]
+\end{equation}
+上面的这个公式就是控制softmax采样需要优化的部分。</p>
+<p>根据传统的重要性采样方法，按照如下公式计算期望：
+\begin{equation}
+\frac{1}{N} \sum_{w_i \sim  Q(w)}\frac{P(w_i)}{Q(w_i)}\nabla_\theta \mathcal{E}(w_i) \approx \mathbb{E}<em>{w_i \sim P}[\nabla</em>\theta \mathcal{E}(w_i)]
+\end{equation}
+其中$N$是从分布$Q$(我们自己定义的一个容易采样的分布)中采样的样本数，但是这种方法仍然需要计算$P(wi)$，而$P(wi)$的计算又需要softmax做归一化，这是我们不想看到的，所以要使用一种有偏估计的方法。</p>
+<p>Softmax公式的分母部分：
+\begin{equation}
+Z(h)=\sum_{w_i \in V} \text{exp}(- \mathcal{E}(w_i))=M\sum_{w_i \in V} (\frac{1}{M})\cdot \text{exp}(- \mathcal{E}(w_i))
+\end{equation}
+公式中$\sum_{w_i \in V} (\frac{1}{M})\cdot \text{exp}(- \mathcal{E}(w_i))$是一种期望形式，因而可以通过采样方法进行估计得到$Z(h)$, 对于$Z(h)$的采样候选分布仍旧选择$Q$分布。
+则可以得到：
+\begin{equation}
+Z(h)=\hat{Z}(h)=\frac{M}{N}\sum_{w_i \sim  Q(w)}\frac{\hat{R}(w_i)\text{exp}(- \mathcal{E}(w_i))}{Q(w_i)}=\frac{M}{N}\sum_{w_i \sim  Q(w)}\frac{\text{exp}(- \mathcal{E}(w_i))}{M\cdot Q(w_i)}
+\end{equation}
+上式中的$\hat{R}(w_i)$代表概率$\frac{1}{M}$，约去$M$可得：
+\begin{equation}
+\hat{Z}(h)=\frac{1}{N}\sum_{w_i \sim  Q(w)}\frac{\text{exp}(- \mathcal{E}(w_i))}{ Q(w_i)}
+\end{equation}
+到这里，我们就可以用$\hat{Z}(h)$去近似$Z(h)$了。</p>
+<blockquote>
+<p>现在理一下思路：<strong>给定候选分布Q，传统采样方法需要计算P，也就是说需要计算分母Z，这是我们不想看到的。幸运的是分母Z仍然可以通过采样得到，采样Z的时候，仍然采用候选分布Q。</strong></p>
+</blockquote>
+<p>\begin{equation}
+\frac{1}{N}  \sum_{w_i \sim  Q(w)}\frac{P(w_i)}{Q(w_i)} \nabla <em>\theta \mathcal{E}(w_i)  \approx  \mathbb{E}</em>{w_i \sim P}[\nabla _\theta \mathcal{E}(w_i)]
+\end{equation}</p>
+<p>\begin{equation}
+\frac{1}{N}\sum_{w_i \sim  Q(w)}\frac{\hat{P}(w_i)}{Q(w_i)}\nabla <em>\theta \mathcal{E}(w_i)  \approx  \mathbb{E}</em>{w_i \sim P}[\nabla <em>\theta \mathcal{E}(w_i)]
+\end{equation}
+其中 $\hat{P}(wi)$代表采样方式获得的概率：
+\begin{equation}
+\hat{P}(w_i)=\frac{\text{exp}(- \mathcal{E}(w_i))}{\hat{Z}(h)}
+\end{equation}
+可得：
+\begin{equation}
+\mathbb{E}</em>{w_i \sim P}[\nabla_\theta \mathcal{E}(w_i)]\approx \frac{1}{N}\sum_{w_i \sim  Q(w)}\frac{\text{exp}(- \mathcal{E}(w_i))}{Q(w_i)\hat{Z}(h)}\nabla_\theta \mathcal{E}(w_i)
+\end{equation}
+现在我们就从$Q$分布中采样$N$个样本，组成集合$J$，最终得到：
+\begin{equation}
+\mathbb{E}<em>{w_i \sim P}[\nabla</em>\theta \mathcal{E}(w_i)]\approx \frac{\sum_{w_j \in J}\text{exp}(- \mathcal{E}(w_j))\nabla_\theta \mathcal{E}(w_j)/Q(w_j)}{\sum_{w_j \in J}\text{exp}(- \mathcal{E}(w_j))/Q(w_j)}
+\end{equation}
+整体梯度为：
+\begin{equation}
+\nabla_\theta J_\theta = : \nabla_\theta \mathcal{E}(w) - \frac{\sum_{w_j \in J}\text{exp}(- \mathcal{E}(w_j))\nabla_\theta \mathcal{E}(w_j)/Q(w_j)}{\sum_{w_j \in J}\text{exp}(- \mathcal{E}(w_j))/Q(w_j)}
+\end{equation}</p>
+<h2 id="tensorflow的采样方法candidate-sampling" class="headerLink">
+    <a href="#tensorflow%e7%9a%84%e9%87%87%e6%a0%b7%e6%96%b9%e6%b3%95candidate-sampling" class="header-mark"></a>Tensorflow的采样方法：candidate sampling</h2><p>假如我们有一个多分类任务或者多标签分类任务，给定训练集$(x_i,T_i)$，其中xixi表示上下文，$T_i$表示目标类别(可能有多个).可以用word2vec中的negtive sampling方法来举例，使用cbow方法，也就是使用上下文$x_i$来预测中心词(单个target$T_i$)，或者使用skip-gram方法，也就是使用中心词$x_i$来预测上下文(多个target($T_i$)).</p>
+<p>我们想学习到一个通用函数$F(x,y)$来表征上下文$x$和目标类$y$的关系，如Word2vec里面，使用上下文预测下个单词的概率。</p>
+<p>完整的训练方法，如使用softmax或者Logistic回归需要对每个训练数据计算所有类$y\in L$的概率$F(x,y)$，当$|L|$非常大的时候，训练将非常耗时。</p>
+<p>&ldquo;candidate sampling&quot;训练方法包括为每一个训练数据$(x_i,T_i)$构造一个训练任务，使得我们只需要使用一个较小的候选集合$C_i\in L$，就能评估$F(x,y)$,典型的，candidate set $C_i$包含目标类别$T_i$和一些随机采样的类别$S_i\in L$：$C_i = T_i \cup S_i$
+, $S_i$的选择可能依赖 $x_i$和 $T_i$，也可能不依赖。 $F(x,y)$可以使用神经网络计算来表征(也就是TensorFlow里面常用的logits)</p>
+<p><figure><a class="lightgallery" href="https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" title="candidate sampling" data-thumbnail="https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+        <img
+            
+            loading="lazy"
+            src="https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast"
+            srcset="https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast, https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast 1.5x, https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast 2x"
+            sizes="auto"
+            alt="https://img-blog.csdn.net/20170410171426202?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDIyMzc1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+    </a></figure>
+其中：</p>
+<ul>
+<li>$Q(y|x)$表示的是给定context $x_i$采样到$y$的概率</li>
+<li>$K(x)$表示任意不以来候选集的函数</li>
+<li>$logistic-training-loss = \sum_{i}(\sum_{y \in POS_i} log(1+exp(-G(x_i,y)) )+\sum_{y \in NEG_i} log(1+exp(G(x_i,y)) ))$</li>
+<li>$softmax-training-loss = \sum_{i}(-log(\frac{exp(G(x_i,t_i))}{\sum_{y \in POS_i \cup NEG_i} exp(G(x_i,y))}))$</li>
+</ul>
+<blockquote>
+<p>在使用tensoflow的时候，我们有时候会纠结选择什么样的损失函数比较好，softmax和logistic在表达形式上是有点区别的，但是也不是很大，而且对于普通的softmax_cross_entropy_with_logits和sigmoid_cross_entropy_with_logits也都能够进行多分类任务，那么他们之间的区别是什么的？</p>
+<p>就我个人所想到的，使用sigmoid_cross_entropy_with_logits和softmax_cross_entropy_with_logits的最大的区别是类别的排他性，在分类任务中，<strong>使用softmax_cross_entropy_with_logits我们一般是选择单个标签的分类，因为其具有排他性</strong>，说白了，softmax_cross_entropy_with_logits需要的是一个类别概率分布，其分布应该服从多项分布(也就是多项logistic regression)，我们训练是让结果尽量靠近这种概率分布，不是说softmax_cross_entropy_with_logits不能进行多分，事实上<strong>softmax_cross_entropy_with_logits是支持多个类别的，其参数labels也没有限制只使用一个类别</strong>，当使用softmax_cross_entropy_with_logits进行多分类时候，以二类为例，我们可以设置真实类别的对应labels上的位置是0.5,0.5，训练使得这个文本尽量倾向这种分布，在test阶段，可以选择两个计算概率最大的类作为类别标签，从这种角度说，使用softmax_cross_entropy_with_logits进行多分，实际上类似于计算文本的主题分布。</p>
+<p><strong>对于sigmoid_cross_entropy_with_logits，公式可以看出，sigmoid_cross_entropy_with_logits其实是训练出了多个分类器，对于有n个标签的分类问题，其实质是分成了n个二分类问题，这点和softmax_cross_entropy_with_logits有着本质的区别。</strong></p>
+</blockquote>
+<p>tensorflow提供了下面两种candidate sample方法</p>
+<ul>
+<li>tf.nn.nce_loss</li>
+<li>tf.nn.sampled_softmax_loss</li>
+</ul>
+<p>tf.nn.nce_loss使用的是logistic, 而tf.nn.sampled_softmax_loss采用的是softmax loss，其实这两者的区别也主要在这儿，采用logistic loss的本质上还是训练n个分类器，而使用softmax loss的其实只是训练了一个主题分类器，tf.nn.nce_loss主要思路也是判断给定context $C_i$和训练数据$x_i$，判断每一个$y_i$是不是target label，而 tf.nn.sampled_softmax_loss则是使得在target label上的分布概率最大化。</p>
+<p>对于多标签多类别的分类任务使用Logistic比较好，对于多标签单类别的分类任务使用softmax比较好，采样中，采用tf.nn.sampled_softmax_loss训练cbow模型比较好，而 tf.nn.nce_loss训练skip-gram比较好。</p>
+<h2 id="tensorflow-源码解析" class="headerLink">
+    <a href="#tensorflow-%e6%ba%90%e7%a0%81%e8%a7%a3%e6%9e%90" class="header-mark"></a>tensorflow 源码解析：</h2><blockquote>
+<p><code>_compute_sampled_logits</code>输入隐藏层输出和真标签，在里面采样获得S集，并计算，返回的就是<code>F（x,y）-logQ</code>，在nce_loss和sampled_softmax_loss中都调用它进行采样，详细的源码解释在下面</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">sampled_softmax_loss</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">biases</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">labels</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">inputs</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">num_sampled</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">num_classes</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">num_true</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">sampled_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">remove_accidental_hits</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">partition_strategy</span><span class="o">=</span><span class="s2">&#34;mod&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">name</span><span class="o">=</span><span class="s2">&#34;sampled_softmax_loss&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl"><span class="n">logits</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">_compute_sampled_logits</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">biases</span><span class="o">=</span><span class="n">biases</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">num_sampled</span><span class="o">=</span><span class="n">num_sampled</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">num_true</span><span class="o">=</span><span class="n">num_true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">sampled_values</span><span class="o">=</span><span class="n">sampled_values</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">subtract_log_q</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">remove_accidental_hits</span><span class="o">=</span><span class="n">remove_accidental_hits</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">partition_strategy</span><span class="o">=</span><span class="n">partition_strategy</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">labels</span> <span class="o">=</span> <span class="n">array_ops</span><span class="o">.</span><span class="n">stop_gradient</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&#34;labels_stop_gradient&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">sampled_losses</span> <span class="o">=</span> <span class="n">nn_ops</span><span class="o">.</span><span class="n">softmax_cross_entropy_with_logits_v2</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">logits</span><span class="o">=</span><span class="n">logits</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># sampled_losses is a [batch_size] tensor.</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="n">sampled_losses</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>_compute_sampled_logits</code>的参数和返回</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">  <span class="n">Args</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">weights</span><span class="p">:</span> <span class="n">A</span> <span class="err">`</span><span class="n">Tensor</span><span class="err">`</span> <span class="n">of</span> <span class="n">shape</span> <span class="err">`</span><span class="p">[</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">dim</span><span class="p">]</span><span class="err">`</span><span class="p">,</span> <span class="ow">or</span> <span class="n">a</span> <span class="nb">list</span> <span class="n">of</span> <span class="err">`</span><span class="n">Tensor</span><span class="err">`</span>
+</span></span><span class="line"><span class="cl">        <span class="n">objects</span> <span class="n">whose</span> <span class="n">concatenation</span> <span class="n">along</span> <span class="n">dimension</span> <span class="mi">0</span> <span class="n">has</span> <span class="n">shape</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">dim</span><span class="p">]</span><span class="o">.</span>  <span class="n">The</span> <span class="p">(</span><span class="n">possibly</span><span class="o">-</span><span class="n">sharded</span><span class="p">)</span> <span class="k">class</span> <span class="nc">embeddings</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">    <span class="n">biases</span><span class="p">:</span> <span class="n">A</span> <span class="err">`</span><span class="n">Tensor</span><span class="err">`</span> <span class="n">of</span> <span class="n">shape</span> <span class="err">`</span><span class="p">[</span><span class="n">num_classes</span><span class="p">]</span><span class="err">`</span><span class="o">.</span>  <span class="n">The</span> <span class="k">class</span> <span class="nc">biases</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">这里我用L指代所有的类别的集合</span><span class="err">，</span><span class="n">h指代隐藏层向量维度</span><span class="err">，</span><span class="n">这两个维度就是</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">h</span><span class="p">],[</span><span class="n">L</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">weights</span> <span class="n">biases就是我们的上下文embedding</span><span class="p">,</span><span class="n">你把embedding传进去</span><span class="err">，</span>
+</span></span><span class="line"><span class="cl"><span class="n">他采样之后就用输出h和这个embedding相乘</span><span class="err">，</span><span class="n">只计算那些被采样的样品就可以了</span><span class="err">。</span>
+</span></span><span class="line"><span class="cl"><span class="n">还有一个就是注意weights的shape</span><span class="p">,</span><span class="n">dim是在后面的</span>
+</span></span><span class="line"><span class="cl"><span class="n">他在sampled_softmax_loss调用中也强调了</span><span class="err">，</span><span class="n">你训练的时候才用</span><span class="err">，</span><span class="n">像下面这样有个选择</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&#34;train&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sampled_softmax_loss</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">biases</span><span class="o">=</span><span class="n">biases</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="o">...</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&#34;eval&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">weights</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">  <span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">bias_add</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">biases</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">labels_one_hot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax_cross_entropy_with_logits</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="n">labels</span><span class="o">=</span><span class="n">labels_one_hot</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="n">logits</span><span class="o">=</span><span class="n">logits</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">eval的时候乘法weights有一个transpose</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">labels</span><span class="p">:</span> <span class="n">A</span> <span class="err">`</span><span class="n">Tensor</span><span class="err">`</span> <span class="n">of</span> <span class="nb">type</span> <span class="err">`</span><span class="n">int64</span><span class="err">`</span> <span class="ow">and</span> <span class="n">shape</span> <span class="err">`</span><span class="p">[</span><span class="n">batch_size</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">num_true</span><span class="p">]</span><span class="err">`</span><span class="o">.</span> <span class="n">The</span> <span class="n">target</span> <span class="n">classes</span><span class="o">.</span>  <span class="n">Note</span> <span class="n">that</span> <span class="n">this</span> <span class="nb">format</span> <span class="n">differs</span> <span class="kn">from</span>
+</span></span><span class="line"><span class="cl">        <span class="nn">the</span> <span class="err">`</span><span class="n">labels</span><span class="err">`</span> <span class="n">argument</span> <span class="n">of</span> <span class="err">`</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax_cross_entropy_with_logits</span><span class="err">`</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">这里labels就是标签</span><span class="err">，</span><span class="n">他也提到了与上面eval的时候输入是不一样的</span><span class="err">，</span><span class="n">那个需要你进行一个one_hot</span>
+</span></span><span class="line"><span class="cl"><span class="n">num_true如果我们用softmax就是1</span><span class="err">，</span><span class="n">其他的就是多标签</span>
+</span></span><span class="line"><span class="cl"><span class="n">shape是</span><span class="p">[</span><span class="n">m</span><span class="p">,</span><span class="n">T</span><span class="p">],</span><span class="n">m是batch的大小</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">inputs</span><span class="p">:</span> <span class="n">A</span> <span class="err">`</span><span class="n">Tensor</span><span class="err">`</span> <span class="n">of</span> <span class="n">shape</span> <span class="err">`</span><span class="p">[</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">dim</span><span class="p">]</span><span class="err">`</span><span class="o">.</span>  <span class="n">The</span> <span class="n">forward</span>
+</span></span><span class="line"><span class="cl">        <span class="n">activations</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">network</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">这就是h</span> <span class="n">输出</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">m</span><span class="p">,</span><span class="n">h</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">num_sampled</span><span class="p">:</span> <span class="n">An</span> <span class="err">`</span><span class="nb">int</span><span class="err">`</span><span class="o">.</span>  <span class="n">The</span> <span class="n">number</span> <span class="n">of</span> <span class="n">classes</span> <span class="n">to</span> <span class="n">randomly</span> <span class="n">sample</span> <span class="n">per</span> <span class="n">batch</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">在这里可以看出</span><span class="err">，</span><span class="n">是一个批次</span><span class="err">，</span><span class="n">用同样的sampled的类</span><span class="err">，</span><span class="n">这个就是集合S的大小</span>
+</span></span><span class="line"><span class="cl"><span class="n">用指代S</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">num_classes</span><span class="p">:</span> <span class="n">An</span> <span class="err">`</span><span class="nb">int</span><span class="err">`</span><span class="o">.</span> <span class="n">The</span> <span class="n">number</span> <span class="n">of</span> <span class="n">possible</span> <span class="n">classes</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">就是所有的类别</span><span class="err">，</span><span class="n">词表L的大小</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">num_true</span><span class="p">:</span> <span class="n">An</span> <span class="err">`</span><span class="nb">int</span><span class="err">`</span><span class="o">.</span>  <span class="n">The</span> <span class="n">number</span> <span class="n">of</span> <span class="n">target</span> <span class="n">classes</span> <span class="n">per</span> <span class="n">training</span> <span class="n">example</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">用T指代</span>
+</span></span><span class="line"><span class="cl"><span class="n">源码里有一个注意</span><span class="err">：</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Note</span><span class="p">:</span> <span class="n">In</span> <span class="n">the</span> <span class="n">case</span> <span class="n">where</span> <span class="n">num_true</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl"><span class="n">we</span> <span class="n">assign</span> <span class="n">to</span> <span class="n">each</span> <span class="n">target</span> <span class="k">class</span>  <span class="nc">the</span> <span class="n">target</span> <span class="n">probability</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">num_true</span> 
+</span></span><span class="line"><span class="cl"><span class="n">so</span> <span class="n">that</span> <span class="n">the</span> <span class="n">target</span> <span class="n">probabilities</span>  <span class="nb">sum</span> <span class="n">to</span> <span class="mi">1</span> <span class="n">per</span><span class="o">-</span><span class="n">example</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">就是说如果有T个真目标类</span><span class="err">，</span><span class="n">那每个真类别的采样概率Q就是1</span><span class="o">/</span><span class="n">T</span><span class="p">,</span><span class="n">有点像上面文章里的1</span><span class="o">/|</span><span class="n">V</span><span class="o">|</span><span class="err">，</span>
+</span></span><span class="line"><span class="cl"><span class="n">但这里我也有个疑问</span><span class="err">，</span><span class="n">如果我们是1个标签</span><span class="err">，</span><span class="n">那Q就是1了吗</span><span class="err">？</span><span class="n">但论文中也没提到正样本的Q怎么计算</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">sampled_values</span><span class="p">:</span> <span class="n">a</span> <span class="nb">tuple</span> <span class="n">of</span> <span class="p">(</span><span class="err">`</span><span class="n">sampled_candidates</span><span class="err">`</span><span class="p">,</span> <span class="err">`</span><span class="n">true_expected_count</span><span class="err">`</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="err">`</span><span class="n">sampled_expected_count</span><span class="err">`</span><span class="p">)</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">a</span> <span class="err">`</span><span class="o">*</span><span class="n">_candidate_sampler</span><span class="err">`</span> <span class="n">function</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">        <span class="p">(</span><span class="k">if</span> <span class="kc">None</span><span class="p">,</span> <span class="n">we</span> <span class="n">default</span> <span class="n">to</span> <span class="err">`</span><span class="n">log_uniform_candidate_sampler</span><span class="err">`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">这里如果none</span><span class="err">，</span><span class="n">函数会自己调用的log_uniform_candidate_sampler</span><span class="err">。</span>
+</span></span><span class="line"><span class="cl"><span class="n">但如果你要用其他采样</span><span class="err">，</span><span class="n">你就得把采样后的结果是一个元组给他</span><span class="err">，</span><span class="n">格式我们也下面介绍</span><span class="err">。</span>
+</span></span><span class="line"><span class="cl"><span class="n">其余采样方法这个我们下文再详细介绍</span><span class="err">。</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">subtract_log_q</span><span class="p">:</span> <span class="n">A</span> <span class="err">`</span><span class="nb">bool</span><span class="err">`</span><span class="o">.</span>  <span class="n">whether</span> <span class="n">to</span> <span class="n">subtract</span> <span class="n">the</span> <span class="n">log</span> <span class="n">expected</span> <span class="n">count</span> <span class="n">of</span>
+</span></span><span class="line"><span class="cl">        <span class="n">the</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">sample</span> <span class="n">to</span> <span class="n">get</span> <span class="n">the</span> <span class="n">logits</span> <span class="n">of</span> <span class="n">the</span> <span class="n">true</span> <span class="n">labels</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Default</span> <span class="ow">is</span> <span class="kc">True</span><span class="o">.</span>  <span class="n">Turn</span> <span class="n">off</span> <span class="k">for</span> <span class="n">Negative</span> <span class="n">Sampling</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">是否减去logQ</span><span class="err">，</span><span class="n">按上面那个表格NCE和sampled</span> <span class="n">softmax都要减的</span><span class="err">，</span><span class="n">负采样不减</span><span class="err">。</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">remove_accidental_hits</span><span class="p">:</span>  <span class="n">A</span> <span class="err">`</span><span class="nb">bool</span><span class="err">`</span><span class="o">.</span>  <span class="n">whether</span> <span class="n">to</span> <span class="n">remove</span> <span class="s2">&#34;accidental hits&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">where</span> <span class="n">a</span> <span class="n">sampled</span> <span class="k">class</span> <span class="nc">equals</span> <span class="n">one</span> <span class="n">of</span> <span class="n">the</span> <span class="n">target</span> <span class="n">classes</span><span class="o">.</span>  <span class="n">Default</span> <span class="ow">is</span>
+</span></span><span class="line"><span class="cl">        <span class="kc">True</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">如果采样到真标签了怎么办</span><span class="err">，</span><span class="n">是否删掉这次采样</span><span class="err">，</span><span class="n">默认是True要删掉</span>
+</span></span><span class="line"><span class="cl"><span class="n">百度paddle里说如果为真</span><span class="err">，</span><span class="n">如果一个sample</span><span class="p">[</span><span class="n">i</span><span class="err">，</span><span class="n">j</span><span class="p">]</span><span class="n">意外地碰到了真标签</span><span class="err">，</span>
+</span></span><span class="line"><span class="cl"><span class="n">那么相应的sampled_logits</span><span class="p">[</span><span class="n">i</span><span class="err">，</span><span class="n">j</span><span class="p">]</span><span class="n">将被减去1e20</span><span class="err">，</span><span class="n">使其SoftMax结果接近零</span><span class="err">。</span><span class="n">默认值为True</span><span class="err">。</span>
+</span></span><span class="line"><span class="cl"><span class="n">框架多还是有好处的</span>
+</span></span><span class="line"><span class="cl"><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">paddlepaddle</span><span class="o">.</span><span class="n">org</span><span class="o">.</span><span class="n">cn</span><span class="o">/</span><span class="n">documentation</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">zh</span><span class="o">/</span><span class="n">api_cn</span><span class="o">/</span><span class="n">layers_cn</span><span class="o">/</span><span class="n">sampled_softmax_with_cross_entropy_cn</span><span class="o">.</span><span class="n">html</span><span class="c1">#sampled-softmax-with-cross-entropy</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">下面来自上面的博客https</span><span class="p">:</span><span class="o">//</span><span class="n">narcissuscyn</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="mi">2018</span><span class="o">/</span><span class="mi">07</span><span class="o">/</span><span class="mi">03</span><span class="o">/</span><span class="n">CandidateSampling</span><span class="o">/</span> 
+</span></span><span class="line"><span class="cl"><span class="n">其实两个loss的核心代码都是_compute_sampled_logits</span><span class="err">，</span><span class="n">但是在实现上不同的地方有两点</span><span class="err">：</span>
+</span></span><span class="line"><span class="cl"><span class="n">sampled_softmax_loss是有去重的</span><span class="err">，</span><span class="n">也就是remove_accidental_hits</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="n">但是nce_loss是不去重的</span><span class="err">，</span><span class="n">我们从上面的表也能看出来</span><span class="err">。</span>
+</span></span><span class="line"><span class="cl"><span class="n">sampled_softmax_loss采用的是softmax</span><span class="o">+</span><span class="n">CE</span><span class="err">，</span><span class="n">但是nce_loss采用的是sigmod</span><span class="o">+</span><span class="n">CE</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">partition_strategy</span><span class="p">:</span> <span class="n">A</span> <span class="n">string</span> <span class="n">specifying</span> <span class="n">the</span> <span class="n">partitioning</span> <span class="n">strategy</span><span class="p">,</span> <span class="n">relevant</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="err">`</span><span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="err">`</span><span class="o">.</span> <span class="n">Currently</span> <span class="err">`</span><span class="s2">&#34;div&#34;</span><span class="err">`</span> <span class="ow">and</span> <span class="err">`</span><span class="s2">&#34;mod&#34;</span><span class="err">`</span> <span class="n">are</span> <span class="n">supported</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Default</span> <span class="ow">is</span> <span class="err">`</span><span class="s2">&#34;mod&#34;</span><span class="err">`</span><span class="o">.</span> <span class="n">See</span> <span class="err">`</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">embedding_lookup</span><span class="err">`</span> <span class="k">for</span> <span class="n">more</span> <span class="n">details</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">name</span><span class="p">:</span> <span class="n">A</span> <span class="n">name</span> <span class="k">for</span> <span class="n">the</span> <span class="n">operation</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">    <span class="n">seed</span><span class="p">:</span> <span class="n">random</span> <span class="n">seed</span> <span class="k">for</span> <span class="n">candidate</span> <span class="n">sampling</span><span class="o">.</span> <span class="n">Default</span> <span class="n">to</span> <span class="kc">None</span><span class="p">,</span> <span class="n">which</span> <span class="n">doesn</span><span class="s1">&#39;t set</span>
+</span></span><span class="line"><span class="cl">        <span class="n">the</span> <span class="n">op</span><span class="o">-</span><span class="n">level</span> <span class="n">random</span> <span class="n">seed</span> <span class="k">for</span> <span class="n">candidate</span> <span class="n">sampling</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">Returns</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">out_logits</span><span class="p">:</span> <span class="err">`</span><span class="n">Tensor</span><span class="err">`</span> <span class="nb">object</span> <span class="k">with</span> <span class="n">shape</span>
+</span></span><span class="line"><span class="cl">        <span class="err">`</span><span class="p">[</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_true</span> <span class="o">+</span> <span class="n">num_sampled</span><span class="p">]</span><span class="err">`</span><span class="p">,</span> <span class="k">for</span> <span class="n">passing</span> <span class="n">to</span> <span class="n">either</span>
+</span></span><span class="line"><span class="cl">        <span class="err">`</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid_cross_entropy_with_logits</span><span class="err">`</span> <span class="p">(</span><span class="n">NCE</span><span class="p">)</span> <span class="ow">or</span>
+</span></span><span class="line"><span class="cl">        <span class="err">`</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax_cross_entropy_with_logits</span><span class="err">`</span> <span class="p">(</span><span class="n">sampled</span> <span class="n">softmax</span><span class="p">)</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">输出格式就是</span><span class="p">[</span><span class="n">m</span><span class="p">,</span><span class="n">T</span><span class="o">+</span><span class="n">S</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">out_labels</span><span class="p">:</span> <span class="n">A</span> <span class="n">Tensor</span> <span class="nb">object</span> <span class="k">with</span> <span class="n">the</span> <span class="n">same</span> <span class="n">shape</span> <span class="k">as</span> <span class="err">`</span><span class="n">out_logits</span><span class="err">`</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">输出格式也是</span><span class="p">[</span><span class="n">m</span><span class="p">,</span><span class="n">T</span><span class="o">+</span><span class="n">S</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-03-13</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="#" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/" data-title="从word2vec到negative sampling"><i class="fab fa-weibo fa-fw"></i></a><a href="#" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/%E4%BB%8Eword2vec%E5%88%B0negative_sampling/" data-title="从word2vec到negative sampling"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@v5.21.1/icons/baidu.svg"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E7%BB%88%E7%AB%AF%E5%B7%A5%E5%85%B7tmux/" class="prev" rel="prev" title="终端工具Tmux"><i class="fas fa-angle-left fa-fw"></i>终端工具Tmux</a>
+            <a href="/softmax%E4%B8%8Esigmoid%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E8%81%94%E7%B3%BB/" class="next" rel="next" title="Softmax与sigmoid的区别与联系">Softmax与sigmoid的区别与联系<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">
+                    由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.100.1">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/HEIGE-PCloud/DoIt" target="_blank" rel="noopener noreferrer" title="DoIt 0.3.0"><i class="far fa-edit fa-fw"></i> DoIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">Gsscsd</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
+
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="回到顶部">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div class="assets"><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css"></noscript><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-cn","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"没有找到结果","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null},"sharerjs":true};</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js" defer></script><script type="text/javascript" src="/js/valine.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.2/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/auto-render.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
+</html>

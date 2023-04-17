@@ -1,0 +1,1893 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>OpenCV之图像处理 - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="OpenCV之图像处理" />
+<meta property="og:description" content="
+线性滤波：方框滤波、均值滤波、高斯滤波
+非线性滤波：中值滤波、双边滤波
+形态学滤波： 腐蚀、膨胀、开运算、闭运算、形态学梯度、顶帽、黑帽
+漫水填充
+图像金字塔和图像尺寸缩放
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-03-28T09:15:26+00:00" />
+<meta property="article:modified_time" content="2019-03-28T09:15:26+00:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="OpenCV之图像处理"/>
+<meta name="twitter:description" content="
+线性滤波：方框滤波、均值滤波、高斯滤波
+非线性滤波：中值滤波、双边滤波
+形态学滤波： 腐蚀、膨胀、开运算、闭运算、形态学梯度、顶帽、黑帽
+漫水填充
+图像金字塔和图像尺寸缩放
+"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://gsscsd.github.io/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" /><link rel="prev" href="https://gsscsd.github.io/opencv%E4%B9%8Bcore%E7%BB%84%E4%BB%B6/" /><link rel="next" href="https://gsscsd.github.io/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%8F%98%E6%8D%A2/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/color.346090a8e4618da38ff45853421bbd1d5ffa3c25e678a3f0131c9f7d5300e15669f91c74f1ed5fab76e7424a2a6a5619a9dc45f99e04f246e37d8af51295b6ae.css" integrity="sha512-NGCQqORhjaOP9FhTQhu9HV/6PCXmeKPwExyffVMA4VZp&#43;Rx08e1fq3bnQkoqalYZqdxF&#43;Z4E8kbjfYr1EpW2rg=="><link rel="stylesheet" href="/css/style.min.4f2deec9ba839d309c76dabead5bd259854c6fea2f78f1b9e47e833e7e3cf0c5e44f9a4a044f2bad8ca08dddc52c872601c501966bb44b2b73968730a68fd556.css" integrity="sha512-Ty3uybqDnTCcdtq&#43;rVvSWYVMb&#43;ovePG55H6DPn488MXkT5pKBE8rrYygjd3FLIcmAcUBlmu0Sytzlocwpo/VVg=="><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "OpenCV之图像处理",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "OpenCV","wordcount":  4911 ,
+        "url": "https:\/\/gsscsd.github.io\/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86\/","datePublished": "2019-03-28T09:15:26+00:00","dateModified": "2019-03-28T09:15:26+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script><script src="//instant.page/5.1.1" defer type="module" integrity="sha384-MWfCL6g1OTGsbSwfuMHc8+8J2u71/LA8dzlIN3ycajckxuZZmF+DNjdm7O6H3PSq"></script>
+</head>
+
+<body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner">
+                <a class="menu-item"
+                    href="/posts/" > 文章 
+                </a><a class="menu-item"
+                    href="/tags/" > 标签 
+                </a><a class="menu-item"
+                    href="/categories/" > 分类 
+                </a><a class="menu-item"
+                    href="/about/" > 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" 
+                        class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+                <a class="menu-item"
+                    href="https://github.com/gsscsd"  title="GitHub" 
+                    rel="noopener noreffer" target="_blank" ><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-desktop">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-desktop">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </span><a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                <div class="search mobile" id="search-mobile">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-mobile">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-mobile">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </div>
+                <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                    取消
+                </a>
+            </div><a class="menu-item" href="/posts/"> 文章 
+                </a><a class="menu-item" href="/tags/"> 标签 
+                </a><a class="menu-item" href="/categories/"> 分类 
+                </a><a class="menu-item" href="/about/"> 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+            <a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a>
+            
+            
+            
+            
+            
+            
+            <a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+
+
+<main class="main">
+            <div class="container"><div class="toc" id="toc-auto">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-auto"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#线性滤波">线性滤波：</a>
+          <ul>
+            <li><a href="#方框滤波均值滤波高斯滤波">方框滤波、均值滤波、高斯滤波</a></li>
+          </ul>
+        </li>
+        <li><a href="#非线性滤波">非线性滤波：</a>
+          <ul>
+            <li><a href="#中值滤波双边滤波">中值滤波、双边滤波</a></li>
+          </ul>
+        </li>
+        <li><a href="#线性非线性总结">线性、非线性总结</a></li>
+        <li><a href="#形态学滤波">形态学滤波：</a>
+          <ul>
+            <li><a href="#膨胀与腐蚀">膨胀与腐蚀</a></li>
+            <li><a href="#开运算闭运算形态学梯度顶帽黑帽">开运算、闭运算、形态学梯度、顶帽、黑帽</a></li>
+          </ul>
+        </li>
+        <li><a href="#漫水填充">漫水填充</a></li>
+        <li><a href="#图像金字塔和图像尺寸缩放">图像金字塔和图像尺寸缩放</a>
+          <ul>
+            <li><a href="#图像尺寸缩放">图像尺寸缩放</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">OpenCV之图像处理</h1><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><i class="author fas fa-user-circle fa-fw"></i><a href="/" title="Author" rel=" author" class="author">Gsscsd</a>
+                </span>&nbsp;<span class="post-category">收录于 </span>&nbsp;<span class="post-category">类别 <a href="/categories/opencv/"><i class="far fa-folder fa-fw"></i>OpenCV</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2019-03-28">2019-03-28</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2019-03-28">2019-03-28</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4911 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 10 分钟&nbsp;<span id="/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" class="leancloud_visitors" data-flag-title="OpenCV之图像处理">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class="leancloud-visitors-count"></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#线性滤波">线性滤波：</a>
+          <ul>
+            <li><a href="#方框滤波均值滤波高斯滤波">方框滤波、均值滤波、高斯滤波</a></li>
+          </ul>
+        </li>
+        <li><a href="#非线性滤波">非线性滤波：</a>
+          <ul>
+            <li><a href="#中值滤波双边滤波">中值滤波、双边滤波</a></li>
+          </ul>
+        </li>
+        <li><a href="#线性非线性总结">线性、非线性总结</a></li>
+        <li><a href="#形态学滤波">形态学滤波：</a>
+          <ul>
+            <li><a href="#膨胀与腐蚀">膨胀与腐蚀</a></li>
+            <li><a href="#开运算闭运算形态学梯度顶帽黑帽">开运算、闭运算、形态学梯度、顶帽、黑帽</a></li>
+          </ul>
+        </li>
+        <li><a href="#漫水填充">漫水填充</a></li>
+        <li><a href="#图像金字塔和图像尺寸缩放">图像金字塔和图像尺寸缩放</a>
+          <ul>
+            <li><a href="#图像尺寸缩放">图像尺寸缩放</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>线性滤波：方框滤波、均值滤波、高斯滤波</p>
+<p>非线性滤波：中值滤波、双边滤波</p>
+<p>形态学滤波： 腐蚀、膨胀、开运算、闭运算、形态学梯度、顶帽、黑帽</p>
+<p>漫水填充</p>
+<p>图像金字塔和图像尺寸缩放</p>
+</blockquote>
+<h3 id="线性滤波" class="headerLink">
+    <a href="#%e7%ba%bf%e6%80%a7%e6%bb%a4%e6%b3%a2" class="header-mark"></a>线性滤波：</h3><h4 id="方框滤波均值滤波高斯滤波" class="headerLink">
+    <a href="#%e6%96%b9%e6%a1%86%e6%bb%a4%e6%b3%a2%e5%9d%87%e5%80%bc%e6%bb%a4%e6%b3%a2%e9%ab%98%e6%96%af%e6%bb%a4%e6%b3%a2" class="header-mark"></a>方框滤波、均值滤波、高斯滤波</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">//  main.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1">//  BoxFilter
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">//  Created by 吕晴 on 2018/9/19.
+</span></span></span><span class="line"><span class="cl"><span class="c1">//  Copyright  2018年 吕晴. All rights reserved.
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/core/core.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//int main()
+</span></span></span><span class="line"><span class="cl"><span class="c1">//{
+</span></span></span><span class="line"><span class="cl"><span class="c1">//    Mat img = imread(&#34;/Users/lvqing/Project/Project_OpenCV_C++/image/7.jpg&#34;);
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">//    //创建窗口
+</span></span></span><span class="line"><span class="cl"><span class="c1">//    namedWindow(&#34;均值滤波【原图】&#34;);
+</span></span></span><span class="line"><span class="cl"><span class="c1">//    namedWindow(&#34;均值滤波【效果图】&#34;);
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">//    imshow(&#34;均值滤波【原图】&#34;, img);
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">//    //进行均值滤波操作
+</span></span></span><span class="line"><span class="cl"><span class="c1">////    Mat out;
+</span></span></span><span class="line"><span class="cl"><span class="c1">////    boxFilter(img, out, -1, Size(5, 5));
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">//    //进行高斯滤波
+</span></span></span><span class="line"><span class="cl"><span class="c1">//    Mat out;
+</span></span></span><span class="line"><span class="cl"><span class="c1">//    GaussianBlur(img, out, Size(0, 0), 0, 0);
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">//    imshow(&#34;均值滤波【效果图】&#34;, out);
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">//    waitKey(0);
+</span></span></span><span class="line"><span class="cl"><span class="c1">//}
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Mat</span> <span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage1</span><span class="p">,</span> <span class="n">dstImage2</span><span class="p">,</span> <span class="n">dstImage3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">nBoxFilter</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">nBlur</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">nGaussianBlur</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//轨迹条的回调函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="kt">void</span> <span class="nf">On_BoxFilter</span><span class="p">(</span><span class="kt">int</span> <span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span> <span class="c1">//方框滤波
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="kt">void</span> <span class="nf">On_Blur</span><span class="p">(</span><span class="kt">int</span> <span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span> <span class="c1">//均值滤波
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="kt">void</span> <span class="nf">On_GaussianBlur</span><span class="p">(</span><span class="kt">int</span> <span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span> <span class="c1">//高斯滤波
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">srcImage</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;/Users/lvqing/Project/Project_OpenCV_C++/image/7.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">srcImage</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no, srcImage is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">dstImage1</span> <span class="o">=</span> <span class="n">srcImage</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">dstImage2</span> <span class="o">=</span> <span class="n">srcImage</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">dstImage3</span> <span class="o">=</span> <span class="n">srcImage</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;原图&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">imshow</span><span class="p">(</span><span class="s">&#34;原图&#34;</span><span class="p">,</span> <span class="n">srcImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;方框滤波&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;内核&#34;</span><span class="p">,</span> <span class="s">&#34;方框滤波&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nBoxFilter</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">On_BoxFilter</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">On_BoxFilter</span><span class="p">(</span><span class="n">nBoxFilter</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;均值滤波&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;内核&#34;</span><span class="p">,</span> <span class="s">&#34;均值滤波&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nBlur</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">On_Blur</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">On_Blur</span><span class="p">(</span><span class="n">nBlur</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;高斯滤波&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;内核&#34;</span><span class="p">,</span> <span class="s">&#34;高斯滤波&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nGaussianBlur</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">On_GaussianBlur</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">On_GaussianBlur</span><span class="p">(</span><span class="n">nGaussianBlur</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">while</span><span class="p">(</span><span class="kt">char</span><span class="p">(</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">!=</span> <span class="sc">&#39;q&#39;</span><span class="p">){}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">On_BoxFilter</span><span class="p">(</span><span class="kt">int</span> <span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">boxFilter</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">nBoxFilter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nBoxFilter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="n">imshow</span><span class="p">(</span><span class="s">&#34;方框滤波&#34;</span><span class="p">,</span> <span class="n">dstImage1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">On_Blur</span><span class="p">(</span><span class="kt">int</span> <span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">blur</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">nBlur</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nBlur</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">Point</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="n">imshow</span><span class="p">(</span><span class="s">&#34;均值滤波&#34;</span><span class="p">,</span> <span class="n">dstImage2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">On_GaussianBlur</span><span class="p">(</span><span class="kt">int</span> <span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">GaussianBlur</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage3</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span> <span class="n">nGaussianBlur</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nGaussianBlur</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">imshow</span><span class="p">(</span><span class="s">&#34;高斯滤波&#34;</span><span class="p">,</span> <span class="n">dstImage3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="非线性滤波" class="headerLink">
+    <a href="#%e9%9d%9e%e7%ba%bf%e6%80%a7%e6%bb%a4%e6%b3%a2" class="header-mark"></a>非线性滤波：</h3><h4 id="中值滤波双边滤波" class="headerLink">
+    <a href="#%e4%b8%ad%e5%80%bc%e6%bb%a4%e6%b3%a2%e5%8f%8c%e8%be%b9%e6%bb%a4%e6%b3%a2" class="header-mark"></a>中值滤波、双边滤波</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/core/core.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">srcimg</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">srcimg</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no, srcimg is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//namedWindow(&#34;MedianBlur SrcImage&#34;);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;BilateralFilter SrcImage&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//imshow(&#34;MedianBlur&#34;, srcimg);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;BilateralFilter&#34;</span><span class="p">,</span> <span class="n">srcimg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//namedWindow(&#34;MedianBlur out&#34;);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;BilateralFilter out&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">out</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//medianBlur(srcimg, out, 7);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">bilateralFilter</span><span class="p">(</span><span class="n">srcimg</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">25</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//imshow(&#34;MedianBlur out&#34;, out);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;BilateralFilter out&#34;</span><span class="p">,</span> <span class="n">out</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="线性非线性总结" class="headerLink">
+    <a href="#%e7%ba%bf%e6%80%a7%e9%9d%9e%e7%ba%bf%e6%80%a7%e6%80%bb%e7%bb%93" class="header-mark"></a>线性、非线性总结</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span><span class="lnt">92
+</span><span class="lnt">93
+</span><span class="lnt">94
+</span><span class="lnt">95
+</span><span class="lnt">96
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/core/core.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Mat</span> <span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage1</span><span class="p">,</span> <span class="n">dstImage2</span><span class="p">,</span> <span class="n">dstImage3</span><span class="p">,</span> <span class="n">dstImage4</span><span class="p">,</span> <span class="n">dstImage5</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">n_boxFilter</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span> <span class="c1">//方框滤波
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">n_blur</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>    <span class="c1">//均值滤波
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">n_gaussianBlur</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>    <span class="c1">//高斯滤波
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">n_medianBlur</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>      <span class="c1">//中值滤波
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">n_bilateralFilter</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">//双边滤波
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//回调函数声明
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="kt">void</span> <span class="nf">BoxFilter</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">Blur</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">GaussianBlur</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">MedianBlur</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">BilateralFilter</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">srcImage</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">srcImage</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no, SrcImage is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">dstImage1</span> <span class="o">=</span> <span class="n">srcImage</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dstImage2</span> <span class="o">=</span> <span class="n">srcImage</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dstImage3</span> <span class="o">=</span> <span class="n">srcImage</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dstImage4</span> <span class="o">=</span> <span class="n">srcImage</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dstImage5</span> <span class="o">=</span> <span class="n">srcImage</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;SrcImage&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;SrcImage&#34;</span><span class="p">,</span> <span class="n">srcImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;BoxFilter&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;box&#34;</span><span class="p">,</span> <span class="s">&#34;BoxFilter&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n_boxFilter</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">BoxFilter</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">BoxFilter</span><span class="p">(</span><span class="n">n_boxFilter</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;Blur&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;blur&#34;</span><span class="p">,</span> <span class="s">&#34;Blur&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n_blur</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">Blur</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Blur</span><span class="p">(</span><span class="n">n_blur</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;GaussianBlur&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;gaussian&#34;</span><span class="p">,</span> <span class="s">&#34;GaussianBlur&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n_gaussianBlur</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">GaussianBlur</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">GaussianBlur</span><span class="p">(</span><span class="n">n_gaussianBlur</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;MedianBlur&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;median&#34;</span><span class="p">,</span> <span class="s">&#34;MedianBlur&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n_medianBlur</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">MedianBlur</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">MedianBlur</span><span class="p">(</span><span class="n">n_medianBlur</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;BilateralFilter&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;bilateral&#34;</span><span class="p">,</span> <span class="s">&#34;BilateralFilter&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n_bilateralFilter</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">BilateralFilter</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">BilateralFilter</span><span class="p">(</span><span class="n">n_bilateralFilter</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">while</span> <span class="p">(</span><span class="kt">char</span><span class="p">(</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="sc">&#39;9&#39;</span><span class="p">))</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">BoxFilter</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">boxFilter</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">n_boxFilter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_boxFilter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;BoxFilter&#34;</span><span class="p">,</span> <span class="n">dstImage1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">Blur</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">blur</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">n_blur</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_blur</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">Point</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;Blur&#34;</span><span class="p">,</span> <span class="n">dstImage2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">GaussianBlur</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">GaussianBlur</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage3</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">n_gaussianBlur</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_gaussianBlur</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;n_gaussianBlur&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">MedianBlur</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">medianBlur</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage4</span><span class="p">,</span> <span class="n">n_medianBlur</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;n_medianBlur&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">BilateralFilter</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">bilateralFilter</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage5</span><span class="p">,</span> <span class="n">n_bilateralFilter</span><span class="p">,</span> <span class="n">n_bilateralFilter</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_bilateralFilter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;n_bilateralFilter&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="形态学滤波" class="headerLink">
+    <a href="#%e5%bd%a2%e6%80%81%e5%ad%a6%e6%bb%a4%e6%b3%a2" class="header-mark"></a>形态学滤波：</h3><h4 id="膨胀与腐蚀" class="headerLink">
+    <a href="#%e8%86%a8%e8%83%80%e4%b8%8e%e8%85%90%e8%9a%80" class="header-mark"></a>膨胀与腐蚀</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">srcImg</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">srcImg</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no, srcImg is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;srcImg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;dilate&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;erode&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;srcImg&#34;</span><span class="p">,</span> <span class="n">srcImg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">out1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">out2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">element</span> <span class="o">=</span> <span class="n">getStructuringElement</span><span class="p">(</span><span class="n">MORPH_RECT</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//膨胀操作
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">dilate</span><span class="p">(</span><span class="n">srcImg</span><span class="p">,</span> <span class="n">out1</span><span class="p">,</span> <span class="n">element</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//腐蚀操作
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">erode</span><span class="p">(</span><span class="n">srcImg</span><span class="p">,</span> <span class="n">out2</span><span class="p">,</span> <span class="n">element</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;dilate&#34;</span><span class="p">,</span> <span class="n">out1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;erode&#34;</span><span class="p">,</span> <span class="n">out2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="c1">//使用滚动条进行膨胀腐蚀操作
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Mat</span> <span class="n">srcImg</span><span class="p">,</span> <span class="n">dstImg</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">g_nStructElementSize</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">g_nTrackbarNumber</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">on_event</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">on_chengdu</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">process</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">srcImg</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">srcImg</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh. no. srcImg is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;SrcImg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;dande&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;srcImg&#34;</span><span class="p">,</span> <span class="n">srcImg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;dande&#34;</span><span class="p">,</span> <span class="s">&#34;dande&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">g_nTrackbarNumber</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">on_event</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;chengdu&#34;</span><span class="p">,</span> <span class="s">&#34;dande&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">g_nStructElementSize</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">on_chengdu</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">while</span> <span class="p">(</span><span class="kt">char</span><span class="p">(</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="sc">&#39;q&#39;</span><span class="p">))</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">on_event</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">process</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">on_chengdu</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">process</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">process</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">element</span> <span class="o">=</span> <span class="n">getStructuringElement</span><span class="p">(</span><span class="n">MORPH_RECT</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Size</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">g_nStructElementSize</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">g_nStructElementSize</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Point</span><span class="p">(</span><span class="n">g_nStructElementSize</span><span class="p">,</span> <span class="n">g_nStructElementSize</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">g_nTrackbarNumber</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">dilate</span><span class="p">(</span><span class="n">srcImg</span><span class="p">,</span> <span class="n">dstImg</span><span class="p">,</span> <span class="n">element</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">erode</span><span class="p">(</span><span class="n">srcImg</span><span class="p">,</span> <span class="n">dstImg</span><span class="p">,</span> <span class="n">element</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;dande&#34;</span><span class="p">,</span> <span class="n">dstImg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="开运算闭运算形态学梯度顶帽黑帽" class="headerLink">
+    <a href="#%e5%bc%80%e8%bf%90%e7%ae%97%e9%97%ad%e8%bf%90%e7%ae%97%e5%bd%a2%e6%80%81%e5%ad%a6%e6%a2%af%e5%ba%a6%e9%a1%b6%e5%b8%bd%e9%bb%91%e5%b8%bd" class="header-mark"></a>开运算、闭运算、形态学梯度、顶帽、黑帽</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">srcImg</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">srcImg</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no, srcImg is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;srcImg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;Open&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;Close&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;Gradient&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;TopHat&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;BlackHat&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;srcImg&#34;</span><span class="p">,</span> <span class="n">srcImg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">element</span> <span class="o">=</span> <span class="n">getStructuringElement</span><span class="p">(</span><span class="n">MORPH_RECT</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">out1</span><span class="p">,</span> <span class="n">out2</span><span class="p">,</span> <span class="n">out3</span><span class="p">,</span> <span class="n">out4</span><span class="p">,</span> <span class="n">out5</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//先腐蚀后膨胀
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">morphologyEx</span><span class="p">(</span><span class="n">srcImg</span><span class="p">,</span> <span class="n">out1</span><span class="p">,</span> <span class="n">MORPH_OPEN</span><span class="p">,</span> <span class="n">element</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//先膨胀后腐蚀
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">morphologyEx</span><span class="p">(</span><span class="n">srcImg</span><span class="p">,</span> <span class="n">out2</span><span class="p">,</span> <span class="n">MORPH_CLOSE</span><span class="p">,</span> <span class="n">element</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//膨胀图 - 腐蚀图
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">morphologyEx</span><span class="p">(</span><span class="n">srcImg</span><span class="p">,</span> <span class="n">out3</span><span class="p">,</span> <span class="n">MORPH_GRADIENT</span><span class="p">,</span> <span class="n">element</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//原图 - 开运算图
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">morphologyEx</span><span class="p">(</span><span class="n">srcImg</span><span class="p">,</span> <span class="n">out4</span><span class="p">,</span> <span class="n">MORPH_TOPHAT</span><span class="p">,</span> <span class="n">element</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//闭运算 - 原图
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">morphologyEx</span><span class="p">(</span><span class="n">srcImg</span><span class="p">,</span> <span class="n">out5</span><span class="p">,</span> <span class="n">MORPH_BLACKHAT</span><span class="p">,</span> <span class="n">element</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;Open&#34;</span><span class="p">,</span> <span class="n">out1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;Close&#34;</span><span class="p">,</span> <span class="n">out2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;Gradient&#34;</span><span class="p">,</span> <span class="n">out3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;Tophat&#34;</span><span class="p">,</span> <span class="n">out4</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;Blackhat&#34;</span><span class="p">,</span> <span class="n">out5</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="漫水填充" class="headerLink">
+    <a href="#%e6%bc%ab%e6%b0%b4%e5%a1%ab%e5%85%85" class="header-mark"></a>漫水填充</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Mat</span> <span class="n">srcImage</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">     <span class="n">srcImage</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">     <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">srcImage</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">     <span class="p">{</span>
+</span></span><span class="line"><span class="cl">       <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no, srcImage is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">       <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">     <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">     <span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;srcImage&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">     <span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;floodFill&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">     <span class="n">imshow</span><span class="p">(</span><span class="s">&#34;srcImage&#34;</span><span class="p">,</span> <span class="n">srcImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">     <span class="n">Rect</span> <span class="n">ccomp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">     <span class="n">floodFill</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">155</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">55</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">ccomp</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">Scalar</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">     <span class="n">imshow</span><span class="p">(</span><span class="s">&#34;floodFill&#34;</span><span class="p">,</span> <span class="n">srcImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">     <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"> 	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="c1">//漫水填充
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//定义原始图、目标图、灰度图、掩膜图
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Mat</span> <span class="n">srcImage</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Mat</span> <span class="n">grayImage</span><span class="p">,</span> <span class="n">maskImage</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//漫水填充的模式
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">fillMode</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//负差最大值、正差最大值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">n_LowDifference</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">n_UpDifference</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//表示floodFill函数标识符低八位的连通值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">Connectivity</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//是否为彩色图的标识符布尔值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">bool</span> <span class="n">IsColor</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//是否显示掩膜窗口的布尔值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">bool</span> <span class="n">UseMask</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//新的重新绘制的像素值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">NewMaskVal</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">Show</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//输出一些帮助信息
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n\n</span><span class="s">欢迎来到漫水填充示例程序</span><span class="se">\n\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n\t</span><span class="s">按键操作说明：</span><span class="se">\n\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\t\t</span><span class="s">鼠标点击图中区域- 进行漫水填充操作</span><span class="se">\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\t\t</span><span class="s">键盘按键【ESC】 - 退出程序</span><span class="se">\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\t\t</span><span class="s">键盘按键【1】- 切换彩色图/灰度图模式</span><span class="se">\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\t\t</span><span class="s">键盘按键【2】- 显示/隐藏掩膜窗口</span><span class="se">\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\t\t</span><span class="s">键盘按键【3】- 恢复原始图像</span><span class="se">\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\t\t</span><span class="s">键盘按键【4】- 使用空范围的漫水填充</span><span class="se">\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\t\t</span><span class="s">键盘按键【5】- 使用渐变、固定范围的漫水填充</span><span class="se">\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\t\t</span><span class="s">键盘按键【6】- 使用渐变、浮动范围的漫水填充</span><span class="se">\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\t\t</span><span class="s">键盘按键【7】- 操作标志符的低八度使用4位的连接模式</span><span class="se">\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\t\t</span><span class="s">键盘按键【8】- 操作标志符的低八度使用8位的连接模式</span><span class="se">\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;</span><span class="se">\n\n\t\t\t\t\t\t\t\t\t</span><span class="s">by 晴宝</span><span class="se">\n\n\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//鼠标onMouse回调函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="kt">void</span> <span class="nf">onMouse</span><span class="p">(</span><span class="kt">int</span> <span class="n">event</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//若鼠标左键没有按下，便返回
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="n">event</span> <span class="o">!=</span> <span class="n">CV_EVENT_LBUTTONDOWN</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//调用floodFill函数之前的参数准备部分
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Point</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">LowDifference</span> <span class="o">=</span> <span class="n">fillMode</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">n_LowDifference</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">UpDifference</span> <span class="o">=</span> <span class="n">fillMode</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">n_UpDifference</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//标志符的0～7位为Connectivity, 8~15位为NewMaskVal左移8位的值, 16～23CV_FLOODFILL_FIXED_RANGE或者0
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">int</span> <span class="n">flags</span> <span class="o">=</span> <span class="n">Connectivity</span> <span class="o">+</span> <span class="p">(</span><span class="n">NewMaskVal</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">fillMode</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="nl">CV_FLOODFILL_FIXED_RANGE</span> <span class="p">:</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//随机生成bgr值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">theRNG</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">255</span><span class="p">;</span> <span class="c1">//随机返回一个0～255之间的值                 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">int</span> <span class="n">g</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">theRNG</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">255</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">theRNG</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">255</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Rect</span> <span class="n">ccomp</span><span class="p">;</span> <span class="c1">//定义重绘区域的最小边界矩形区域
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//在重绘区域像素的新值， 若是彩色图模式，取Scalar(b, g, r)，若是灰色图模式，取Scalar(r * 0.229 + g * 0.587 + b * 0.114)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Scalar</span> <span class="n">newVal</span> <span class="o">=</span> <span class="n">IsColor</span> <span class="o">?</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="o">:</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="mf">0.229</span> <span class="o">+</span> <span class="n">g</span> <span class="o">*</span> <span class="mf">0.587</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="mf">0.114</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//目标图的赋值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Mat</span> <span class="n">dst</span> <span class="o">=</span> <span class="n">IsColor</span> <span class="o">?</span> <span class="nl">dstImage</span> <span class="p">:</span> <span class="n">grayImage</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">area</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//正式调用floodFill函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="n">UseMask</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">threshold</span><span class="p">(</span><span class="n">maskImage</span><span class="p">,</span> <span class="n">maskImage</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">CV_THRESH_BINARY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">area</span> <span class="o">=</span> <span class="n">floodFill</span><span class="p">(</span><span class="n">dstImage</span><span class="p">,</span> <span class="n">maskImage</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">newVal</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ccomp</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">LowDifference</span><span class="p">,</span> <span class="n">LowDifference</span><span class="p">,</span> <span class="n">LowDifference</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">			<span class="n">Scalar</span><span class="p">(</span><span class="n">UpDifference</span><span class="p">,</span> <span class="n">UpDifference</span><span class="p">,</span> <span class="n">UpDifference</span><span class="p">),</span> <span class="n">flags</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;mask&#34;</span><span class="p">,</span> <span class="n">maskImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">area</span> <span class="o">=</span> <span class="n">floodFill</span><span class="p">(</span><span class="n">dstImage</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">newVal</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ccomp</span><span class="p">,</span> <span class="n">Scalar</span><span class="p">(</span><span class="n">LowDifference</span><span class="p">,</span> <span class="n">LowDifference</span><span class="p">,</span> <span class="n">LowDifference</span><span class="p">),</span> 
+</span></span><span class="line"><span class="cl">			<span class="n">Scalar</span><span class="p">(</span><span class="n">UpDifference</span><span class="p">,</span> <span class="n">UpDifference</span><span class="p">,</span> <span class="n">UpDifference</span><span class="p">),</span> <span class="n">flags</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;floodFill&#34;</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">area</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;  个像素被重绘</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">system</span><span class="p">(</span><span class="s">&#34;color 2F&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">srcImage</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">srcImage</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no, srcImage is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//显示帮助文档
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Show</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//拷贝原图到目标图
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">srcImage</span><span class="p">.</span><span class="n">copyTo</span><span class="p">(</span><span class="n">dstImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//转换三通道的image道灰度图
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cvtColor</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">grayImage</span><span class="p">,</span> <span class="n">COLOR_BGR2GRAY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//利用image的尺寸来初始化掩膜mask
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">maskImage</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">srcImage</span><span class="p">.</span><span class="n">rows</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">srcImage</span><span class="p">.</span><span class="n">cols</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">CV_8UC1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;floodFill&#34;</span><span class="p">,</span> <span class="n">CV_WINDOW_AUTOSIZE</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//创建Trackbar
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;minus&#34;</span><span class="p">,</span> <span class="s">&#34;floodFill&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n_LowDifference</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">createTrackbar</span><span class="p">(</span><span class="s">&#34;positive&#34;</span><span class="p">,</span> <span class="s">&#34;floodFill&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n_UpDifference</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//鼠标回调函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">setMouseCallback</span><span class="p">(</span><span class="s">&#34;floodFill&#34;</span><span class="p">,</span> <span class="n">onMouse</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//循环轮询按键
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//先显示效果图
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;floodFill&#34;</span><span class="p">,</span> <span class="n">IsColor</span> <span class="o">?</span> <span class="nl">dstImage</span> <span class="p">:</span> <span class="n">grayImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">//获取键盘按键
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//判断ESC是否按下，若按下便退出
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">((</span><span class="n">c</span> <span class="o">&amp;</span> <span class="mi">255</span><span class="p">)</span> <span class="o">==</span> <span class="mi">27</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;程序退出。。。。。。。。。。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">//根据按键的不同，进行各种操作
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">switch</span> <span class="p">((</span><span class="kt">char</span><span class="p">)</span><span class="n">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//如果键盘“1”被按下， 效果图在灰度图，彩色图之间互换
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">case</span> <span class="sc">&#39;1&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//若原来为彩色，并转化为灰度图，并且将掩膜mask所有元素设置为0
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="k">if</span> <span class="p">(</span><span class="n">IsColor</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;键盘“1”被按下，切换彩色/灰度模式，当前操作为将【彩色模式】切换为【灰度模式】</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">					<span class="n">cvtColor</span><span class="p">(</span><span class="n">srcImage</span><span class="p">,</span> <span class="n">grayImage</span><span class="p">,</span> <span class="n">COLOR_BGR2GRAY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="n">maskImage</span> <span class="o">=</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="c1">//将标志符设为false， 表示当前图像不为彩色，而是灰度
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>				<span class="n">IsColor</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="k">else</span><span class="c1">///若原来为灰度图，便将原来的彩图image0再次拷贝给image，并且将掩膜mask所有元素设置为0
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">srcImage</span><span class="p">.</span><span class="n">copyTo</span><span class="p">(</span><span class="n">dstImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="n">maskImage</span> <span class="o">=</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="c1">//将标志符设为false， 表示当前图像为彩色
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>				<span class="n">IsColor</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//如果键盘“2”被按下， 显示/隐藏掩膜窗口
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">case</span> <span class="sc">&#39;2&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">UseMask</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">destroyWindow</span><span class="p">(</span><span class="s">&#34;mask&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="n">UseMask</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="k">else</span>
+</span></span><span class="line"><span class="cl">			<span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;mask&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="n">maskImage</span> <span class="o">=</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;mask&#34;</span><span class="p">,</span> <span class="n">maskImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="n">UseMask</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//如果键盘“3”被按下，恢复原始图像 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">case</span> <span class="sc">&#39;3&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">srcImage</span><span class="p">.</span><span class="n">copyTo</span><span class="p">(</span><span class="n">dstImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cvtColor</span><span class="p">(</span><span class="n">dstImage</span><span class="p">,</span> <span class="n">grayImage</span><span class="p">,</span> <span class="n">COLOR_BGR2GRAY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="n">maskImage</span> <span class="o">=</span> <span class="n">Scalar</span><span class="o">::</span><span class="n">all</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//如果键盘“4”被按下，使用空范围的漫水填充 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">case</span> <span class="sc">&#39;4&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">fillMode</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//如果键盘“5”被按下，使用渐变、固定范围的漫水填充 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">case</span> <span class="sc">&#39;5&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">fillMode</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//如果键盘“6”被按下，使用渐变、浮动范围的漫水填充
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">case</span> <span class="sc">&#39;6&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">fillMode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//如果键盘“7”被按下，操作标志符的低八度使用4位的连接模式
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">case</span> <span class="sc">&#39;7&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">fillMode</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//如果键盘“8”被按下，操作标志符的低八度使用8位的连接模式
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">case</span> <span class="sc">&#39;8&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">fillMode</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="图像金字塔和图像尺寸缩放" class="headerLink">
+    <a href="#%e5%9b%be%e5%83%8f%e9%87%91%e5%ad%97%e5%a1%94%e5%92%8c%e5%9b%be%e5%83%8f%e5%b0%ba%e5%af%b8%e7%bc%a9%e6%94%be" class="header-mark"></a>图像金字塔和图像尺寸缩放</h3><h4 id="图像尺寸缩放" class="headerLink">
+    <a href="#%e5%9b%be%e5%83%8f%e5%b0%ba%e5%af%b8%e7%bc%a9%e6%94%be" class="header-mark"></a>图像尺寸缩放</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">srcImg</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">srcImg</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no, srcImg is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">Mat</span> <span class="n">dstImg1</span><span class="p">,</span> <span class="n">dstImg2</span><span class="p">,</span> <span class="n">tmpImg</span><span class="p">,</span> <span class="n">dstImg3</span><span class="p">,</span> <span class="n">dstImg4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;srcImg&#34;</span><span class="p">,</span> <span class="n">srcImg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">tmpImg</span> <span class="o">=</span> <span class="n">srcImg</span><span class="p">;</span> <span class="c1">//将原图给临时变量
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//进行尺寸调整操作
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">resize</span><span class="p">(</span><span class="n">tmpImg</span><span class="p">,</span> <span class="n">dstImg1</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImg</span><span class="p">.</span><span class="n">cols</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImg</span><span class="p">.</span><span class="n">rows</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">resize</span><span class="p">(</span><span class="n">tmpImg</span><span class="p">,</span> <span class="n">dstImg2</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImg</span><span class="p">.</span><span class="n">cols</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImg</span><span class="p">.</span><span class="n">rows</span> <span class="o">*</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//进行向上取样操作
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">pyrUp</span><span class="p">(</span><span class="n">tmpImg</span><span class="p">,</span> <span class="n">dstImg3</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImg</span><span class="p">.</span><span class="n">cols</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImg</span><span class="p">.</span><span class="n">rows</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//进行向下取样操作
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">pyrDown</span><span class="p">(</span><span class="n">tmpImg</span><span class="p">,</span> <span class="n">dstImg4</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImg</span><span class="p">.</span><span class="n">cols</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImg</span><span class="p">.</span><span class="n">rows</span> <span class="o">/</span> <span class="mi">2</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;dstImg1&#34;</span><span class="p">,</span> <span class="n">dstImg1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;dstImg2&#34;</span><span class="p">,</span> <span class="n">dstImg2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;dstImg3&#34;</span><span class="p">,</span> <span class="n">dstImg3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;dstImg4&#34;</span><span class="p">,</span> <span class="n">dstImg4</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span><span class="lnt">92
+</span><span class="lnt">93
+</span><span class="lnt">94
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/imgproc/imgproc.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/highgui/highgui.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//定义全局变量
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Mat</span> <span class="n">srcImage</span><span class="p">,</span> <span class="n">tmpImage</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//全局函数声明
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">Show</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Show</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">srcImage</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#34;4.jpg&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">srcImage</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;Oh, no , srcImage is error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;srcImage&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">namedWindow</span><span class="p">(</span><span class="s">&#34;dstImage&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;srcImage&#34;</span><span class="p">,</span> <span class="n">srcImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//参数赋值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">tmpImage</span> <span class="o">=</span> <span class="n">srcImage</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dstImage</span> <span class="o">=</span> <span class="n">tmpImage</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">key</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//轮询获取按键信息
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">key</span> <span class="o">=</span> <span class="n">waitKey</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span> <span class="c1">//读取键值到key变量中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//根据key变量的值，进行不同的操作
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">switch</span> <span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="mi">27</span><span class="o">:</span><span class="c1">//按下ESC
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="sc">&#39;q&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="sc">&#39;a&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">pyrUp</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">.</span><span class="n">cols</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImage</span><span class="p">.</span><span class="n">rows</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="sc">&#39;d&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">pyrDown</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">.</span><span class="n">cols</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImage</span><span class="p">.</span><span class="n">rows</span> <span class="o">/</span> <span class="mi">2</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="sc">&#39;w&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">resize</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">.</span><span class="n">cols</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImage</span><span class="p">.</span><span class="n">rows</span> <span class="o">*</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="sc">&#39;S&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">resize</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">.</span><span class="n">cols</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImage</span><span class="p">.</span><span class="n">rows</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="sc">&#39;3&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">pyrUp</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">.</span><span class="n">cols</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImage</span><span class="p">.</span><span class="n">rows</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="sc">&#39;4&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">pyrDown</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">.</span><span class="n">cols</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImage</span><span class="p">.</span><span class="n">rows</span> <span class="o">/</span> <span class="mi">2</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="sc">&#39;1&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">resize</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">.</span><span class="n">cols</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImage</span><span class="p">.</span><span class="n">rows</span> <span class="o">*</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="sc">&#39;2&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">resize</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">,</span> <span class="n">Size</span><span class="p">(</span><span class="n">tmpImage</span><span class="p">.</span><span class="n">cols</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tmpImage</span><span class="p">.</span><span class="n">rows</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">default</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">imshow</span><span class="p">(</span><span class="s">&#34;dstImage&#34;</span><span class="p">,</span> <span class="n">dstImage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">tmpImage</span> <span class="o">=</span> <span class="n">dstImage</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">Show</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n\n\n</span><span class="s">欢迎来到图像尺寸缩放程序~</span><span class="se">\n\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n\n\n\n</span><span class="s">按键说明：</span><span class="se">\n\n\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">	       <span class="s">&#34;</span><span class="se">\t\t\t</span><span class="s">键盘按键【ESC】或者【Q】 -  退出程序&#34;</span>
+</span></span><span class="line"><span class="cl">	       <span class="s">&#34;</span><span class="se">\t\t\t</span><span class="s">键盘按键【1】或者【W】 -  进行基于【resize】函数的图片放大&#34;</span>
+</span></span><span class="line"><span class="cl">	       <span class="s">&#34;</span><span class="se">\t\t\t</span><span class="s">键盘按键【2】或者【S】 -  进行基于【resize】函数的图片缩小&#34;</span>
+</span></span><span class="line"><span class="cl">	       <span class="s">&#34;</span><span class="se">\t\t\t</span><span class="s">键盘按键【3】或者【A】 -  进行基于【pyrUp】函数的图片放大&#34;</span>
+</span></span><span class="line"><span class="cl">	       <span class="s">&#34;</span><span class="se">\t\t\t</span><span class="s">键盘按键【4】或者【D】 -  进行基于【pyrDown】函数的图片缩小&#34;</span>
+</span></span><span class="line"><span class="cl">	       <span class="s">&#34;</span><span class="se">\n\n\n\n\n\n\n\n\n\n\t\t\t\t</span><span class="s">   by 晴宝</span><span class="se">\n\n\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2019-03-28</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="#" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" data-title="OpenCV之图像处理"><i class="fab fa-weibo fa-fw"></i></a><a href="#" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" data-title="OpenCV之图像处理"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@v5.21.1/icons/baidu.svg"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/opencv/">opencv</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/opencv%E4%B9%8Bcore%E7%BB%84%E4%BB%B6/" class="prev" rel="prev" title="OpenCV之core组件进阶"><i class="fas fa-angle-left fa-fw"></i>OpenCV之core组件进阶</a>
+            <a href="/opencv%E4%B9%8B%E5%9B%BE%E5%83%8F%E5%8F%98%E6%8D%A2/" class="next" rel="next" title="OpenCV之图像变换">OpenCV之图像变换<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">
+                    由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.100.1">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/HEIGE-PCloud/DoIt" target="_blank" rel="noopener noreferrer" title="DoIt 0.3.0"><i class="far fa-edit fa-fw"></i> DoIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">Gsscsd</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
+
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="回到顶部">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div class="assets"><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css"></noscript><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-cn","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"没有找到结果","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null},"sharerjs":true};</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js" defer></script><script type="text/javascript" src="/js/valine.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.2/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/auto-render.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
+</html>

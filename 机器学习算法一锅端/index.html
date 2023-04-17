@@ -1,0 +1,550 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>机器学习算法一锅端 - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="机器学习算法一锅端" />
+<meta property="og:description" content="
+    最优的通用机器学习算法在机器学习领域，一个基本的定理就是“没有免费的午餐”。换言之，就是没有算法能完美地解决所有问题，尤其是对监督学习而言（例如预测建模）。
+举例来说，你不能去说神经网络任何情况下都能比决策树更有优势，反之亦然。它们要受很多因素的影响，比如你的数据集的规模或结构。
+其结果是，在用给定的测试集来评估性能并挑选算法时，你应当根据具体的问题来采用不同的算法。
+当然，所选的算法必须要适用于你自己的问题，这就要求选择正确的机器学习任务。作为类比，如果你需要打扫房子，你可能会用到吸尘器、扫帚或是拖把，但你绝对不该掏出铲子来挖地。
+如果说最优的通用机器学习算法，那可能就是随机算法了，只要数据符合自然规律，那么随机算法的准确率在50%。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E4%B8%80%E9%94%85%E7%AB%AF/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-03-03T19:30:31+00:00" />
+<meta property="article:modified_time" content="2019-03-03T19:30:31+00:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="机器学习算法一锅端"/>
+<meta name="twitter:description" content="
+    最优的通用机器学习算法在机器学习领域，一个基本的定理就是“没有免费的午餐”。换言之，就是没有算法能完美地解决所有问题，尤其是对监督学习而言（例如预测建模）。
+举例来说，你不能去说神经网络任何情况下都能比决策树更有优势，反之亦然。它们要受很多因素的影响，比如你的数据集的规模或结构。
+其结果是，在用给定的测试集来评估性能并挑选算法时，你应当根据具体的问题来采用不同的算法。
+当然，所选的算法必须要适用于你自己的问题，这就要求选择正确的机器学习任务。作为类比，如果你需要打扫房子，你可能会用到吸尘器、扫帚或是拖把，但你绝对不该掏出铲子来挖地。
+如果说最优的通用机器学习算法，那可能就是随机算法了，只要数据符合自然规律，那么随机算法的准确率在50%。"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E4%B8%80%E9%94%85%E7%AB%AF/" /><link rel="prev" href="https://gsscsd.github.io/python_numpy/" /><link rel="next" href="https://gsscsd.github.io/%E4%BB%8E%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E7%9C%8B%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/color.346090a8e4618da38ff45853421bbd1d5ffa3c25e678a3f0131c9f7d5300e15669f91c74f1ed5fab76e7424a2a6a5619a9dc45f99e04f246e37d8af51295b6ae.css" integrity="sha512-NGCQqORhjaOP9FhTQhu9HV/6PCXmeKPwExyffVMA4VZp&#43;Rx08e1fq3bnQkoqalYZqdxF&#43;Z4E8kbjfYr1EpW2rg=="><link rel="stylesheet" href="/css/style.min.4f2deec9ba839d309c76dabead5bd259854c6fea2f78f1b9e47e833e7e3cf0c5e44f9a4a044f2bad8ca08dddc52c872601c501966bb44b2b73968730a68fd556.css" integrity="sha512-Ty3uybqDnTCcdtq&#43;rVvSWYVMb&#43;ovePG55H6DPn488MXkT5pKBE8rrYygjd3FLIcmAcUBlmu0Sytzlocwpo/VVg=="><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "机器学习算法一锅端",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E4%B8%80%E9%94%85%E7%AB%AF\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "机器学习","wordcount":  6141 ,
+        "url": "https:\/\/gsscsd.github.io\/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E4%B8%80%E9%94%85%E7%AB%AF\/","datePublished": "2019-03-03T19:30:31+00:00","dateModified": "2019-03-03T19:30:31+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script><script src="//instant.page/5.1.1" defer type="module" integrity="sha384-MWfCL6g1OTGsbSwfuMHc8+8J2u71/LA8dzlIN3ycajckxuZZmF+DNjdm7O6H3PSq"></script>
+</head>
+
+<body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner">
+                <a class="menu-item"
+                    href="/posts/" > 文章 
+                </a><a class="menu-item"
+                    href="/tags/" > 标签 
+                </a><a class="menu-item"
+                    href="/categories/" > 分类 
+                </a><a class="menu-item"
+                    href="/about/" > 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" 
+                        class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+                <a class="menu-item"
+                    href="https://github.com/gsscsd"  title="GitHub" 
+                    rel="noopener noreffer" target="_blank" ><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-desktop">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-desktop">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </span><a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                <div class="search mobile" id="search-mobile">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-mobile">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-mobile">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </div>
+                <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                    取消
+                </a>
+            </div><a class="menu-item" href="/posts/"> 文章 
+                </a><a class="menu-item" href="/tags/"> 标签 
+                </a><a class="menu-item" href="/categories/"> 分类 
+                </a><a class="menu-item" href="/about/"> 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+            <a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a>
+            
+            
+            
+            
+            
+            
+            <a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+
+
+<main class="main">
+            <div class="container"><div class="toc" id="toc-auto">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-auto"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#最优的通用机器学习算法">最优的通用机器学习算法</a></li>
+            <li><a href="#误差分析">误差分析</a></li>
+            <li><a href="#机器学习算法优缺点分析">机器学习算法优缺点分析</a>
+              <ul>
+                <li><a href="#朴素贝叶斯"><strong>朴素贝叶斯</strong></a></li>
+                <li><a href="#logistic-regression逻辑回归-">**Logistic Regression（逻辑回归） **</a></li>
+                <li><a href="#线性回归-">**线性回归 **</a></li>
+                <li><a href="#最近邻算法knn"><strong>最近邻算法——KNN</strong></a></li>
+                <li><a href="#决策树-">**决策树 **</a></li>
+                <li><a href="#svm支持向量机-">**SVM支持向量机 **</a></li>
+                <li><a href="#adaboost"><strong>Adaboost</strong></a></li>
+                <li><a href="#k-means聚类"><strong>K-Means聚类</strong></a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">机器学习算法一锅端</h1><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><i class="author fas fa-user-circle fa-fw"></i><a href="/" title="Author" rel=" author" class="author">Gsscsd</a>
+                </span>&nbsp;<span class="post-category">收录于 </span>&nbsp;<span class="post-category">类别 <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>机器学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2019-03-03">2019-03-03</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2019-03-03">2019-03-03</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 6141 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 13 分钟&nbsp;<span id="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E4%B8%80%E9%94%85%E7%AB%AF/" class="leancloud_visitors" data-flag-title="机器学习算法一锅端">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class="leancloud-visitors-count"></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#最优的通用机器学习算法">最优的通用机器学习算法</a></li>
+            <li><a href="#误差分析">误差分析</a></li>
+            <li><a href="#机器学习算法优缺点分析">机器学习算法优缺点分析</a>
+              <ul>
+                <li><a href="#朴素贝叶斯"><strong>朴素贝叶斯</strong></a></li>
+                <li><a href="#logistic-regression逻辑回归-">**Logistic Regression（逻辑回归） **</a></li>
+                <li><a href="#线性回归-">**线性回归 **</a></li>
+                <li><a href="#最近邻算法knn"><strong>最近邻算法——KNN</strong></a></li>
+                <li><a href="#决策树-">**决策树 **</a></li>
+                <li><a href="#svm支持向量机-">**SVM支持向量机 **</a></li>
+                <li><a href="#adaboost"><strong>Adaboost</strong></a></li>
+                <li><a href="#k-means聚类"><strong>K-Means聚类</strong></a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h4 id="最优的通用机器学习算法" class="headerLink">
+    <a href="#%e6%9c%80%e4%bc%98%e7%9a%84%e9%80%9a%e7%94%a8%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0%e7%ae%97%e6%b3%95" class="header-mark"></a>最优的通用机器学习算法</h4><p>在机器学习领域，一个基本的定理就是“没有免费的午餐”。换言之，就是没有算法能完美地解决所有问题，尤其是对监督学习而言（例如预测建模）。</p>
+<p>举例来说，你不能去说神经网络任何情况下都能比决策树更有优势，反之亦然。它们要受很多因素的影响，比如你的数据集的规模或结构。</p>
+<p>其结果是，在用给定的测试集来评估性能并挑选算法时，你应当根据具体的问题来采用不同的算法。</p>
+<p>当然，所选的算法必须要适用于你自己的问题，这就要求选择正确的机器学习任务。作为类比，如果你需要打扫房子，你可能会用到吸尘器、扫帚或是拖把，但你绝对不该掏出铲子来挖地。</p>
+<p>如果说最优的通用机器学习算法，那可能就是随机算法了，只要数据符合自然规律，那么随机算法的准确率在50%。</p>
+<h4 id="误差分析" class="headerLink">
+    <a href="#%e8%af%af%e5%b7%ae%e5%88%86%e6%9e%90" class="header-mark"></a>误差分析</h4><p>在统计学中，一个模型好坏，是根据偏差和方差来衡量的：</p>
+<ol>
+<li>
+<p><strong>偏差</strong>：描述的是预测值（估计值）的期望E’与真实值Y之间的差距。偏差越大，越偏离真实数据。</p>
+<p>$$Bias[\hat{f(x)}] = E[\hat{f(x)}] - f(x) \tag{1}$$</p>
+</li>
+<li>
+<p><strong>方差</strong>：描述的是预测值P的变化范围，离散程度，是预测值的方差，也就是离其期望值E的距离。方差越大，数据的分布越分散。</p>
+<p>$$Var[\hat{f(x)}] = E[(f(x) - E[\hat{f(x)}])^2] \tag{2}$$</p>
+<p>模型的真实误差是两者之和，如公式：</p>
+</li>
+</ol>
+<p>$$E[(y - \hat{f(x)^2}] = Bias[\hat{f(x)}]^2+Var[\hat{f(x)}] + \sigma ^ 2\tag{3}​$$</p>
+<p>在统计学习框架下，大家刻画模型复杂度的时候，有这么个观点，认为$Error = Bias + Variance$。这里的Error大概可以理解为模型的预测错误率，是有两部分组成的，一部分是由于模型太简单而带来的估计不准确的部分（Bias），另一部分是由于模型太复杂而带来的更大的变化空间和不确定性（Variance）。</p>
+<p>简单来讲是我们要在训练集上学习一个模型，然后拿到测试集去用，效果好不好要根据测试集的错误率来衡量。但很多时候，我们只能假设测试集和训练集的是符合同一个数据分布的，但却拿不到真正的测试数据。这时候怎么在只看到训练错误率的情况下，去衡量测试错误率呢？</p>
+<p>由于训练样本很少（至少不足够多），所以通过训练集得到的模型，总不是真正正确的。（就算在训练集上正确率100%，也不能说明它刻画了真实的数据分布，要知道刻画真实的数据分布才是我们的目的，而不是只刻画训练集的有限的数据点）。</p>
+<p>而且，实际中，<strong>训练样本往往还有一定的噪音误差</strong>，所以如果太追求在训练集上的完美而采用一个很复杂的模型，会使得模型把训练集里面的误差都当成了真实的数据分布特征，从而得到错误的数据分布估计。这样的话，到了真正的测试集上就错的一塌糊涂了（这种现象叫过拟合）。但是也不能用太简单的模型，否则在数据分布比较复杂的时候，模型就不足以刻画数据分布了（体现为连在训练集上的错误率都很高，这种现象较欠拟合）。<strong>过拟合表明采用的模型比真实的数据分布更复杂，而欠拟合表示采用的模型比真实的数据分布要简单。</strong></p>
+<p>在实际中，为了让Error尽量小，我们在选择模型的时候需要平衡Bias和Variance所占的比例，也就是平衡over-fitting和under-fitting。</p>
+<p><strong>当模型复杂度上升的时候，偏差会逐渐变小，而方差会逐渐变大。</strong></p>
+<h4 id="机器学习算法优缺点分析" class="headerLink">
+    <a href="#%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0%e7%ae%97%e6%b3%95%e4%bc%98%e7%bc%ba%e7%82%b9%e5%88%86%e6%9e%90" class="header-mark"></a>机器学习算法优缺点分析</h4><ol>
+<li>
+<h5 id="朴素贝叶斯" class="headerLink">
+    <a href="#%e6%9c%b4%e7%b4%a0%e8%b4%9d%e5%8f%b6%e6%96%af" class="header-mark"></a><strong>朴素贝叶斯</strong></h5><blockquote>
+<p>朴素贝叶斯属于生成式模型（关于生成模型和判别式模型，主要还是在于是否需要求联合分布），比较简单，你只需做一堆计数即可。如果注有条件独立性假设（一个比较严格的条件），朴素贝叶斯分类器的收敛速度将快于判别模型，比如逻辑回归，所以你只需要较少的训练数据即可。即使NB条件独立假设不成立，NB分类器在实践中仍然表现的很出色。它的主要缺点是它不能学习特征间的相互作用。引用一个比较经典的例子，比如，虽然你喜欢Brad Pitt和Tom Cruise的电影，但是它不能学习出你不喜欢他们在一起演的电影。</p>
+</blockquote>
+<blockquote>
+<p><strong>优点：</strong></p>
+<ul>
+<li>朴素贝叶斯模型发源于古典数学理论，有着坚实的数学基础，以及稳定的分类效率；</li>
+<li>对大数量训练和查询时具有较高的速度。即使使用超大规模的训练集，针对每个项目通常也只会有相对较少的特征数，并且对项目的训练和分类也仅仅是特征概率的数学运算而已；</li>
+<li>对小规模的数据表现很好，能个处理多分类任务，适合增量式训练（即可以实时的对新增的样本进行训练）；</li>
+<li>对缺失数据不太敏感，算法也比较简单，常用于文本分类；</li>
+<li>朴素贝叶斯对结果解释容易理解。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>需要计算先验概率；</li>
+<li>分类决策存在错误率；</li>
+<li>对输入数据的表达形式很敏感；</li>
+<li>由于使用了样本属性独立性的假设，所以如果样本属性有关联时其效果不好。</li>
+</ul>
+<p><strong>应用场合：</strong></p>
+<ul>
+<li>欺诈检测中使用较多；</li>
+<li>一封电子邮件是否是垃圾邮件；</li>
+<li>一篇文章应该分到科技、政治，还是体育类；</li>
+<li>一段文字表达的是积极的情绪还是消极的情绪；</li>
+<li>人脸识别。</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<h5 id="logistic-regression逻辑回归-" class="headerLink">
+    <a href="#logistic-regression%e9%80%bb%e8%be%91%e5%9b%9e%e5%bd%92-" class="header-mark"></a>**Logistic Regression（逻辑回归） **</h5><blockquote>
+<p>**逻辑回归属于判别式模型，同时伴有很多模型正则化的方法<code>（L0， L1，L2，etc）</code>，而且你不必像在用朴素贝叶斯那样担心你的特征是否相关。**与决策树、SVM相比，你还会得到一个不错的概率解释，你甚至可以轻松地利用新数据来更新模型（使用在线梯度下降算法-online gradient descent）。如果你需要一个概率架构（比如，简单地调节分类阈值，指明不确定性，或者是要获得置信区间），或者你希望以后将更多的训练数据快速整合到模型中去，那么使用它吧。</p>
+<p><strong>Sigmoid</strong>函数:$f(x )= \frac{1}{1 + e^{-x}}$</p>
+</blockquote>
+<blockquote>
+<p><strong>优点：</strong></p>
+<ul>
+<li>实现简单，广泛的应用于工业问题上；</li>
+<li>分类时计算量非常小，速度很快，存储资源低；</li>
+<li>便利的观测样本概率分数；</li>
+<li>对逻辑回归而言，多重共线性并不是问题，它可以结合L2正则化来解决该问题；</li>
+<li>计算代价不高，易于理解和实现。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>当特征空间很大时，逻辑回归的性能不是很好；</li>
+<li>容易欠拟合，一般准确度不太高；</li>
+<li>不能很好地处理大量多类特征或变量；</li>
+<li>只能处理两分类问题（在此基础上衍生出来的softmax可以用于多分类），且必须线性可分；</li>
+<li>对于非线性特征，需要进行转换。</li>
+</ul>
+<p><strong>应用领域：</strong></p>
+<ul>
+<li>用于二分类领域，可以得出概率值，适用于根据分类概率排名的领域，如搜索排名等；</li>
+<li>Logistic回归的扩展softmax可以应用于多分类领域，如手写字识别等；</li>
+<li>信用评估；</li>
+<li>测量市场营销的成功度；</li>
+<li>预测某个产品的收益；</li>
+<li>特定的某天是否会发生地震。</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<h5 id="线性回归-" class="headerLink">
+    <a href="#%e7%ba%bf%e6%80%a7%e5%9b%9e%e5%bd%92-" class="header-mark"></a>**线性回归 **</h5><blockquote>
+<p>线性回归是用于回归的，它不像Logistic回归那样用于分类，其基本思想是用梯度下降法对最小二乘法形式的误差函数进行优化，当然也可以用normal equation直接求得参数的解，结果为： $\hat{w} = (X^TX)^{-1}X^Ty$</p>
+<p>而在LWLR（局部加权线性回归）中，参数的计算表达式为:  $\hat{w} = (X^TWX)^{-1}X^TWy$</p>
+<p>由此可见LWLR与LR不同，LWLR是一个非参数模型，因为每次进行回归计算都要遍历训练样本至少一次。</p>
+<p><strong>优点：</strong> 实现简单，计算简单。</p>
+<p><strong>缺点：</strong> 不能拟合非线性数据。</p>
+<p>**优化结果：**L1正则化(Lasso)，L2正则化(Ridge)</p>
+</blockquote>
+</li>
+<li>
+<h5 id="最近邻算法knn" class="headerLink">
+    <a href="#%e6%9c%80%e8%bf%91%e9%82%bb%e7%ae%97%e6%b3%95knn" class="header-mark"></a><strong>最近邻算法——KNN</strong></h5><blockquote>
+<p>KNN即最近邻算法，其主要过程为：</p>
+<ul>
+<li>计算训练样本和测试样本中每个样本点的距离（常见的距离度量有欧式距离，马氏距离等）；</li>
+<li>对上面所有的距离值进行排序(升序)；</li>
+<li>选前k个最小距离的样本；</li>
+<li>根据这k个样本的标签进行投票，得到最后的分类类别。</li>
+</ul>
+<p><strong>如何选择一个最佳的K值</strong>，这取决于数据。一般情况下，在分类时较大的K值能够减小噪声的影响，但会使类别之间的界限变得模糊。一个较好的K值可通过各种启发式技术来获取，比如，<strong>交叉验证</strong>。另外噪声和非相关性特征向量的存在会使K近邻算法的准确性减小。近邻算法具有较强的一致性结果，随着数据趋于无限，算法保证错误率不会超过贝叶斯算法错误率的两倍。对于一些好的K值，K近邻保证错误率不会超过贝叶斯理论误差率。</p>
+</blockquote>
+<blockquote>
+<p><strong>优点:</strong></p>
+<ul>
+<li>理论成熟，思想简单，既可以用来做分类也可以用来做回归；</li>
+<li>可用于非线性分类；</li>
+<li>训练时间复杂度为O(n)；</li>
+<li>对数据没有假设，准确度高，对outlier不敏感；</li>
+<li>KNN是一种在线技术，新数据可以直接加入数据集而不必进行重新训练；</li>
+<li>KNN理论简单，容易实现。</li>
+</ul>
+<p><strong>缺点:</strong></p>
+<ul>
+<li>样本不平衡问题（即有些类别的样本数量很多，而其它样本的数量很少）效果差；</li>
+<li>需要大量内存；</li>
+<li>对于样本容量大的数据集计算量比较大（体现在距离计算上）；</li>
+<li>样本不平衡时，预测偏差比较大。如：某一类的样本比较少，而其它类样本比较多；</li>
+<li>KNN每一次分类都会重新进行一次全局运算；</li>
+<li>k值大小的选择没有理论选择最优，往往是结合K-折交叉验证得到最优k值选择。</li>
+</ul>
+<p><strong>应用领域</strong></p>
+<p>文本分类、模式识别、聚类分析，多分类领域</p>
+</blockquote>
+</li>
+<li>
+<h5 id="决策树-" class="headerLink">
+    <a href="#%e5%86%b3%e7%ad%96%e6%a0%91-" class="header-mark"></a>**决策树 **</h5><blockquote>
+<p>决策树的一大优势就是易于解释。它可以毫无压力地处理特征间的交互关系并且是非参数化的，因此你不必担心异常值或者数据是否线性可分（举个例子，决策树能轻松处理好类别A在某个特征维度x的末端，类别B在中间，然后类别A又出现在特征维度x前端的情况）。它的<strong>缺点之一就是不支持在线学习</strong>，于是在新样本到来后，决策树需要全部重建。<strong>另一个缺点就是容易出现过拟合</strong>，但这也就是诸如随机森林RF（或提升树boosted tree）之类的集成方法的切入点。另外，随机森林经常是很多分类问题的赢家（通常比支持向量机好上那么一丁点），它训练快速并且可调，同时你无须担心要像支持向量机那样调一大堆参数，所以在以前都一直很受欢迎。</p>
+<p>决策树中很重要的一点就是选择一个属性进行分枝，因此要注意一下信息增益（ID3，C4.5，Gini）的计算公式，并深入理解它。</p>
+<p>熵的定义公式如下:$H=-\sum_{i=1}^np(x_i)log2p(x_i)$。</p>
+<p>其中的n代表有n个分类类别（比如假设是二类问题，那么n=2）。分别计算这2类样本在总样本中出现的概率:$p_1和p_2​$，这样就可以计算出未选中属性分枝前的信息熵。现在选中一个属性$x_j​$，用来进行分枝，此时分枝规则是：如果$x_j=v​$的话，将样本分到树的一个分支；如果不相等则进入另一个分支。很显然，分支中的样本很有可能包括2个类别，分别计算这2个分支的熵：$H1和H2​$，计算出分枝后的总信息熵：$H&rsquo;=p1H1+p2H2 ​$，则此时的信息增益：$\Delta H = H - H&rsquo;​$，以信息增益为原则，把所有的属性都测试一边，选择一个使增益最大的属性作为本次分枝属性。</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>决策树易于理解和解释，可以可视化分析，容易提取出规则；</li>
+<li>可以同时处理标称型和数值型数据；</li>
+<li>比较适合处理有缺失属性的样本；</li>
+<li>能够处理不相关的特征；</li>
+<li>测试数据集时，运行速度比较快；</li>
+<li>在相对短的时间内能够对大型数据源做出可行且效果良好的结果。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>容易发生过拟合（随机森林可以很大程度上减少过拟合）；</li>
+<li>容易忽略数据集中属性的相互关联；</li>
+<li>对于那些各类别样本数量不一致的数据，在决策树中，进行属性划分时，不同的判定准则会带来不同的属性选择倾向；信息增益准则对可取数目较多的属性有所偏好（典型代表ID3算法），而增益率准则（CART）则对可取数目较少的属性有所偏好，但CART进行属性划分时候不再简单地直接利用增益率尽心划分，而是采用一种启发式规则）（只要是使用了信息增益，都有这个缺点，如RF）。</li>
+<li>ID3算法计算信息增益时结果偏向数值比较多的特征。</li>
+</ul>
+<p><strong>改进措施：</strong></p>
+<ul>
+<li>对决策树进行剪枝。可以采用交叉验证法和加入正则化的方法；</li>
+<li>使用基于决策树的combination算法，如bagging算法，randomforest算法，可以解决过拟合的问题。</li>
+</ul>
+<p><strong>应用领域：</strong></p>
+<p>企业管理实践，企业投资决策，由于决策树很好的分析能力，在决策过程应用较多。</p>
+<p>关于ID3与C4.5算法：</p>
+<p>ID3算法是以信息论为基础，以信息熵和信息增益度为衡量标准，从而实现对数据的归纳分类。ID3算法计算每个属性的信息增益，并选取具有最高增益的属性作为给定的测试属性。</p>
+<p>C4.5算法核心思想是ID3算法，是ID3算法的改进，改进方面有： 用信息增益率来选择属性，克服了用信息增益选择属性时偏向选择取值多的属性的不足；</p>
+<ul>
+<li>在树构造过程中进行剪枝；</li>
+<li>能处理非离散的数据；</li>
+<li>能处理不完整的数据。</li>
+</ul>
+<p><strong>优点</strong></p>
+<p>产生的分类规则易于理解，准确率较高。</p>
+<p><strong>缺点</strong></p>
+<ul>
+<li>在构造树的过程中，需要对数据集进行多次的顺序扫描和排序，因而导致算法的低效；</li>
+<li>C4.5只适合于能够驻留于内存的数据集，当训练集大得无法在内存容纳时程序无法运行。</li>
+</ul>
+<p>在回归上，常使用CART树，也是后面的Boost以及Bagging算法的基础。</p>
+</blockquote>
+</li>
+<li>
+<h5 id="svm支持向量机-" class="headerLink">
+    <a href="#svm%e6%94%af%e6%8c%81%e5%90%91%e9%87%8f%e6%9c%ba-" class="header-mark"></a>**SVM支持向量机 **</h5><blockquote>
+<p>支持向量机，一个经久不衰的算法，高准确率，为避免过拟合提供了很好的理论保证，而且就算数据在原特征空间线性不可分，只要给个合适的核函数，它就能运行得很好。在动辄超高维的文本分类问题中特别受欢迎。可惜内存消耗大，难以解释，运行和调参也有些烦人，而随机森林却刚好避开了这些缺点，比较实用。</p>
+<p><strong>优点:</strong></p>
+<ul>
+<li>可以解决高维问题，即大型特征空间；</li>
+<li>解决小样本下机器学习问题；</li>
+<li>能够处理非线性特征的相互作用；</li>
+<li>无局部极小值问题；（相对于神经网络等算法）</li>
+<li>无需依赖整个数据；</li>
+<li>泛化能力比较强。</li>
+</ul>
+<p><strong>缺点:</strong></p>
+<ul>
+<li>当观测样本很多时，效率并不是很高；</li>
+<li>对非线性问题没有通用解决方案，有时候很难找到一个合适的核函数；</li>
+<li>对于核函数的高维映射解释力不强，尤其是径向基函数；</li>
+<li>常规SVM只支持二分类；</li>
+<li>对缺失数据敏感。</li>
+</ul>
+<p>对于核的选择也是有技巧的（libsvm中自带了四种核函数：线性核、多项式核、RBF以及sigmoid核）：</p>
+<p>第一，如果样本数量小于特征数，那么就没必要选择非线性核，简单的使用线性核就可以了；</p>
+<p>第二，如果样本数量大于特征数目，这时可以使用非线性核，将样本映射到更高维度，一般可以得到更好的结果；</p>
+<p>第三，如果样本数目和特征数目相等，该情况可以使用非线性核，原理和第二种一样。</p>
+<p>对于第一种情况，也可以先对数据进行降维，然后使用非线性核，这也是一种方法。</p>
+<p><strong>应用领域</strong></p>
+<p>文本分类、图像识别（主要二分类领域，毕竟常规SVM只能解决二分类问题）</p>
+</blockquote>
+</li>
+<li>
+<h5 id="adaboost" class="headerLink">
+    <a href="#adaboost" class="header-mark"></a><strong>Adaboost</strong></h5><blockquote>
+<p>Adaboost是一种加和模型，每个模型都是基于上一次模型的错误率来建立的，过分关注分错的样本，而对正确分类的样本减少关注度，逐次迭代之后，可以得到一个相对较好的模型。该算法是一种典型的boosting算法，其加和理论的优势可以使用Hoeffding不等式得以解释。</p>
+<p><strong>优点:</strong></p>
+<ul>
+<li>Adaboost是一种有很高精度的分类器；</li>
+<li>可以使用各种方法构建子分类器，Adaboost算法提供的是框架；</li>
+<li>当使用简单分类器时，计算出的结果是可以理解的，并且弱分类器的构造极其简单；</li>
+<li>简单，不用做特征筛选；</li>
+<li>不易发生overfitting。</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>对outlier比较敏感。</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<h5 id="k-means聚类" class="headerLink">
+    <a href="#k-means%e8%81%9a%e7%b1%bb" class="header-mark"></a><strong>K-Means聚类</strong></h5><blockquote>
+<p>K-Means是一个简单的聚类算法，把n的对象根据他们的属性分为k个分割，k&lt; n。 算法的核心就是要优化失真函数J,使其收敛到局部最小值但不是全局最小值。</p>
+<p><strong>优点</strong></p>
+<ul>
+<li>算法简单，容易实现 ；</li>
+<li>算法速度很快；</li>
+<li>对处理大数据集，该算法是相对可伸缩的和高效率的，因为它的复杂度大约是O(nkt)，其中n是所有对象的数目，k是簇的数目,t是迭代的次数。通常k&laquo;n。这个算法通常局部收敛；</li>
+<li>算法尝试找出使平方误差函数值最小的k个划分。当簇是密集的、球状或团状的，且簇与簇之间区别明显时，聚类效果较好。</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>对数据类型要求较高，适合数值型数据；</li>
+<li>可能收敛到局部最小值，在大规模数据上收敛较慢；</li>
+<li>分组的数目k是一个输入参数，不合适的k可能返回较差的结果；</li>
+<li>对初值的簇心值敏感，对于不同的初始值，可能会导致不同的聚类结果；</li>
+<li>不适合于发现非凸面形状的簇，或者大小差别很大的簇；</li>
+<li>对于”噪声”和孤立点数据敏感，少量的该类数据能够对平均值产生极大影响。</li>
+</ul>
+</blockquote>
+</li>
+</ol></div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2019-03-03</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="#" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E4%B8%80%E9%94%85%E7%AB%AF/" data-title="机器学习算法一锅端"><i class="fab fa-weibo fa-fw"></i></a><a href="#" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E4%B8%80%E9%94%85%E7%AB%AF/" data-title="机器学习算法一锅端"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@v5.21.1/icons/baidu.svg"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/python_numpy/" class="prev" rel="prev" title="Numpy"><i class="fas fa-angle-left fa-fw"></i>Numpy</a>
+            <a href="/%E4%BB%8E%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E7%9C%8B%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" class="next" rel="next" title="从一个例子看机器学习">从一个例子看机器学习<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">
+                    由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.100.1">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/HEIGE-PCloud/DoIt" target="_blank" rel="noopener noreferrer" title="DoIt 0.3.0"><i class="far fa-edit fa-fw"></i> DoIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">Gsscsd</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
+
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="回到顶部">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div class="assets"><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css"></noscript><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-cn","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"没有找到结果","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null},"sharerjs":true};</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js" defer></script><script type="text/javascript" src="/js/valine.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.2/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/auto-render.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
+</html>

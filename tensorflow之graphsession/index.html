@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noodp" />
+    <title>tensorflow之Graph、Session - Gsscsd</title><meta name="Description" content="时光划过指缝-阅读挽留时光"><meta property="og:title" content="tensorflow之Graph、Session" />
+<meta property="og:description" content="
+学习完tensorflow变量常量等基本量的操作，意味着最基本的东西都有了，使用这些基本的操作，我们就做一些数学运算，至于接下来如何操作基本量和组成更大的计算图，那就需要学习Graph和Session了。
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gsscsd.github.io/tensorflow%E4%B9%8Bgraphsession/" /><meta property="og:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2018-12-28T16:54:20+00:00" />
+<meta property="article:modified_time" content="2018-12-28T16:54:20+00:00" /><meta property="og:site_name" content="Gsscsd" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/gsscsd/BlogImg/20220628173721.png"/>
+
+<meta name="twitter:title" content="tensorflow之Graph、Session"/>
+<meta name="twitter:description" content="
+学习完tensorflow变量常量等基本量的操作，意味着最基本的东西都有了，使用这些基本的操作，我们就做一些数学运算，至于接下来如何操作基本量和组成更大的计算图，那就需要学习Graph和Session了。
+"/>
+<meta name="application-name" content="Gsscsd">
+<meta name="apple-mobile-web-app-title" content="Gsscsd">
+
+<meta name="theme-color" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://gsscsd.github.io/tensorflow%E4%B9%8Bgraphsession/" /><link rel="prev" href="https://gsscsd.github.io/tensorflow%E4%B9%8Btensorvariable/" /><link rel="next" href="https://gsscsd.github.io/tensorflow%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/color.346090a8e4618da38ff45853421bbd1d5ffa3c25e678a3f0131c9f7d5300e15669f91c74f1ed5fab76e7424a2a6a5619a9dc45f99e04f246e37d8af51295b6ae.css" integrity="sha512-NGCQqORhjaOP9FhTQhu9HV/6PCXmeKPwExyffVMA4VZp&#43;Rx08e1fq3bnQkoqalYZqdxF&#43;Z4E8kbjfYr1EpW2rg=="><link rel="stylesheet" href="/css/style.min.4f2deec9ba839d309c76dabead5bd259854c6fea2f78f1b9e47e833e7e3cf0c5e44f9a4a044f2bad8ca08dddc52c872601c501966bb44b2b73968730a68fd556.css" integrity="sha512-Ty3uybqDnTCcdtq&#43;rVvSWYVMb&#43;ovePG55H6DPn488MXkT5pKBE8rrYygjd3FLIcmAcUBlmu0Sytzlocwpo/VVg=="><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css"></noscript><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "tensorflow之Graph、Session",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gsscsd.github.io\/tensorflow%E4%B9%8Bgraphsession\/"
+        },"image": ["https:\/\/gsscsd.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "python, 深度学习, tensorflow","wordcount":  2885 ,
+        "url": "https:\/\/gsscsd.github.io\/tensorflow%E4%B9%8Bgraphsession\/","datePublished": "2018-12-28T16:54:20+00:00","dateModified": "2018-12-28T16:54:20+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Gsscsd","logo": "https:\/\/cdn.jsdelivr.net\/gh\/gsscsd\/BlogImg\/G_128px.ico"},"author": {
+                "@type": "Person",
+                "name": "Gsscsd"
+            },"description": ""
+    }
+    </script><script src="//instant.page/5.1.1" defer type="module" integrity="sha384-MWfCL6g1OTGsbSwfuMHc8+8J2u71/LA8dzlIN3ycajckxuZZmF+DNjdm7O6H3PSq"></script>
+</head>
+
+<body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">
+        function setTheme(theme) {document.body.setAttribute('theme', theme); document.documentElement.style.setProperty('color-scheme', theme === 'light' ? 'light' : 'dark'); window.theme = theme;   window.isDark = window.theme !== 'light' }
+        function saveTheme(theme) {window.localStorage && localStorage.setItem('theme', theme);}
+        function getMeta(metaName) {const metas = document.getElementsByTagName('meta'); for (let i = 0; i < metas.length; i++) if (metas[i].getAttribute('name') === metaName) return metas[i]; return '';}
+        if (window.localStorage && localStorage.getItem('theme')) {let theme = localStorage.getItem('theme');theme === 'light' || theme === 'dark' || theme === 'black' ? setTheme(theme) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light')); } else { if ('auto' === 'light' || 'auto' === 'dark' || 'auto' === 'black') setTheme('auto'), saveTheme('auto'); else saveTheme('auto'), window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme('dark') : setTheme('light');}
+        let metaColors = {'light': '#f8f8f8','dark': '#252627','black': '#000000'}
+        getMeta('theme-color').content = metaColors[document.body.getAttribute('theme')];
+        window.switchThemeEventSet = new Set()
+    </script>
+    <div id="back-to-top"></div>
+    <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Gsscsd">Gsscsd</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner">
+                <a class="menu-item"
+                    href="/posts/" > 文章 
+                </a><a class="menu-item"
+                    href="/tags/" > 标签 
+                </a><a class="menu-item"
+                    href="/categories/" > 分类 
+                </a><a class="menu-item"
+                    href="/about/" > 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" 
+                        class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+                <a class="menu-item"
+                    href="https://github.com/gsscsd"  title="GitHub" 
+                    rel="noopener noreffer" target="_blank" ><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-desktop">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-desktop">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </span><a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Gsscsd">Gsscsd</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                <div class="search mobile" id="search-mobile">
+                    <input type="text"
+                        placeholder="搜索文章标题或内容..."
+                        id="search-input-mobile">
+                    <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile"
+                        title="搜索">
+                        <i class="fas fa-search fa-fw"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile"
+                        title="清空">
+                        <i class="fas fa-times-circle fa-fw"></i>
+                    </a>
+                    <span class="search-button search-loading" id="search-loading-mobile">
+                        <i class="fas fa-spinner fa-fw fa-spin"></i>
+                    </span>
+                </div>
+                <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                    取消
+                </a>
+            </div><a class="menu-item" href="/posts/"> 文章 
+                </a><a class="menu-item" href="/tags/"> 标签 
+                </a><a class="menu-item" href="/categories/"> 分类 
+                </a><a class="menu-item" href="/about/"> 关于 
+                </a>
+                <div class="dropdown">
+                    <a href="javascript:void(0);" class="menu-item menu-more dropbtn" title="" > 工具导航 
+                    </a>
+                    <div class="menu-more-content dropdown-content"><a href="http://www.chat.gsscsd.cn" title="" > chatgpt </a></div>
+                </div>
+            <a class="menu-item" href="https://github.com/gsscsd" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  
+                </a>
+            
+            
+            
+            
+            
+            
+            <a href="javascript:void(0);" class="menu-item theme-switch" title="">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+
+
+<main class="main">
+            <div class="container"><div class="toc" id="toc-auto">
+        <h2 class="toc-title">目录</h2>
+        <div class="toc-content" id="toc-content-auto"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#tensorflow的基础知识">tensorflow的基础知识</a>
+          <ul>
+            <li><a href="#tensorflow基础概念之graphtfgraph">tensorflow基础概念之<strong>Graph(tf.Graph)</strong></a></li>
+            <li><a href="#tensorflow基础概念之sessiontfsession">tensorflow基础概念之<strong>Session(tf.Session)</strong></a></li>
+            <li><a href="#tensorflow之激活函数">tensorflow之激活函数</a></li>
+            <li><a href="#tensorflow之优化器">tensorflow之优化器</a></li>
+            <li><a href="#tensorflow变量作用域机制">tensorflow变量作用域机制</a>
+              <ul>
+                <li><a href="#tfname_scopescope_name">tf.name_scope(‘scope_name’)</a></li>
+                <li><a href="#tfvariable_scopescope_name">tf.variable_scope(‘scope_name’)</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC", "true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">tensorflow之Graph、Session</h1><div class="post-meta">
+            <div class="post-meta-line">
+                <span class="post-author"><i class="author fas fa-user-circle fa-fw"></i><a href="/" title="Author" rel=" author" class="author">Gsscsd</a>
+                </span>&nbsp;<span class="post-category">收录于 </span>&nbsp;<span class="post-category">类别 <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>深度学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2018-12-28">2018-12-28</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime="2018-12-28">2018-12-28</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2885 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;<span id="/tensorflow%E4%B9%8Bgraphsession/" class="leancloud_visitors" data-flag-title="tensorflow之Graph、Session">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class="leancloud-visitors-count"></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#tensorflow的基础知识">tensorflow的基础知识</a>
+          <ul>
+            <li><a href="#tensorflow基础概念之graphtfgraph">tensorflow基础概念之<strong>Graph(tf.Graph)</strong></a></li>
+            <li><a href="#tensorflow基础概念之sessiontfsession">tensorflow基础概念之<strong>Session(tf.Session)</strong></a></li>
+            <li><a href="#tensorflow之激活函数">tensorflow之激活函数</a></li>
+            <li><a href="#tensorflow之优化器">tensorflow之优化器</a></li>
+            <li><a href="#tensorflow变量作用域机制">tensorflow变量作用域机制</a>
+              <ul>
+                <li><a href="#tfname_scopescope_name">tf.name_scope(‘scope_name’)</a></li>
+                <li><a href="#tfvariable_scopescope_name">tf.variable_scope(‘scope_name’)</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>学习完tensorflow变量常量等基本量的操作，意味着最基本的东西都有了，使用这些基本的操作，我们就做一些数学运算，至于接下来如何操作基本量和组成更大的计算图，那就需要学习Graph和Session了。</p>
+</blockquote>
+<h3 id="tensorflow的基础知识" class="headerLink">
+    <a href="#tensorflow%e7%9a%84%e5%9f%ba%e7%a1%80%e7%9f%a5%e8%af%86" class="header-mark"></a>tensorflow的基础知识</h3><h4 id="tensorflow基础概念之graphtfgraph" class="headerLink">
+    <a href="#tensorflow%e5%9f%ba%e7%a1%80%e6%a6%82%e5%bf%b5%e4%b9%8bgraphtfgraph" class="header-mark"></a>tensorflow基础概念之<strong>Graph(tf.Graph)</strong></h4><blockquote>
+<p>Graph是一个TensorFlow的一种运算，被表示为一个<strong>数据流的图。</strong></p>
+<p>一个Graph包含一些操作（Operation）对象，这些对象是<strong>计算节点</strong>。前面说过的Tensor对象，则是表示在不同的操作（operation）间的<strong>数据节点</strong></p>
+<p>每一个任务都需要一个图，即使不去手动的声明，tensorflow也会在后台默认的构建图，然后将操作添加到图里面。</p>
+<p>一般情况下，我们只需要使用默认生成的图即可，特殊情况下，再去显示的声明多个图。</p>
+</blockquote>
+<p><strong>属性</strong>：</p>
+<blockquote>
+<ul>
+<li><strong>building_function</strong>:Returns True iff this graph represents a function.</li>
+<li><strong>finalized</strong>:返回True，要是这个图被终止了</li>
+<li><strong>graph_def_versions</strong>:The GraphDef version information of this graph.</li>
+<li><strong>seed</strong>:The graph-level random seed of this graph.</li>
+<li><strong>version</strong>:Returns a version number that increases as ops are added to the graph.</li>
+</ul>
+</blockquote>
+<p><strong>函数</strong>：</p>
+<blockquote>
+<ul>
+<li><strong>add_to_collection(name,value)</strong>：存放值在给定名称的collection里面(因为collection不是sets,所以有可能一个值会添加很多次) .</li>
+<li><strong>as_default()</strong>：返回一个上下文管理器,使得这个Graph对象成为当前默认的graph.</li>
+<li><strong>finalize()</strong>：结束这个graph,使得他只读(read-only).</li>
+</ul>
+</blockquote>
+<h4 id="tensorflow基础概念之sessiontfsession" class="headerLink">
+    <a href="#tensorflow%e5%9f%ba%e7%a1%80%e6%a6%82%e5%bf%b5%e4%b9%8bsessiontfsession" class="header-mark"></a>tensorflow基础概念之<strong>Session(tf.Session)</strong></h4><blockquote>
+<p>运行TensorFLow操作（operations）的类,一个Seesion包含了操作对象执行的环境.</p>
+<p>Session是一个比较重要的东西，TensorFlow中只有让Graph（计算图）上的节点Session（会话）中执行，才会得到结果。Session的开启涉及真实的运算，因此比较消耗资源。在使用结束后，务必关闭Session。一般在使用过程中，我们可以通过with上下文管理器来使用Session。</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Using the context manager.</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>属性</strong>：</p>
+<blockquote>
+<ul>
+<li><strong>graph</strong>：“投放”到session中的图</li>
+<li>**graph_def：**图的描述</li>
+</ul>
+</blockquote>
+<p><strong>函数</strong>：</p>
+<blockquote>
+<ul>
+<li><strong>tf.Session.<strong>init</strong>(target=”, graph=None, config=None)</strong>：Session构造函数，可以在声明Session的时候指定Graph，如果未指定，则使用默认图。</li>
+<li><strong>tf.Session.run(fetches, feed_dict=None, options=None, run_metadata=None)</strong>：运行操作估算（计算）tensor。</li>
+<li><strong>tf.Session.close()</strong>：Session使用之后，一定要关闭</li>
+<li><strong>tf.as_default()</strong> ：返回一个上下文管理器，使得这个对象成为当前默认的session/使用with关键字然后可以在with关键字代码块中执行</li>
+</ul>
+</blockquote>
+<h4 id="tensorflow之激活函数" class="headerLink">
+    <a href="#tensorflow%e4%b9%8b%e6%bf%80%e6%b4%bb%e5%87%bd%e6%95%b0" class="header-mark"></a>tensorflow之激活函数</h4><blockquote>
+<p>激活操作提供了在神经网络中使用的不同类型的非线性模型。包括光滑非线性模型(sigmoid, tanh, elu, softplus, and softsign)。连续但是不是处处可微的函数(relu, relu6, crelu and relu_x)。当然还有随机正则化 (dropout) ,所有的激活操作都是作用在每个元素上面的，输出一个tensor和输入的tensor又相同的形状和数据类型。</p>
+</blockquote>
+<p><strong>激活函数列表</strong>：</p>
+<blockquote>
+<ul>
+<li><strong>tf.nn.relu</strong></li>
+<li><strong>tf.nn.relu6</strong></li>
+<li><strong>tf.nn.crelu</strong></li>
+<li><strong>tf.nn.elu</strong></li>
+<li><strong>tf.nn.softplus</strong></li>
+<li><strong>tf.nn.softsign</strong></li>
+<li><strong>tf.nn.dropout</strong></li>
+<li><strong>tf.nn.bias_add</strong></li>
+<li><strong>tf.sigmoid</strong></li>
+<li><strong>tf.tanh</strong></li>
+<li><strong>tf.nn.softmax</strong></li>
+</ul>
+</blockquote>
+<p><strong>tf.nn.relu(features, name=None)</strong>：</p>
+<blockquote>
+<p>计算修正线性单元:<code>max(features,0)</code></p>
+<p>如果，你不知道使用哪个激活函数，那么使用relu准没错。</p>
+</blockquote>
+<p><strong>tf.nn.softmax(logits,dim=-1,name=None)</strong>：</p>
+<blockquote>
+<p>计算softmax激活值，多分类输出层的激活函数。</p>
+</blockquote>
+<h4 id="tensorflow之优化器" class="headerLink">
+    <a href="#tensorflow%e4%b9%8b%e4%bc%98%e5%8c%96%e5%99%a8" class="header-mark"></a>tensorflow之优化器</h4><blockquote>
+<p>深度学习常见的是对于梯度的优化，也就是说，优化器最后其实就是各种对于梯度下降算法的优化，此处记录一下tensorflow的优化器api。</p>
+</blockquote>
+<p><strong>优化器列表</strong>：</p>
+<blockquote>
+<ul>
+<li><strong>tf.train.Optimizer</strong></li>
+<li><strong>tf.train.GradientDescentOptimizer</strong></li>
+<li><strong>tf.train.AdagradOptimizer</strong></li>
+<li><strong>tf.train.AdadeltaOptimizer</strong></li>
+<li><strong>tf.train.MomentumOptimizer</strong></li>
+<li><strong>tf.train.AdamOptimizer</strong></li>
+<li><strong>tf.train.FtrlOptimizer</strong></li>
+<li><strong>tf.train.RMSPropOptimizer</strong></li>
+</ul>
+</blockquote>
+<p><strong>tf.train.Optimizer</strong>：</p>
+<blockquote>
+<p>优化器（optimizers）类的基类。这个类定义了在训练模型的时候添加一个操作的API。<strong>你基本上不会直接使用这个类</strong>。</p>
+</blockquote>
+<p><strong>tf.train.GradientDescentOptimizer(learning_rate,use_locking=False,name=&lsquo;GradientDescent&rsquo;)</strong> ：</p>
+<blockquote>
+<p>作用：创建一个梯度下降优化器对象
+参数：
+<strong>learning_rate:</strong> A Tensor or a floating point value. 要使用的学习率
+<strong>use_locking:</strong> 要是True的话，就对于更新操作（update operations.）使用锁
+<strong>name:</strong> 名字，可选，默认是”GradientDescent”.</p>
+</blockquote>
+<p><strong>tf.train.AdadeltaOptimizer(learning_rate=0.001, rho=0.95, epsilon=1e-08, use_locking=False, name=&lsquo;Adadelta&rsquo;)</strong></p>
+<blockquote>
+<p>作用：构造一个使用Adadelta算法的优化器
+参数：
+<strong>learning_rate:</strong> tensor或者浮点数，学习率
+<strong>rho:</strong> tensor或者浮点数. 优化参数
+<strong>epsilon:</strong> tensor或者浮点数. 优化参数
+<strong>use_locking</strong>: If True use locks for update operations.
+<strong>name:</strong> 【可选】这个操作的名字，默认是”Adadelta”</p>
+</blockquote>
+<h4 id="tensorflow变量作用域机制" class="headerLink">
+    <a href="#tensorflow%e5%8f%98%e9%87%8f%e4%bd%9c%e7%94%a8%e5%9f%9f%e6%9c%ba%e5%88%b6" class="header-mark"></a>tensorflow变量作用域机制</h4><blockquote>
+<p>在深度学习中，我们可能需要用到大量的变量集，而且这些变量集可能在多处都要用到。例如，训练模型时，训练参数如权重（weights）、偏置（biases）等已经定下来，要拿到验证集去验证，我们自然希望这些参数是同一组。以往写简单的程序，可能使用全局限量就可以了，但在深度学习中，这显然是不行的，一方面不便管理，另外这样一来代码的封装性受到极大影响。因此，TensorFlow提供了一种变量管理方法：变量作用域机制，以此解决上面出现的问题。</p>
+<p>在Tensoflow中，提供了两种作用域：</p>
+<ul>
+<li>命名域(name scope)：通过tf.name_scope()来实现；</li>
+<li>变量域（variable scope）：通过tf.variable_scope()来实现；可以通过设置reuse 标志以及初始化方式来影响域下的变量。</li>
+</ul>
+<p>这两种作用域都会给tf.Variable()创建的变量加上词头，而tf.name_scope对tf.get_variable()创建的变量没有词头影响。</p>
+</blockquote>
+<h5 id="tfname_scopescope_name" class="headerLink">
+    <a href="#tfname_scopescope_name" class="header-mark"></a>tf.name_scope(‘scope_name’)</h5><blockquote>
+<p>tf.name_scope 主要结合 tf.Variable() 来使用，方便参数命名管理。</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 与 tf.Variable() 结合使用。简化了命名</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s1">&#39;conv1&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">scope</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">weights1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weights&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bias1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">([</span><span class="mf">0.3</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bias&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 注意，这里的 with 和 python 中其他的 with 是不一样的</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 执行完 with 里边的语句之后，这个 conv1/ 和 conv2/ 空间还是在内存中的。这时候如果再次执行上面的代码</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 就会再生成其他命名空间</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 下面是在另外一个命名空间来定义变量的</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s1">&#39;conv2&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">scope</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">weights2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weights&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bias2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">([</span><span class="mf">0.33</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bias&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 所以，实际上weights1 和 weights2 这两个引用名指向了不同的空间，不会冲突</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">weights1</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">weights2</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -----------------</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># conv1/weights:0</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># conv2/weights:0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="tfvariable_scopescope_name" class="headerLink">
+    <a href="#tfvariable_scopescope_name" class="header-mark"></a>tf.variable_scope(‘scope_name’)</h5><blockquote>
+<p>tf.variable_scope() 主要结合 tf.get_variable() 来使用，实现 变量共享。</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># 这里是正确的打开方式</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 可以看出，name 参数才是对象的唯一标识</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s1">&#39;v_scope&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">scope1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Weights1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s1">&#39;Weights&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bias1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s1">&#39;bias&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 下面来共享上面已经定义好的变量</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># note: 在下面的 scope 中的变量必须已经定义过了，才能设置 reuse=True，否则会报错</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s1">&#39;v_scope&#39;</span><span class="p">,</span> <span class="n">reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">scope2</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Weights2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s1">&#39;Weights&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 也可以与tf.Variable一起使用</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bias2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">([</span><span class="mf">0.52</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bias&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">Weights1</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">Weights2</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">bias2</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 可以看到这两个引用名称指向的是同一个内存对象</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># --------------</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># v_scope/Weights:0</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># v_scope/Weights:0</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># v_scope_1/bias:0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>tf.variable_scope(‘scope_name’)中的参数reuse很重要，reuse标记变量是否进行复用。</p>
+<p>reuse的参数：</p>
+<ul>
+<li>None:默认参数，此时基础父scope的reuse标记</li>
+<li>tf.AUTO_REUSE:自动复用，如果变量存在，则复用，不存在则创建。</li>
+<li>True:复用</li>
+</ul>
+</blockquote></div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2018-12-28</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="#" title="分享到 微博" data-sharer="weibo" data-url="https://gsscsd.github.io/tensorflow%E4%B9%8Bgraphsession/" data-title="tensorflow之Graph、Session"><i class="fab fa-weibo fa-fw"></i></a><a href="#" title="分享到 百度" data-sharer="baidu" data-url="https://gsscsd.github.io/tensorflow%E4%B9%8Bgraphsession/" data-title="tensorflow之Graph、Session"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@v5.21.1/icons/baidu.svg"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/python/">python</a>,&nbsp;<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>,&nbsp;<a href="/tags/tensorflow/">tensorflow</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/tensorflow%E4%B9%8Btensorvariable/" class="prev" rel="prev" title="tensorflow之Tensor、Variable"><i class="fas fa-angle-left fa-fw"></i>tensorflow之Tensor、Variable</a>
+            <a href="/tensorflow%E5%AE%9E%E4%BE%8B%E4%B8%8E%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" class="next" rel="next" title="tensorflow实例与线性回归">tensorflow实例与线性回归<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+        </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">
+                    由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.100.1">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/HEIGE-PCloud/DoIt" target="_blank" rel="noopener noreferrer" title="DoIt 0.3.0"><i class="far fa-edit fa-fw"></i> DoIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">Gsscsd</a></span></div>
+            <div class="footer-line"></div>
+            <div class="footer-line">
+            </div>
+        </div></footer></div>
+
+    <div id="fixed-buttons"><a href="#back-to-top" id="back-to-top-button" class="fixed-button" title="回到顶部">
+            <i class="fas fa-arrow-up fa-fw"></i>
+        </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+            <i class="fas fa-comment fa-fw"></i>
+        </a>
+    </div><div class="assets"><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css"><link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.css"></noscript><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-cn","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"distance":null,"findAllMatches":null,"fuseIndexURL":"/index.json","highlightTag":"em","ignoreFieldNorm":null,"ignoreLocation":null,"isCaseSensitive":null,"location":null,"maxResultLength":10,"minMatchCharLength":null,"noResultsFound":"没有找到结果","snippetLength":50,"threshold":null,"type":"fuse","useExtendedSearch":null},"sharerjs":true};</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js" defer></script><script type="text/javascript" src="/js/valine.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.4.2/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/auto-render.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/copy-tex.min.js" defer></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/mhchem.min.js" defer></script><script type="text/javascript" src="/js/katex.min.js" defer></script><script type="text/javascript" src="/js/theme.min.js" defer></script></div>
+</body>
+
+</html>
