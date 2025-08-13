@@ -1,0 +1,157 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel数据可视化</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Excel数据可视化</h1>
+
+    <!-- 原始表格 -->
+    <h2 style="text-align: center;">原始数据表</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>| 上证指数日线行情</th>
+                <th>open</th>
+                <th>high</th>
+                <th>low</th>
+                <th>close</th>
+                <th>volume</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2025-02-19 00:00:00</td>
+                <td>3320.78</td>
+                <td>3352.09</td>
+                <td>3320.58</td>
+                <td>3351.54</td>
+                <td>5.02913e+10</td>
+            </tr>
+            <tr>
+                <td>2025-02-20 00:00:00</td>
+                <td>3347.59</td>
+                <td>3355.56</td>
+                <td>3338.03</td>
+                <td>3350.78</td>
+                <td>5.04357e+10</td>
+            </tr>
+            <tr>
+                <td>2025-02-21 00:00:00</td>
+                <td>3356.7</td>
+                <td>3381.06</td>
+                <td>3339.03</td>
+                <td>3379.11</td>
+                <td>6.0819e+10</td>
+            </tr>
+            <tr>
+                <td>2025-02-24 00:00:00</td>
+                <td>3374.08</td>
+                <td>3384.81</td>
+                <td>3355.87</td>
+                <td>3373.03</td>
+                <td>5.98188e+10</td>
+            </tr>
+            <tr>
+                <td>2025-02-25 00:00:00</td>
+                <td>3345.65</td>
+                <td>3369.56</td>
+                <td>3337.84</td>
+                <td>3346.04</td>
+                <td>5.27579e+10</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 图表容器 -->
+    <div class="chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+        const labels = [
+            '2025-02-19',
+            '2025-02-20',
+            '2025-02-21',
+            '2025-02-24',
+            '2025-02-25'
+        ];
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: '开盘价 (open)',
+                data: [3320.78, 3347.59, 3356.7, 3374.08, 3345.65],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }, {
+                label: '最高价 (high)',
+                data: [3352.09, 3355.56, 3381.06, 3384.81, 3369.56],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }, {
+                label: '最低价 (low)',
+                data: [3320.58, 3338.03, 3339.03, 3355.87, 3337.84],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }, {
+                label: '收盘价 (close)',
+                data: [3351.54, 3350.78, 3379.11, 3373.03, 3346.04],
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                },
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '上证指数日线行情'
+                }
+            }
+        };
+
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+</body>
+</html>
+```
