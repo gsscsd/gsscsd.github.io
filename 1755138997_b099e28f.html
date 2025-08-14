@@ -1,0 +1,183 @@
+为了生成针对中国联通近期财报信息的分析报告，我们需要具体的财报数据。由于实际数据没有提供，我将构造一个示例化的模板来展示如何构建这样一个报告。请用实际的数据替换下面的占位符值。
+
+以下是根据提供的模板构造的HTML页面，其中包含了一些示例数据：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财报分析结果</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">财报分析结果</h1>
+
+    <!-- 原始表格 -->
+    <h2 style="text-align: center;">原始财报数据表</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>项目</th>
+                <th>金额 (亿元)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>流动资产 - 现金及现金等价物</td>
+                <td>1000</td>
+            </tr>
+            <tr>
+                <td>流动资产 - 应收账款</td>
+                <td>800</td>
+            </tr>
+            <tr>
+                <td>流动资产 - 存货</td>
+                <td>500</td>
+            </tr>
+            <tr>
+                <td>非流动资产 - 固定资产净值</td>
+                <td>2000</td>
+            </tr>
+            <tr>
+                <td>非流动资产 - 无形资产</td>
+                <td>300</td>
+            </tr>
+            <tr>
+                <td>流动负债 - 应付账款</td>
+                <td>600</td>
+            </tr>
+            <tr>
+                <td>流动负债 - 短期借款</td>
+                <td>400</td>
+            </tr>
+            <tr>
+                <td>非流动负债 - 长期借款</td>
+                <td>700</td>
+            </tr>
+            <tr>
+                <td>股东权益 - 股本</td>
+                <td>1500</td>
+            </tr>
+            <tr>
+                <td>股东权益 - 资本公积</td>
+                <td>200</td>
+            </tr>
+            <tr>
+                <td>股东权益 - 未分配利润</td>
+                <td>500</td>
+            </tr>
+            <tr>
+                <td>营业收入</td>
+                <td>3000</td>
+            </tr>
+            <tr>
+                <td>营业成本</td>
+                <td>2000</td>
+            </tr>
+            <tr>
+                <td>毛利</td>
+                <td>1000</td>
+            </tr>
+            <tr>
+                <td>营业利润</td>
+                <td>800</td>
+            </tr>
+            <tr>
+                <td>净利润</td>
+                <td>700</td>
+            </tr>
+            <tr>
+                <td>每股收益(EPS)</td>
+                <td>0.5</td>
+            </tr>
+            <tr>
+                <td>经营活动产生的现金流量净额</td>
+                <td>900</td>
+            </tr>
+            <tr>
+                <td>投资活动产生的现金流量净额</td>
+                <td>-200</td>
+            </tr>
+            <tr>
+                <td>融资活动产生的现金流量净额</td>
+                <td>300</td>
+            </tr>
+            <tr>
+                <td>流动比率</td>
+                <td>2.0</td>
+            </tr>
+            <tr>
+                <td>资产负债率</td>
+                <td>0.4</td>
+            </tr>
+            <tr>
+                <td>毛利率</td>
+                <td>0.33</td>
+            </tr>
+            <tr>
+                <td>净利率</td>
+                <td>0.23</td>
+            </tr>
+            <tr>
+                <td>ROE(净资产收益率)</td>
+                <td>0.14</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 图表容器 -->
+    <div class="chart-container">
+        <div id="myChart" style="width: 100%;height:400px;"></div>
+    </div>
+
+    <script>
+        var myChart = echarts.init(document.getElementById('myChart'));
+        var option = {
+            title: { text: '中国联通关键财务指标' },
+            tooltip: {},
+            xAxis: {
+                type: 'category',
+                data: ['流动资产', '非流动资产', '流动负债', '非流动负债', '股东权益', '营业收入', '营业成本', '毛利', '营业利润', '净利润', '每股收益(EPS)', '经营活动现金流', '投资活动现金流', '融资活动现金流', '流动比率', '资产负债率', '毛利率', '净利率', 'ROE']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: [1000, 2300, 1000, 700, 2200, 3000, 2000, 1000, 800, 700, 0.5, 900, -200, 300, 2.0, 0.4, 0.33, 0.23, 0.14],
+                type: 'bar',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(180, 180, 180, 0.2)'
+                }
+            }]
+        };
+        myChart.setOption(option);
+    </script>
+</body>
+</html>
+```
+
+此HTML页面包括了基本的CSS样式和一个简单的条形图，展示了各项关键财务指标。请注意，实际应用中需要将示例数据替换为真实的财报数据。此外，可以根据需要调整图表类型，例如改为折线图或饼图等，以更好地展示特定的数据趋势或比例关系。
