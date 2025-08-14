@@ -1,0 +1,167 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国联通财报信息可视化</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">中国联通财报信息可视化</h1>
+
+    <!-- 原始表格 -->
+    <h2 style="text-align: center;">原始数据表</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>报表类型</th>
+                <th>项目</th>
+                <th>金额（亿元）</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>资产负债表</td>
+                <td>流动资产</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>资产负债表</td>
+                <td>非流动资产</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>资产负债表</td>
+                <td>总负债</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>资产负债表</td>
+                <td>股东权益</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>利润表</td>
+                <td>营业收入</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>利润表</td>
+                <td>营业成本</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>利润表</td>
+                <td>净利润</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>现金流量表</td>
+                <td>经营活动现金流净额</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>现金流量表</td>
+                <td>投资活动现金流净额</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>现金流量表</td>
+                <td>筹资活动现金流净额</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 图表容器 -->
+    <div class="chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+        const labels = [
+            '流动资产', '非流动资产', '总负债', '股东权益',
+            '营业收入', '营业成本', '净利润',
+            '经营活动现金流净额', '投资活动现金流净额', '筹资活动现金流净额'
+        ];
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: '金额（亿元）',
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(201, 203, 207, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(201, 203, 207, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '中国联通财报信息'
+                    }
+                }
+            }
+        };
+
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+</body>
+</html>
+```
