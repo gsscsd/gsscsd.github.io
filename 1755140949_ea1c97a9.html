@@ -1,0 +1,206 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国移动财报</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">中国移动财报</h1>
+
+    <!-- 原始表格 -->
+    <h2 style="text-align: center;">利润表 - 2021年报至2024年报及TTM数据</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>项目</th>
+                <th>2021年报</th>
+                <th>2022年报</th>
+                <th>2023年报</th>
+                <th>2024年报</th>
+                <th>近12个月(TTM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>营业总收入</td>
+                <td>8,482.58亿</td>
+                <td>9,372.59亿</td>
+                <td>10,093.09亿</td>
+                <td>10,407.59亿</td>
+                <td>10,408.12亿</td>
+            </tr>
+            <tr>
+                <td>营业收入</td>
+                <td>8,482.58亿</td>
+                <td>9,372.59亿</td>
+                <td>10,093.09亿</td>
+                <td>10,407.59亿</td>
+                <td>10,408.12亿</td>
+            </tr>
+            <tr>
+                <td>营业总成本</td>
+                <td>7,155.79亿</td>
+                <td>7,933.72亿</td>
+                <td>8,611.85亿</td>
+                <td>8,797.0亿</td>
+                <td>8,772.66亿</td>
+            </tr>
+            <tr>
+                <td>营业成本</td>
+                <td>6,039.05亿</td>
+                <td>6,768.63亿</td>
+                <td>7,243.58亿</td>
+                <td>7,387.72亿</td>
+                <td>7,368.24亿</td>
+            </tr>
+            <tr>
+                <td>营业税金及附加</td>
+                <td>27.22亿</td>
+                <td>28.98亿</td>
+                <td>30.71亿</td>
+                <td>37.59亿</td>
+                <td>39.13亿</td>
+            </tr>
+            <tr>
+                <td>销售费用</td>
+                <td>482.43亿</td>
+                <td>495.92亿</td>
+                <td>524.77亿</td>
+                <td>545.64亿</td>
+                <td>540.24亿</td>
+            </tr>
+            <tr>
+                <td>管理费用</td>
+                <td>532.28亿</td>
+                <td>545.33亿</td>
+                <td>560.25亿</td>
+                <td>569.37亿</td>
+                <td>567.01亿</td>
+            </tr>
+            <tr>
+                <td>财务费用</td>
+                <td>-80.96亿</td>
+                <td>-86.05亿</td>
+                <td>-34.57亿</td>
+                <td>-24.95亿</td>
+                <td>-25.48亿</td>
+            </tr>
+            <tr>
+                <td>研发费用</td>
+                <td>155.77亿</td>
+                <td>180.91亿</td>
+                <td>287.11亿</td>
+                <td>281.63亿</td>
+                <td>283.52亿</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 图表容器 -->
+    <div class="chart-container">
+        <canvas id="profitChart"></canvas>
+    </div>
+
+    <script>
+        const profitData = {
+            labels: ['2021年报', '2022年报', '2023年报', '2024年报', '近12个月(TTM)'],
+            datasets: [
+                {
+                    label: '营业总收入',
+                    data: [8482.58, 9372.59, 10093.09, 10407.59, 10408.12],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: '营业总成本',
+                    data: [7155.79, 7933.72, 8611.85, 8797.0, 8772.66],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: '营业成本',
+                    data: [6039.05, 6768.63, 7243.58, 7387.72, 7368.24],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: '营业税金及附加',
+                    data: [27.22, 28.98, 30.71, 37.59, 39.13],
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: '销售费用',
+                    data: [482.43, 495.92, 524.77, 545.64, 540.24],
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: '管理费用',
+                    data: [532.28, 545.33, 560.25, 569.37, 567.01],
+                    backgroundColor: 'rgba(201, 203, 207, 0.2)',
+                    borderColor: 'rgba(201, 203, 207, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: '财务费用',
+                    data: [-80.96, -86.05, -34.57, -24.95, -25.48],
+                    backgroundColor: 'rgba(255, 205, 86, 0.2)',
+                    borderColor: 'rgba(255, 205, 86, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: '研发费用',
+                    data: [155.77, 180.91, 287.11, 281.63, 283.52],
+                    backgroundColor: 'rgba(148, 123, 162, 0.2)',
+                    borderColor: 'rgba(148, 123, 162, 1)',
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        const profitChart = new Chart(document.getElementById('profitChart'), {
+            type: 'line',
+            data: profitData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+```
