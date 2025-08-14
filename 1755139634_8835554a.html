@@ -1,0 +1,250 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国联通财报数据可视化</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">中国联通财报数据可视化</h1>
+
+    <!-- 原始表格 -->
+    <h2 style="text-align: center;">资产负债表</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>项目</th>
+                <th>金额(万元)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>流动资产</td>
+                <td>500</td>
+            </tr>
+            <tr>
+                <td>非流动资产</td>
+                <td>800</td>
+            </tr>
+            <tr>
+                <td>总负债</td>
+                <td>600</td>
+            </tr>
+            <tr>
+                <td>股东权益</td>
+                <td>700</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 style="text-align: center;">利润表</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>项目</th>
+                <th>金额(万元)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>营业收入</td>
+                <td>1200</td>
+            </tr>
+            <tr>
+                <td>营业成本</td>
+                <td>800</td>
+            </tr>
+            <tr>
+                <td>净利润</td>
+                <td>200</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 style="text-align: center;">现金流量表</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>项目</th>
+                <th>金额(万元)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>经营活动现金流净额</td>
+                <td>300</td>
+            </tr>
+            <tr>
+                <td>投资活动现金流净额</td>
+                <td>-100</td>
+            </tr>
+            <tr>
+                <td>筹资活动现金流净额</td>
+                <td>-50</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 图表容器 -->
+    <div class="chart-container">
+        <canvas id="balanceSheetChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="incomeStatementChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="cashFlowChart"></canvas>
+    </div>
+
+    <script>
+        const balanceSheetData = {
+            labels: ['流动资产', '非流动资产', '总负债', '股东权益'],
+            datasets: [{
+                label: '金额(万元)',
+                data: [500, 800, 600, 700],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const incomeStatementData = {
+            labels: ['营业收入', '营业成本', '净利润'],
+            datasets: [{
+                label: '金额(万元)',
+                data: [1200, 800, 200],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const cashFlowData = {
+            labels: ['经营活动现金流净额', '投资活动现金流净额', '筹资活动现金流净额'],
+            datasets: [{
+                label: '金额(万元)',
+                data: [300, -100, -50],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const balanceSheetConfig = {
+            type: 'bar',
+            data: balanceSheetData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                title: {
+                    display: true,
+                    text: '资产负债表'
+                }
+            }
+        };
+
+        const incomeStatementConfig = {
+            type: 'bar',
+            data: incomeStatementData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                title: {
+                    display: true,
+                    text: '利润表'
+                }
+            }
+        };
+
+        const cashFlowConfig = {
+            type: 'bar',
+            data: cashFlowData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                title: {
+                    display: true,
+                    text: '现金流量表'
+                }
+            }
+        };
+
+        const balanceSheetChart = new Chart(
+            document.getElementById('balanceSheetChart'),
+            balanceSheetConfig
+        );
+
+        const incomeStatementChart = new Chart(
+            document.getElementById('incomeStatementChart'),
+            incomeStatementConfig
+        );
+
+        const cashFlowChart = new Chart(
+            document.getElementById('cashFlowChart'),
+            cashFlowConfig
+        );
+    </script>
+</body>
+</html>
+```
