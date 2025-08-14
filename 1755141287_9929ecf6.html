@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国移动财报可视化</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">中国移动财务数据可视化</h1>
+
+    <div class="grid">
+        <div class="chart-container">
+            <h2>营业总收入与总成本趋势</h2>
+            <canvas id="revenueCostChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h2>净利润增长</h2>
+            <canvas id="profitChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <h2>2024年营业收入构成</h2>
+        <canvas id="revenueCompositionChart"></canvas>
+    </div>
+
+    <div class="grid">
+        <div class="chart-container">
+            <h2>2024三季报现金流</h2>
+            <canvas id="cashFlowChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h2>收入占比</h2>
+            <canvas id="revenueShareChart"></canvas>
+        </div>
+    </div>
+
+    <h2>原始数据表</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>指标</th>
+                <th>2021年</th>
+                <th>2022年</th>
+                <th>2023年</th>
+                <th>2024年</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>营业总收入(亿)</td>
+                <td>8,482.58</td>
+                <td>9,372.59</td>
+                <td>10,093.09</td>
+                <td>10,407.59</td>
+            </tr>
+            <tr>
+                <td>营业总成本(亿)</td>
+                <td>7,155.79</td>
+                <td>7,933.72</td>
+                <td>8,611.85</td>
+                <td>8,797.0</td>
+            </tr>
+            <tr>
+                <td>净利润(亿)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>1,383.73</td>
+                <td>1,109.84(三季报)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        // 营业总收入与总成本趋势
+        const revenueCostCtx = document.getElementById('revenueCostChart').getContext('2d');
+        new Chart(revenueCostCtx, {
+            type: 'line',
+            data: {
+                labels: ['2021', '2022', '2023', '2024'],
+                datasets: [
+                    {
+                        label: '营业总收入(亿)',
+                        data: [8482.58, 9372.59, 10093.09, 10407.59],
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        tension: 0.1
+                    },
+                    {
+                        label: '营业总成本(亿)',
+                        data: [7155.79, 7933.72, 8611.85, 8797.0],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '营业总收入与总成本趋势(亿)'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+
+        // 净利润增长
+        const profitCtx = document.getElementById('profitChart').getContext('2d');
+        new Chart(profitCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2023年', '2024三季报'],
+                datasets: [{
+                    label: '净利润(亿)',
+                    data: [1383.73, 1109.84],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '净利润增长(亿)'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+
+        // 2024年营业收入构成
+        const revenueCompositionCtx = document.getElementById('revenueCompositionChart').getContext('2d');
+        new Chart(revenueCompositionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['个人市场', '家庭市场', '政企市场', '新兴市场'],
+                datasets: [{
+                    label: '收入(亿)',
+                    data: [4837, 1431, 2091, 536],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '2024年营业收入构成(亿)'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // 2024三季报现金流
+        const cashFlowCtx = document.getElementById('cashFlowChart').getContext('2d');
+        new Chart(cashFlowCtx, {
+            type: 'bar',
+            data: {
+                labels: ['经营活动', '投资活动', '融资活动', '净增加额'],
+                datasets: [{
+                    label: '现金流(亿)',
+                    data: [2240.75, -1270.14, -1173.23, -202.62],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(255, 99, 132, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '2024三季报现金流(亿)'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+
+        // 收入占比
+        const revenueShareCtx = document.getElementById('revenueShareChart').getContext('2d');
+        new Chart(revenueShareCtx, {
+            type: 'pie',
+            data: {
+                labels: ['个人市场(54.38%)', '家庭市场(16.09%)', '政企市场(22.49%)', '新兴市场(5.75%)'],
+                datasets: [{
+                    data: [54.38, 16.09, 22.49, 5.75],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '收入占比(%)'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
